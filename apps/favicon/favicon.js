@@ -16,6 +16,18 @@ let uploadedImage = null;
 let selectedSizes = [];
 let generatedFavicons = [];
 
+// Allowed file types
+const allowedTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/svg+xml'
+];
+
+const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+
 // DOM Elements
 const imageInput = document.getElementById('imageInput');
 const uploadArea = document.getElementById('uploadArea');
@@ -81,11 +93,31 @@ function setupEventListeners() {
     downloadAllBtn.addEventListener('click', downloadAllFavicons);
 }
 
+// Validate file type
+function isValidImageFile(file) {
+    // Check MIME type
+    if (allowedTypes.includes(file.type.toLowerCase())) {
+        return true;
+    }
+    
+    // Check file extension as fallback
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    
+    return hasValidExtension;
+}
+
 // Handle file selection
 function handleFileSelect(e) {
     const file = e.target.files[0];
     if (file) {
-        processImage(file);
+        if (isValidImageFile(file)) {
+            processImage(file);
+        } else {
+            showToast('Please select a valid image file (JPG, PNG, GIF, WebP, or SVG)', 'error');
+            // Clear the input
+            e.target.value = '';
+        }
     }
 }
 
@@ -107,8 +139,12 @@ function handleDrop(e) {
     uploadArea.classList.remove('dragover');
     
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        processImage(file);
+    if (file) {
+        if (isValidImageFile(file)) {
+            processImage(file);
+        } else {
+            showToast('Please drop a valid image file (JPG, PNG, GIF, WebP, or SVG)', 'error');
+        }
     } else {
         showToast('Please drop a valid image file', 'error');
     }
@@ -116,6 +152,12 @@ function handleDrop(e) {
 
 // Process uploaded image
 function processImage(file) {
+    // Double-check validation
+    if (!isValidImageFile(file)) {
+        showToast('Invalid file type. Please use JPG, PNG, GIF, WebP, or SVG', 'error');
+        return;
+    }
+    
     const reader = new FileReader();
     
     reader.onload = (e) => {
@@ -137,7 +179,16 @@ function processImage(file) {
                 sizesCard.appendChild(generateBtn);
             }
         };
+        img.onerror = () => {
+            showToast('Failed to load image. Please ensure the file is a valid image.', 'error');
+            imageInput.value = '';
+        };
         img.src = e.target.result;
+    };
+    
+    reader.onerror = () => {
+        showToast('Failed to read file. Please try again.', 'error');
+        imageInput.value = '';
     };
     
     reader.readAsDataURL(file);
