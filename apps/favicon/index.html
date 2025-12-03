@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Image to Favicon Converter - Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48) with preview and download options.">
+    <meta name="keywords" content="favicon converter, image to favicon, favicon generator, icon converter, favicon maker, create favicon">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/favicon/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/favicon/">
+    <meta property="og:title" content="Image to Favicon Converter | Free Favicon Generator">
+    <meta property="og:description" content="Convert any image to favicon format. Generate favicons in multiple sizes with preview and download options.">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/favicon/">
+    <meta name="twitter:title" content="Image to Favicon Converter | Free Favicon Generator">
+    <meta name="twitter:description" content="Convert any image to favicon format. Generate favicons in multiple sizes with preview and download options.">
+    
+    <title>Image to Favicon Converter | Free Favicon Generator | Robin Thomas</title>
+    <link rel="stylesheet" href="favicon.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-image"></i> Image to Favicon Converter</h1>
+            <p class="subtitle">Convert any image to favicon format in multiple sizes</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="card" id="uploadCard">
+                <h2><i class="fas fa-upload"></i> Upload Image</h2>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <p class="upload-hint">Supports: JPG, PNG, GIF, WebP, SVG</p>
+                    </div>
+                </div>
+                <div class="image-preview" id="imagePreview" style="display: none;">
+                    <img id="previewImage" alt="Preview">
+                    <button class="remove-btn" id="removeBtn">
+                        <i class="fas fa-times"></i> Remove
+                    </button>
+                </div>
+            </div>
+
+            <!-- Favicon Sizes Selection -->
+            <div class="card" id="sizesCard" style="display: none;">
+                <h2><i class="fas fa-ruler"></i> Favicon Sizes</h2>
+                <p class="card-description">Select the sizes you want to generate</p>
+                <div class="sizes-grid" id="sizesGrid">
+                    <!-- Sizes will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Generated Favicons Section -->
+            <div class="card" id="resultsCard" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-download"></i> Generated Favicons</h2>
+                    <button class="download-all-btn" id="downloadAllBtn">
+                        <i class="fas fa-download"></i> Download All
+                    </button>
+                </div>
+                <div class="favicons-grid" id="faviconsGrid">
+                    <!-- Generated favicons will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Instructions Section -->
+            <div class="card">
+                <h2><i class="fas fa-info-circle"></i> How to Use</h2>
+                <ol class="instructions-list">
+                    <li>Upload an image file (JPG, PNG, GIF, WebP, or SVG)</li>
+                    <li>Select the favicon sizes you want to generate</li>
+                    <li>Click "Generate Favicons" to create your favicons</li>
+                    <li>Download individual sizes or download all at once</li>
+                    <li>Use the generated .ico files in your website</li>
+                </ol>
+                <div class="info-box">
+                    <h3><i class="fas fa-lightbulb"></i> Tips</h3>
+                    <ul>
+                        <li>For best results, use a square image (1:1 aspect ratio)</li>
+                        <li>Recommended minimum size: 512x512 pixels</li>
+                        <li>Simple designs work best at small sizes</li>
+                        <li>16x16 and 32x32 are the most commonly used sizes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Favicon generated successfully!</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+    </footer>
+
+    <script src="favicon.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Image to Favicon Converter",
+        "description": "Convert any image to favicon format. Generate favicons in multiple sizes with preview and download options.",
+        "url": "https://robinthomasonline.github.io/apps/favicon/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Robin Thomas",
+            "url": "https://robinthomasonline.github.io"
+        },
+        "featureList": [
+            "Image upload and preview",
+            "Multiple favicon sizes (16x16, 32x32, 48x48, etc.)",
+            "Individual and bulk download",
+            "Real-time preview",
+            "Supports multiple image formats"
+        ]
+    }
+    </script>
+</body>
+</html>
+
