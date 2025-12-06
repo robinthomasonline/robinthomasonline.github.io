@@ -4,16 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!typingText) return;
     
     const words = [
-        'Vibe Coder',
-        'Entrepreneur',
-        'GRC Consultant',
-        'Infrastructure Consultant',
-        'IT Specialist',
+        'Cloud Architect',
+        'Cybersecurity Consultant',
+        'DevOps Engineer',
+        'GRC Specialist',
+        'Infrastructure & Network Specialist',
+        'IT Management Professional',
         'Business Consultant',
-        'Security Specialist',
-        'Network Administrator',
-        'System Administrator',
-        'Cloud Engineer'
+        'Software Developer',
+        'IT Support Specialist'
     ];
 
     let wordIndex = 0;

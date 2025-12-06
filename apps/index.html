@@ -8,9 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4A90E2;
-            --secondary-color: #50E3C2;
-            --background-color: #000000;
+            --bg-dark: #0a0f1c;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-cyan: #00f2ff;
+            --accent-purple: #bd00ff;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --primary-color: #00f2ff;
+            --secondary-color: #bd00ff;
+            --background-color: #0a0f1c;
             --text-color: #ffffff;
         }
 
@@ -20,13 +27,19 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 2rem 1rem;
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
         }
 
         .container {
@@ -44,7 +57,7 @@
             font-size: 3rem;
             font-weight: 800;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -52,7 +65,7 @@
 
         .header p {
             font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -61,19 +74,28 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--text-color);
+            color: var(--text-primary);
             text-decoration: none;
             margin-bottom: 2rem;
             padding: 0.5rem 1rem;
             border-radius: 8px;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         .back-link:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-cyan);
             transform: translateX(-5px);
+            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
+        }
+
+        .back-link:focus {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
         }
 
         .apps-grid {
@@ -84,10 +106,10 @@
         }
 
         .app-card {
-            background: rgba(255, 255, 255, 0.07);
+            background: var(--glass-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 2rem;
             transition: all 0.3s ease;
@@ -106,7 +128,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.3s ease;
@@ -114,19 +136,24 @@
 
         .app-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 32px rgba(0, 242, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-cyan);
         }
 
         .app-card:hover::before {
             transform: scaleX(1);
         }
 
+        .app-card:focus {
+            outline: 2px solid var(--accent-cyan);
+            outline-offset: 2px;
+        }
+
         .project-icon {
             font-size: 3rem;
             margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -136,11 +163,11 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            color: var(--text-color);
+            color: var(--text-primary);
         }
 
         .project-description {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-secondary);
             margin-bottom: 1.5rem;
             flex-grow: 1;
             line-height: 1.7;
@@ -155,7 +182,7 @@
             padding: 0.5rem 0;
             padding-left: 1.5rem;
             position: relative;
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             font-size: 0.95rem;
         }
 
@@ -163,7 +190,7 @@
             content: '✓';
             position: absolute;
             left: 0;
-            color: var(--primary-color);
+            color: var(--accent-cyan);
             font-weight: 700;
         }
 
@@ -171,7 +198,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--primary-color);
+            color: var(--accent-cyan);
             text-decoration: none;
             font-weight: 600;
             margin-top: auto;
@@ -180,7 +207,7 @@
 
         .project-link:hover {
             gap: 1rem;
-            color: var(--secondary-color);
+            color: var(--accent-purple);
         }
 
         .project-link i {
@@ -299,37 +326,142 @@
             text-align: center;
             padding: 3rem 1rem 2rem;
             margin-top: 4rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--glass-border);
         }
 
         .app-footer p {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             margin: 0.5rem 0;
             line-height: 1.6;
         }
 
         .app-footer a {
-            color: var(--primary-color);
+            color: var(--accent-cyan);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .app-footer a:hover {
-            color: var(--secondary-color);
+            color: var(--accent-purple);
             text-decoration: underline;
         }
 
         .app-footer .footer-link {
-            color: var(--secondary-color);
+            color: var(--accent-purple);
         }
 
         .app-footer .footer-link:hover {
-            color: var(--primary-color);
+            color: var(--accent-cyan);
+        }
+
+        /* Neural Network Background Canvas */
+        #cyber-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--bg-dark);
+            pointer-events: none;
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            #cyber-canvas {
+                display: none;
+            }
+            
+            .app-card {
+                transition: none;
+            }
+            
+            * {
+                animation: none !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Neural Network Background Canvas -->
+    <canvas id="cyber-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #0a0f1c;"></canvas>
+    <script>
+    const canvas = document.getElementById('cyber-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    // Configuration
+    const particleCount = 60;
+    const connectionDistance = 150;
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.size = Math.random() * 2 + 1;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0 || this.x > width) this.vx *= -1;
+            if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
+
+        draw() {
+            ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < connectionDistance) {
+                    ctx.strokeStyle = `rgba(0, 242, 255, ${1 - dist/connectionDistance * 0.2})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+
+    // Respect reduced motion preference
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.addEventListener('resize', resize);
+        init();
+        animate();
+    } else {
+        canvas.style.display = 'none';
+    }
+    </script>
     <div class="container">
         <a href="../index.html" class="back-link">
             <i class="fas fa-arrow-left"></i>

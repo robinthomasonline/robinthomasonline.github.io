@@ -8,8 +8,8 @@ Type: Personal Portfolio & Web Applications Showcase
 Language: English
 
 # About
-Robin Thomas is an IT & Cybersecurity Consultant, DevOps & Cloud Specialist, and GRC & Compliance Expert with 9+ years of experience. 
-Specializes in infrastructure, network security, cloud solutions, and compliance (PCI DSS, ISO 27001).
+Robin Thomas is an Enterprise IT Consultant & Cybersecurity Expert specializing in GRC, Cloud Infrastructure, and DevOps. 
+With 10+ years of industry experience, he helps businesses secure their networks, optimize cloud operations, and build scalable software solutions.
 Founder of Opsbin (IT Support Services) and Bitstrail (Software Development Company).
 
 # Main Sections
@@ -24,39 +24,43 @@ Founder of Opsbin (IT Support Services) and Bitstrail (Software Development Comp
 # Web Applications
 The site hosts several free web applications:
 
-1. Work Timer - Productivity timer for tracking work sessions
+1. WTFQR - Generate custom QR codes instantly with customizable styling options
+   URL: https://wtfqr.com/
+
+2. Work Timer - Productivity timer for tracking work sessions, breaks, and time management
    URL: https://robinthomasonline.github.io/apps/timer/
 
-2. Mood Logger - Track emotional wellbeing and mood patterns
+3. Mood Logger - Track emotional wellbeing and mood patterns over time with interactive charts
    URL: https://robinthomasonline.github.io/apps/mood/
 
-3. Password Generator - Generate secure, compliant passwords
+4. Password Generator - Generate secure, compliant passwords with ISO, PCI, CSA, HIPAA, NIST, and GDPR presets
    URL: https://robinthomasonline.github.io/apps/password/
 
-4. Subnet Calculator - Network engineering tool for subnet calculations
+5. Subnet Calculator - Network engineering tool for subnet calculations with binary representation visualization
    URL: https://robinthomasonline.github.io/apps/subnet/
 
-5. IP Address Locator - IP geolocation and network information tool
+6. IP Address Locator - IP geolocation and comprehensive network information tool with interactive map
    URL: https://robinthomasonline.github.io/apps/ip/
 
-6. Kanban Board - Drag-and-drop task management board
+7. Kanban Board - Drag-and-drop task management board with three-column workflow and CSV export/import
    URL: https://robinthomasonline.github.io/apps/kanban/
 
-7. Kerala Lottery Draw Machine - Lottery simulator
-   URL: https://robinthomasonline.github.io/apps/keralalottery/
-
-8. Resume & Cover Letter Generator - AI-powered ATS-friendly resume and cover letter generator
+8. Resume & Cover Letter Generator - AI-powered ATS-friendly resume and cover letter generator using Gemini AI
    URL: https://robinthomasonline.github.io/apps/resume-cover/
 
-9. Co-Founder Pie - Calculate fair equity distribution for startup co-founders
+9. Co-Founder Pie - Calculate fair equity distribution for startup co-founders (2-10 founders) with weighted task scoring
    URL: https://robinthomasonline.github.io/apps/cofounder-pie/
 
-10. Daybook - Track income and expenses for small shops with invoice generation
+10. Daybook - Track income and expenses for small shops with customer details, invoice generation, and data export
     URL: https://robinthomasonline.github.io/apps/daybook/
 
-# External Apps
-- Smart HOMI: https://smarthomi.app
-- Bookingtrails: https://bookingtrails.com
+11. Image to Favicon Converter - Convert any image to favicon format with multiple sizes (16x16, 32x32, 48x48, etc.)
+    URL: https://robinthomasonline.github.io/apps/favicon/
+
+# External Apps & Projects
+- WTFQR: https://wtfqr.com (QR Code Generator)
+- Smart HOMI: https://smarthomi.app (Smart Home Operations Platform)
+- Bookingtrails: https://bookingtrails.com (Adventure Sports Booking Platform)
 
 # Contact Information
 Email: robinthomasonline@gmail.com
@@ -79,5 +83,5 @@ WhatsApp: Available via contact page
 Technologies used: HTML, CSS, JavaScript, React, Node.js, TypeScript, AWS, Azure, GCP, Docker, Kubernetes, and more.
 
 # Last Updated
-2025
+2025-01-20
 

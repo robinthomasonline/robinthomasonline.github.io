@@ -26,8 +26,10 @@ Allow: /apps/keralalottery/
 Allow: /apps/cofounder-pie/
 Allow: /apps/resume-cover/
 Allow: /apps/daybook/
+Allow: /apps/favicon/
 
 # Allow static assets
+Allow: /assets/
 Allow: /*.css$
 Allow: /*.js$
 Allow: /*.png$
