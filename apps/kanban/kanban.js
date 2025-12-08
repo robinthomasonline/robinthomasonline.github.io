@@ -5,11 +5,17 @@ class KanbanBoard {
         this.currentEditId = null;
         this.draggedElement = null;
         this.dragOverElement = null;
+        this.dragOverIndex = null;
+        this.sortMode = 'order'; // 'order', 'priority', 'duedate'
+        this.timers = {}; // Store active timers for tasks
+        this.taskTimeSpent = {}; // Store total time spent on each task
         
         this.initializeElements();
         this.loadTasks();
         this.attachEventListeners();
         this.updateTaskCounts();
+        this.initializeTimers();
+        this.updateSortSelect();
     }
 
     initializeElements() {
@@ -25,12 +31,14 @@ class KanbanBoard {
         this.taskDescription = document.getElementById('taskDescription');
         this.taskPriority = document.getElementById('taskPriority');
         this.taskUser = document.getElementById('taskUser');
+        this.taskDueDate = document.getElementById('taskDueDate');
         
         // Button elements
         this.addTaskBtn = document.getElementById('addTaskBtn');
         this.exportBtn = document.getElementById('exportBtn');
         this.importBtn = document.getElementById('importBtn');
         this.importFileInput = document.getElementById('importFileInput');
+        this.sortSelect = document.getElementById('sortSelect');
         
         // Column lists
         this.todoList = document.getElementById('todoList');
@@ -58,6 +66,9 @@ class KanbanBoard {
         this.exportBtn.addEventListener('click', () => this.exportToCSV());
         this.importBtn.addEventListener('click', () => this.importFileInput.click());
         this.importFileInput.addEventListener('change', (e) => this.importFromCSV(e));
+        
+        // Sort dropdown
+        this.sortSelect.addEventListener('change', (e) => this.changeSort(e.target.value));
         
         // Close modal on outside click
         this.modal.addEventListener('click', (e) => {
@@ -97,25 +108,56 @@ class KanbanBoard {
             const savedTasks = localStorage.getItem('kanbanTasks');
             if (savedTasks) {
                 this.tasks = JSON.parse(savedTasks);
-                // Ensure backward compatibility - add user field if missing
+                // Ensure backward compatibility - add missing fields
                 this.tasks = this.tasks.map(task => ({
                     ...task,
-                    user: task.user || ''
+                    user: task.user || '',
+                    dueDate: task.dueDate || null,
+                    timeSpent: task.timeSpent || 0, // Total time in seconds
+                    order: task.order !== undefined ? task.order : this.tasks.indexOf(task)
                 }));
                 this.renderTasks();
+            }
+            
+            // Load saved time spent
+            const savedTimeSpent = localStorage.getItem('kanbanTimeSpent');
+            if (savedTimeSpent) {
+                this.taskTimeSpent = JSON.parse(savedTimeSpent);
             }
         } catch (error) {
             console.error('Error loading tasks:', error);
             this.tasks = [];
         }
     }
+    
+    saveTimeSpent() {
+        try {
+            localStorage.setItem('kanbanTimeSpent', JSON.stringify(this.taskTimeSpent));
+        } catch (error) {
+            console.error('Error saving time spent:', error);
+        }
+    }
+    
+    initializeTimers() {
+        // Start timers for tasks that are in progress
+        this.tasks.forEach(task => {
+            if (task.status === 'inprogress' && !this.timers[task.id]) {
+                // Resume timer from last duration
+                this.startTimer(task.id);
+            }
+        });
+    }
 
     // Task Management
-    addTask(title, description, priority, user) {
+    addTask(title, description, priority, user, dueDate) {
         if (!title.trim()) {
             this.showToast('Task title is required', 'error');
             return;
         }
+
+        const maxOrder = this.tasks.length > 0 
+            ? Math.max(...this.tasks.map(t => t.order || 0))
+            : -1;
 
         const task = {
             id: this.generateId(),
@@ -123,8 +165,11 @@ class KanbanBoard {
             description: description.trim(),
             priority: priority || 'medium',
             user: user ? user.trim() : '',
+            dueDate: dueDate || null,
             status: 'todo',
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            timeSpent: 0,
+            order: maxOrder + 1
         };
 
         this.tasks.push(task);
@@ -134,7 +179,7 @@ class KanbanBoard {
         this.showToast('Task added successfully!');
     }
 
-    updateTask(id, title, description, priority, user) {
+    updateTask(id, title, description, priority, user, dueDate) {
         const task = this.tasks.find(t => t.id === id);
         if (!task) return;
 
@@ -142,6 +187,7 @@ class KanbanBoard {
         task.description = description.trim();
         task.priority = priority || 'medium';
         task.user = user ? user.trim() : '';
+        task.dueDate = dueDate || null;
 
         this.saveTasks();
         this.renderTasks();
@@ -151,6 +197,15 @@ class KanbanBoard {
 
     deleteTask(id) {
         if (confirm('Are you sure you want to delete this task?')) {
+            // Stop timer if running
+            if (this.timers[id]) {
+                this.stopTimer(id);
+            }
+            
+            // Remove from time spent tracking
+            delete this.taskTimeSpent[id];
+            this.saveTimeSpent();
+            
             this.tasks = this.tasks.filter(t => t.id !== id);
             this.saveTasks();
             this.renderTasks();
@@ -159,14 +214,72 @@ class KanbanBoard {
         }
     }
 
-    moveTask(taskId, newStatus) {
+    moveTask(taskId, newStatus, newOrder = null) {
         const task = this.tasks.find(t => t.id === taskId);
-        if (task && task.status !== newStatus) {
-            task.status = newStatus;
-            this.saveTasks();
-            this.renderTasks();
-            this.updateTaskCounts();
+        if (!task) return;
+        
+        const oldStatus = task.status;
+        
+        // Handle timer based on status change
+        if (oldStatus === 'inprogress' && newStatus !== 'inprogress') {
+            // Moving out of in progress
+            if (newStatus === 'done') {
+                // Moving to done - stop timer and save time
+                this.stopTimer(taskId);
+            } else {
+                // Moving to todo/new - pause timer (save current time but keep it ready to resume)
+                this.pauseTimer(taskId);
+            }
         }
+        
+        if (newStatus === 'inprogress' && oldStatus !== 'inprogress') {
+            // Moving into in progress - start/resume timer
+            this.startTimer(taskId);
+        }
+        
+        task.status = newStatus;
+        
+        // Update order if provided
+        if (newOrder !== null) {
+            task.order = newOrder;
+        }
+        
+        this.saveTasks();
+        this.renderTasks();
+        this.updateTaskCounts();
+    }
+    
+    reorderTask(taskId, newIndex, status) {
+        const tasksInColumn = this.tasks
+            .filter(t => t.status === status)
+            .sort((a, b) => {
+                if (this.sortMode === 'priority') {
+                    const priorityOrder = { high: 3, medium: 2, low: 1 };
+                    return priorityOrder[b.priority] - priorityOrder[a.priority];
+                } else if (this.sortMode === 'duedate') {
+                    const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+                    const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+                    return dateA - dateB;
+                }
+                return (a.order || 0) - (b.order || 0);
+            });
+        
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return;
+        
+        // Remove task from its current position
+        tasksInColumn.splice(tasksInColumn.findIndex(t => t.id === taskId), 1);
+        
+        // Insert at new position
+        tasksInColumn.splice(newIndex, 0, task);
+        
+        // Update order values
+        tasksInColumn.forEach((t, index) => {
+            t.order = index;
+        });
+        
+        this.saveTasks();
+        this.renderTasks();
     }
 
     // DOM Rendering
@@ -186,7 +299,26 @@ class KanbanBoard {
         // Render tasks in each column
         Object.keys(tasksByStatus).forEach(status => {
             const list = this.getListByStatus(status);
-            const tasks = tasksByStatus[status];
+            let tasks = tasksByStatus[status];
+
+            // Sort tasks
+            if (this.sortMode === 'priority') {
+                const priorityOrder = { high: 3, medium: 2, low: 1 };
+                tasks = tasks.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
+            } else if (this.sortMode === 'duedate') {
+                tasks = tasks.sort((a, b) => {
+                    const dateA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+                    const dateB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+                    // Tasks without due dates go to the end
+                    if (!a.dueDate && !b.dueDate) {
+                        return (a.order || 0) - (b.order || 0);
+                    }
+                    return dateA - dateB;
+                });
+            } else {
+                // Sort by order (default)
+                tasks = tasks.sort((a, b) => (a.order || 0) - (b.order || 0));
+            }
 
             if (tasks.length === 0) {
                 list.innerHTML = this.createEmptyState(status);
@@ -210,6 +342,19 @@ class KanbanBoard {
             day: 'numeric',
             year: 'numeric'
         });
+        
+        const dueDateFormatted = task.dueDate 
+            ? new Date(task.dueDate).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            })
+            : null;
+        
+        const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'done';
+        
+        const timeSpent = this.getTimeSpent(task.id);
+        const timeDisplay = this.formatTime(timeSpent);
 
         taskElement.innerHTML = `
             <div class="task-header">
@@ -225,11 +370,21 @@ class KanbanBoard {
             </div>
             ${task.description ? `<div class="task-description">${this.escapeHtml(task.description)}</div>` : ''}
             ${task.user ? `<div class="task-user"><i class="fas fa-user"></i> ${this.escapeHtml(task.user)}</div>` : ''}
+            ${dueDateFormatted ? `<div class="task-due-date ${isOverdue ? 'overdue' : ''}"><i class="fas fa-calendar${isOverdue ? '-times' : ''}"></i> Due: ${dueDateFormatted}</div>` : ''}
             <div class="task-footer">
-                <span class="task-priority ${task.priority}">${task.priority}</span>
+                <div class="task-footer-left">
+                    <span class="task-priority ${task.priority}">${task.priority}</span>
+                    ${task.status === 'inprogress' ? `<span class="task-timer-inline"><i class="fas fa-clock"></i> <span class="timer-display" data-task-id="${task.id}">${timeDisplay}</span></span>` : ''}
+                    ${timeSpent > 0 && task.status !== 'inprogress' ? `<span class="task-time-spent-inline"><i class="fas fa-hourglass-half"></i> ${timeDisplay}</span>` : ''}
+                </div>
                 <span class="task-date">${formattedDate}</span>
             </div>
         `;
+        
+        // Update timer display if task is in progress
+        if (task.status === 'inprogress') {
+            this.updateTimerDisplay(task.id);
+        }
 
         // Attach event listeners
         const editBtn = taskElement.querySelector('[data-action="edit"]');
@@ -298,6 +453,7 @@ class KanbanBoard {
         this.taskDescription.value = '';
         this.taskPriority.value = 'medium';
         this.taskUser.value = '';
+        this.taskDueDate.value = '';
         this.modal.classList.add('show');
         this.taskTitle.focus();
     }
@@ -312,6 +468,7 @@ class KanbanBoard {
         this.taskDescription.value = task.description || '';
         this.taskPriority.value = task.priority;
         this.taskUser.value = task.user || '';
+        this.taskDueDate.value = task.dueDate || '';
         this.modal.classList.add('show');
         this.taskTitle.focus();
     }
@@ -324,6 +481,7 @@ class KanbanBoard {
         this.taskDescription.value = '';
         this.taskPriority.value = 'medium';
         this.taskUser.value = '';
+        this.taskDueDate.value = '';
     }
 
     saveTask() {
@@ -331,6 +489,7 @@ class KanbanBoard {
         const description = this.taskDescription.value;
         const priority = this.taskPriority.value;
         const user = this.taskUser.value;
+        const dueDate = this.taskDueDate.value;
 
         if (!title.trim()) {
             this.showToast('Task title is required', 'error');
@@ -338,9 +497,9 @@ class KanbanBoard {
         }
 
         if (this.currentEditId) {
-            this.updateTask(this.currentEditId, title, description, priority, user);
+            this.updateTask(this.currentEditId, title, description, priority, user, dueDate);
         } else {
-            this.addTask(title, description, priority, user);
+            this.addTask(title, description, priority, user, dueDate);
         }
 
         this.closeModalHandler();
@@ -354,10 +513,48 @@ class KanbanBoard {
             // Allow drop
             column.addEventListener('dragover', (e) => {
                 e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
                 const taskItem = e.target.closest('.task-item');
-                if (taskItem && taskItem !== this.draggedElement) {
-                    taskItem.classList.add('drag-over');
-                    this.dragOverElement = taskItem;
+                const columnRect = column.getBoundingClientRect();
+                const mouseY = e.clientY;
+                
+                if (this.draggedElement) {
+                    const taskId = this.draggedElement.dataset.taskId;
+                    const currentStatus = this.draggedElement.dataset.status;
+                    const newStatus = column.dataset.status;
+                    
+                    // If dragging within same column, handle reordering
+                    if (currentStatus === newStatus) {
+                        const tasks = Array.from(column.querySelectorAll('.task-item:not(.dragging)'));
+                        let insertIndex = tasks.length;
+                        
+                        for (let i = 0; i < tasks.length; i++) {
+                            const taskRect = tasks[i].getBoundingClientRect();
+                            const taskMiddle = taskRect.top + taskRect.height / 2;
+                            
+                            if (mouseY < taskMiddle) {
+                                insertIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // Visual feedback
+                        tasks.forEach((t, index) => {
+                            t.classList.remove('drag-over');
+                            if (index === insertIndex) {
+                                t.classList.add('drag-over');
+                            }
+                        });
+                        
+                        this.dragOverIndex = insertIndex;
+                    } else {
+                        // Different column - highlight the column
+                        if (taskItem && taskItem !== this.draggedElement) {
+                            taskItem.classList.add('drag-over');
+                            this.dragOverElement = taskItem;
+                        }
+                    }
                 }
             });
 
@@ -370,24 +567,35 @@ class KanbanBoard {
 
             column.addEventListener('drop', (e) => {
                 e.preventDefault();
-                const taskItem = e.target.closest('.task-item');
-                if (taskItem) {
-                    taskItem.classList.remove('drag-over');
-                }
+                
+                // Remove all drag-over classes
+                document.querySelectorAll('.task-item').forEach(item => {
+                    item.classList.remove('drag-over');
+                });
 
                 if (this.draggedElement) {
                     const taskId = this.draggedElement.dataset.taskId;
+                    const oldStatus = this.draggedElement.dataset.status;
                     const newStatus = column.dataset.status;
-                    this.moveTask(taskId, newStatus);
+                    
+                    // If same column, reorder
+                    if (oldStatus === newStatus && this.dragOverIndex !== null) {
+                        this.reorderTask(taskId, this.dragOverIndex, newStatus);
+                    } else {
+                        // Different column - move task
+                        this.moveTask(taskId, newStatus);
+                    }
+                    
                     this.draggedElement.classList.remove('dragging');
                     this.draggedElement = null;
+                    this.dragOverIndex = null;
                 }
             });
 
             // Handle task item drag events
             column.addEventListener('dragstart', (e) => {
                 const taskItem = e.target.closest('.task-item');
-                if (taskItem) {
+                if (taskItem && !e.target.closest('.task-actions')) {
                     this.draggedElement = taskItem;
                     taskItem.classList.add('dragging');
                     e.dataTransfer.effectAllowed = 'move';
@@ -405,8 +613,105 @@ class KanbanBoard {
                     });
                 }
                 this.draggedElement = null;
+                this.dragOverIndex = null;
             });
         });
+    }
+    
+    // Timer Functions
+    startTimer(taskId) {
+        if (this.timers[taskId]) {
+            // Timer already running
+            return;
+        }
+        
+        const startTime = Date.now();
+        this.timers[taskId] = {
+            startTime: startTime,
+            interval: setInterval(() => {
+                this.updateTimerDisplay(taskId);
+            }, 1000)
+        };
+    }
+    
+    pauseTimer(taskId) {
+        if (!this.timers[taskId]) {
+            return;
+        }
+        
+        const timer = this.timers[taskId];
+        const elapsed = Math.floor((Date.now() - timer.startTime) / 1000);
+        
+        // Add to total time spent
+        if (!this.taskTimeSpent[taskId]) {
+            this.taskTimeSpent[taskId] = 0;
+        }
+        this.taskTimeSpent[taskId] += elapsed;
+        
+        // Update task object
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) {
+            task.timeSpent = this.taskTimeSpent[taskId];
+        }
+        
+        // Clear interval but keep the accumulated time
+        clearInterval(timer.interval);
+        delete this.timers[taskId];
+        
+        this.saveTasks();
+        this.saveTimeSpent();
+    }
+    
+    stopTimer(taskId) {
+        // Stop timer and save time (used when moving to Done)
+        this.pauseTimer(taskId);
+    }
+    
+    getTimeSpent(taskId) {
+        let total = this.taskTimeSpent[taskId] || 0;
+        
+        // Add current timer time if running
+        if (this.timers[taskId]) {
+            const elapsed = Math.floor((Date.now() - this.timers[taskId].startTime) / 1000);
+            total += elapsed;
+        }
+        
+        return total;
+    }
+    
+    updateTimerDisplay(taskId) {
+        const display = document.querySelector(`.timer-display[data-task-id="${taskId}"]`);
+        if (display) {
+            const timeSpent = this.getTimeSpent(taskId);
+            display.textContent = this.formatTime(timeSpent);
+        }
+    }
+    
+    formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        
+        if (hours > 0) {
+            return `${hours}h ${minutes}m ${secs}s`;
+        } else if (minutes > 0) {
+            return `${minutes}m ${secs}s`;
+        } else {
+            return `${secs}s`;
+        }
+    }
+    
+    // Sort Change
+    changeSort(mode) {
+        this.sortMode = mode;
+        this.updateSortSelect();
+        this.renderTasks();
+    }
+    
+    updateSortSelect() {
+        if (this.sortSelect) {
+            this.sortSelect.value = this.sortMode;
+        }
     }
 
     // Utility Functions
@@ -442,16 +747,19 @@ class KanbanBoard {
         }
 
         // CSV Headers
-        const headers = ['Title', 'Description', 'Priority', 'Status', 'Assigned To', 'Created At'];
+        const headers = ['Title', 'Description', 'Priority', 'Status', 'Assigned To', 'Due Date', 'Time Spent (seconds)', 'Created At'];
         
         // Convert tasks to CSV rows
         const rows = this.tasks.map(task => {
+            const timeSpent = this.getTimeSpent(task.id);
             return [
                 this.escapeCsvField(task.title),
                 this.escapeCsvField(task.description || ''),
                 task.priority,
                 task.status,
                 this.escapeCsvField(task.user || ''),
+                task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '',
+                timeSpent,
                 new Date(task.createdAt).toLocaleString()
             ];
         });
@@ -508,8 +816,16 @@ class KanbanBoard {
                         priority: values[2] || 'medium',
                         status: values[3] || 'todo',
                         user: this.unescapeCsvField(values[4] || ''),
-                        createdAt: values[5] ? new Date(values[5]).toISOString() : new Date().toISOString()
+                        dueDate: values[5] ? new Date(values[5]).toISOString().split('T')[0] : null,
+                        timeSpent: parseInt(values[6]) || 0,
+                        createdAt: values[7] ? new Date(values[7]).toISOString() : new Date().toISOString(),
+                        order: importedTasks.length
                     };
+                    
+                    // Store time spent
+                    if (task.timeSpent > 0) {
+                        this.taskTimeSpent[task.id] = task.timeSpent;
+                    }
 
                     // Validate task
                     if (task.title && ['todo', 'inprogress', 'done'].includes(task.status) && 
@@ -535,8 +851,10 @@ class KanbanBoard {
                 }
 
                 this.saveTasks();
+                this.saveTimeSpent();
                 this.renderTasks();
                 this.updateTaskCounts();
+                this.initializeTimers();
                 this.showToast(`Successfully imported ${importedTasks.length} task(s)!`);
 
             } catch (error) {
