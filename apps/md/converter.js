@@ -213,12 +213,21 @@ function exportToDoc() {
         </w:WordDocument>
     </xml>
     <style>
+        @page {
+            margin: 2.54cm 2.54cm 2.54cm 2.54cm; /* 1 inch margins (2.54cm) */
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+        .content-wrapper {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
         h1, h2, h3, h4, h5, h6 {
             margin-top: 1.5rem;
@@ -256,7 +265,9 @@ function exportToDoc() {
     </style>
 </head>
 <body>
-    ${html}
+    <div class="content-wrapper">
+        ${html}
+    </div>
 </body>
 </html>`;
 
@@ -314,12 +325,14 @@ async function exportToPdf() {
         tempContainer.style.position = 'absolute';
         tempContainer.style.left = '-9999px';
         tempContainer.style.width = '210mm'; // A4 width
-        tempContainer.style.padding = '20mm';
+        tempContainer.style.padding = '25mm 20mm'; // Top/Bottom: 25mm, Left/Right: 20mm
+        tempContainer.style.margin = '0';
         tempContainer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
         tempContainer.style.fontSize = '12pt';
         tempContainer.style.lineHeight = '1.6';
         tempContainer.style.color = '#000';
         tempContainer.style.backgroundColor = '#fff';
+        tempContainer.style.textAlign = 'left';
         tempContainer.innerHTML = html;
         
         // Add styles for better PDF rendering
@@ -377,89 +390,179 @@ async function exportToPdf() {
         // Wait for images to load
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Convert to canvas then PDF
-        if (typeof html2canvas !== 'undefined' && typeof window.jspdf !== 'undefined') {
-            showToast('Generating PDF...', 'info');
-            
-            const canvas = await html2canvas(tempContainer, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            });
-            
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4'
-            });
-            
-            const imgData = canvas.toDataURL('image/png', 1.0);
-            const imgWidth = 210; // A4 width in mm
-            const pageHeight = 297; // A4 height in mm
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
-            
-            // Add first page
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-            
-            // Add additional pages if needed
-            while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-            
-            pdf.save('document.pdf');
-            showToast('PDF file exported successfully!');
-        } else {
-            // Fallback: Use browser print to PDF
-            showToast('Using browser print dialog...', 'info');
-            const printWindow = window.open('', '_blank');
-            if (!printWindow) {
-                showToast('Please allow popups to export PDF', 'error');
-                return;
-            }
-            
-            printWindow.document.write(`<!DOCTYPE html>
+        // Primary method: Use browser print dialog for selectable text
+        // This preserves text selectability better than html2canvas
+        showToast('Opening print dialog for PDF export...', 'info');
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+            showToast('Please allow popups to export PDF. Trying alternative method...', 'error');
+            // Fallback to jsPDF if popup is blocked
+            await exportToPdfWithJsPDF(html, tempContainer);
+            return;
+        }
+        
+        printWindow.document.write(`<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Export to PDF</title>
     <style>
+        @page {
+            margin: 2.54cm 2.54cm 2.54cm 2.54cm; /* 1 inch margins (2.54cm) */
+            size: A4;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            color: #000;
+            background: #fff;
+        }
+        .content-wrapper {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            page-break-after: avoid;
+        }
+        h1 { font-size: 24pt; }
+        h2 { font-size: 20pt; }
+        h3 { font-size: 16pt; }
+        p { margin-bottom: 1rem; }
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+        blockquote {
+            border-left: 4px solid #4f46e5;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            page-break-inside: avoid;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+        }
+        table th {
+            background: #f4f4f4;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            page-break-inside: avoid;
         }
         @media print {
-            body { margin: 0; padding: 1rem; }
+            body { 
+                margin: 0; 
+                padding: 0; 
+            }
+            .content-wrapper {
+                margin: 0;
+                padding: 0;
+            }
         }
     </style>
 </head>
 <body>
-    ${html}
+    <div class="content-wrapper">
+        ${html}
+    </div>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 250);
+        };
+    </script>
 </body>
 </html>`);
-            printWindow.document.close();
-            
-            setTimeout(() => {
-                printWindow.print();
-                showToast('Use browser print dialog to save as PDF', 'info');
-            }, 250);
-        }
+        printWindow.document.close();
+        
+        showToast('Use "Save as PDF" in the print dialog. Text will be selectable!', 'info');
         
         // Clean up
         document.body.removeChild(tempContainer);
     } catch (error) {
         console.error('Error exporting to PDF:', error);
         showToast('Error exporting to PDF. Please try again.', 'error');
+    }
+}
+
+// Fallback function for jsPDF export (when popup is blocked)
+async function exportToPdfWithJsPDF(html, tempContainer) {
+    try {
+        if (typeof window.jspdf === 'undefined' || typeof html2canvas === 'undefined') {
+            showToast('PDF libraries not available. Please allow popups for better PDF export.', 'error');
+            return;
+        }
+        
+        showToast('Generating PDF (text may not be selectable)...', 'info');
+        
+        const canvas = await html2canvas(tempContainer, {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+        });
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // Set margins: 20mm left/right, 25mm top/bottom
+        const marginLeft = 20;
+        const marginRight = 20;
+        const marginTop = 25;
+        const marginBottom = 25;
+        const pageWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const contentWidth = pageWidth - marginLeft - marginRight;
+        const contentHeight = pageHeight - marginTop - marginBottom;
+        
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        const imgWidth = contentWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = marginTop;
+        
+        pdf.addImage(imgData, 'PNG', marginLeft, position, imgWidth, imgHeight);
+        heightLeft -= contentHeight;
+        
+        while (heightLeft > 0) {
+            position = heightLeft - imgHeight + marginTop;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', marginLeft, position, imgWidth, imgHeight);
+            heightLeft -= contentHeight;
+        }
+        
+        pdf.save('document.pdf');
+        showToast('PDF exported (Note: For selectable text, use browser print dialog)', 'info');
+    } catch (error) {
+        console.error('Error in jsPDF fallback:', error);
+        showToast('Error generating PDF. Please try the print dialog method.', 'error');
     }
 }
 
