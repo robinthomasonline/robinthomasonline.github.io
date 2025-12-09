@@ -57,6 +57,9 @@ The site hosts several free web applications:
 11. Image to Favicon Converter - Convert any image to favicon format with multiple sizes (16x16, 32x32, 48x48, etc.)
     URL: https://robinthomasonline.github.io/apps/favicon/
 
+12. Markdown Converter - Convert Markdown files to DOC and PDF formats instantly with live preview, file upload support, and word count
+    URL: https://robinthomasonline.github.io/apps/md/
+
 # External Apps & Projects
 - WTFQR: https://wtfqr.com (QR Code Generator)
 - Smart HOMI: https://smarthomi.app (Smart Home Operations Platform)

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Markdown to DOC and PDF Converter - Convert your Markdown files to Word documents and PDFs instantly. Perfect for documentation, reports, and more.">
+    <meta name="keywords" content="markdown converter, markdown to doc, markdown to pdf, doc converter, pdf converter, markdown tool">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/md/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/md/">
+    <meta property="og:title" content="Markdown to DOC & PDF Converter | Robin Thomas">
+    <meta property="og:description" content="Convert your Markdown files to Word documents and PDFs instantly. Free online tool.">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/md/">
+    <meta name="twitter:title" content="Markdown to DOC & PDF Converter">
+    <meta name="twitter:description" content="Convert your Markdown files to Word documents and PDFs instantly.">
+    
+    <title>Markdown to DOC & PDF Converter | Robin Thomas</title>
+    <link rel="stylesheet" href="converter.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-alt"></i> Markdown Converter</h1>
+            <p class="subtitle">Convert Markdown to DOC and PDF formats</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="loadFileBtn">
+                <i class="fas fa-folder-open"></i> Load Markdown File
+            </button>
+            <button class="btn btn-secondary" id="clearBtn">
+                <i class="fas fa-eraser"></i> Clear
+            </button>
+            <button class="btn btn-success" id="exportDocBtn">
+                <i class="fas fa-file-word"></i> Export as DOC
+            </button>
+            <button class="btn btn-danger" id="exportPdfBtn">
+                <i class="fas fa-file-pdf"></i> Export as PDF
+            </button>
+        </div>
+
+        <div class="editor-container">
+            <div class="editor-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-edit"></i> Markdown Editor</h2>
+                    <div class="word-count">
+                        <span id="wordCount">0 words</span>
+                    </div>
+                </div>
+                <textarea id="markdownInput" class="markdown-input"></textarea>
+            </div>
+
+            <div class="preview-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-eye"></i> Preview</h2>
+                    <button class="btn btn-small" id="togglePreviewBtn">
+                        <i class="fas fa-compress-alt"></i> Hide Preview
+                    </button>
+                </div>
+                <div id="preview" class="preview-content"></div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-card">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <h3>How to use</h3>
+                    <p>1. Enter or paste your Markdown content in the editor</p>
+                    <p>2. Preview the rendered output on the right</p>
+                    <p>3. Click Export to convert to DOC or PDF format</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="fileInput" accept=".md,.markdown,.txt" style="display: none;">
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">File exported successfully!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="robinthomasonline" data-color="#FFDD00" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
+    </footer>
+
+    <script src="converter.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Markdown to DOC & PDF Converter",
+        "description": "Convert your Markdown files to Word documents and PDFs instantly. Free online tool.",
+        "url": "https://robinthomasonline.github.io/apps/md/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Robin Thomas",
+            "url": "https://robinthomasonline.github.io"
+        },
+        "featureList": [
+            "Markdown to DOC conversion",
+            "Markdown to PDF conversion",
+            "Live preview",
+            "File upload support",
+            "Word count",
+            "Syntax highlighting"
+        ]
+    }
+    </script>
+</body>
+</html>
