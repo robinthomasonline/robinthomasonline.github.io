@@ -425,6 +425,54 @@
             color: #A78BFA;
             text-decoration: underline;
         }
+        
+        .app-footer .footer-link {
+            color: #A78BFA;
+        }
+        
+        .app-footer .footer-link:hover {
+            color: #8B5CF6;
+        }
+        
+        .app-footer .bmc-logo {
+            display: inline-block;
+            margin-top: 1rem;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .app-footer .bmc-logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        
+        .app-footer .bmc-logo img {
+            height: 60px;
+            width: 217px;
+        }
+        
+        .app-footer .view-all-apps-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem auto 0 auto;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(45deg, #8B5CF6, #A78BFA);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: fit-content;
+        }
+        
+        .app-footer .view-all-apps-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -528,7 +576,13 @@
     <!-- Footer -->
     <footer class="app-footer">
         <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
-        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="robinthomasonline" data-color="#FFDD00" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="../index.html" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
     </footer>
     <script type="application/ld+json">
     {

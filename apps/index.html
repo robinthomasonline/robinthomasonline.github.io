@@ -359,6 +359,22 @@
             color: var(--accent-cyan);
         }
 
+        .app-footer .bmc-logo {
+            display: inline-block;
+            margin-top: 1rem;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .app-footer .bmc-logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .app-footer .bmc-logo img {
+            height: 60px;
+            width: 217px;
+        }
+
         /* Neural Network Background Canvas */
         #cyber-canvas {
             position: fixed;
@@ -731,7 +747,7 @@
                 <div class="project-icon">
                     <i class="fas fa-qrcode"></i>
                 </div>
-                <h2 class="project-title">WTFQR</h2>
+                <h2 class="project-title">WTFQR - QR Code Generator</h2>
                 <p class="project-description">
                     Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for URLs, text, contact information, and more with customizable styling options.
                 </p>
@@ -755,7 +771,9 @@
     <footer class="app-footer">
         <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
         <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
-        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="robinthomasonline" data-color="#FFDD00" data-emoji="☕"  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+        </a>
     </footer>
 </body>
 </html>
