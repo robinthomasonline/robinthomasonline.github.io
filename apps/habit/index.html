@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Habit Tracker - Track daily habits with minimal design and powerful retention features. Build streaks, monitor progress, and achieve your goals.">
+    <meta name="keywords" content="Habit Tracker, Daily Habits, Habit Building, Streak Counter, Goal Tracking, Productivity">
+    <meta name="author" content="Robin Thomas">
+    <title>Habit Tracker - Build Better Habits</title>
+    <link rel="stylesheet" href="habit.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon-habit.ico">
+        <meta property="og:image" content="https://robinthomasonline.github.io/assets/habit.png">
+        <meta name="twitter:image" content="https://robinthomasonline.github.io/assets/habit.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><img src="https://robinthomasonline.github.io/assets/habit.png" alt="Habit" style="width:56px;height:56px;vertical-align:middle;margin-right:12px;border-radius:8px;background:rgba(255,255,255,0.02);padding:6px;"> Habit Tracker</h1>
+            <p>Build better habits, one day at a time</p>
+        </div>
+
+        <!-- Add Habit Section -->
+        <div class="card add-habit-card">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    id="habitInput" 
+                    class="habit-input" 
+                    placeholder="Add a new habit (e.g., Drink water, Exercise, Read)..."
+                    autocomplete="off"
+                >
+                <select id="frequencySelect" class="frequency-select">
+                    <option value="daily">Daily</option>
+                    <option value="weekdays">Weekdays</option>
+                    <option value="weekends">Weekends</option>
+                </select>
+                <button id="addBtn" class="btn btn-add">
+                    <i class="fas fa-plus"></i> Add Habit
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Total Habits</p>
+                    <p class="stat-value" id="totalHabits">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Completed Today</p>
+                    <p class="stat-value" id="completedToday">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Best Streak</p>
+                    <p class="stat-value" id="bestStreak">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-target"></i>
+                </div>
+                <div class="stat-content">
+                    <p class="stat-label">Completion %</p>
+                    <p class="stat-value" id="completionRate">0%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Habits List -->
+        <div class="habits-section">
+            <h2 class="section-title">Your Habits</h2>
+            <div id="habitsList" class="habits-list">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No habits yet. Add one to get started!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar View for Selected Habit -->
+        <div class="card calendar-card" id="calendarCard" style="display: none;">
+            <div class="card-header">
+                <h2>Calendar View</h2>
+                <span id="habitName" class="habit-name"></span>
+            </div>
+            <div class="calendar-controls">
+                <button id="prevMonth" class="btn-month">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span id="monthYear" class="month-year"></span>
+                <button id="nextMonth" class="btn-month">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div id="calendar" class="calendar-grid"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="../index.html" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
+    </footer>
+
+    <script src="habit.js"></script>
+</body>
+</html>

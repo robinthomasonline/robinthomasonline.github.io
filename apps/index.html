@@ -159,6 +159,23 @@
             background-clip: text;
         }
 
+        /* Inline header with png icon and title on same line */
+        .project-header-inline {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .project-icon-img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            padding: 6px;
+        }
+
         .project-title {
             font-size: 1.8rem;
             font-weight: 700;
@@ -495,10 +512,10 @@
 
         <div class="apps-grid">
             <a href="mood/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-heart"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/mood.png" alt="Mood Logger" class="project-icon-img">
+                    <h2 class="project-title">Mood Logger</h2>
                 </div>
-                <h2 class="project-title">Mood Logger</h2>
                 <p class="project-description">
                     Track your emotional wellbeing with a comprehensive mood logging application. 
                     Visualize your mood trends over time and gain insights into your emotional patterns.
@@ -517,10 +534,10 @@
             </a>
 
             <a href="password/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-key"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/password.png" alt="Password Generator" class="project-icon-img">
+                    <h2 class="project-title">Password Generator</h2>
                 </div>
-                <h2 class="project-title">Password Generator</h2>
                 <p class="project-description">
                     Generate secure, compliant passwords with customizable settings. 
                     Includes presets for ISO, PCI, CSA, HIPAA, NIST, and GDPR compliance standards.
@@ -539,10 +556,10 @@
             </a>
 
             <a href="timer/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-stopwatch"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/worktimer.png" alt="Work Timer" class="project-icon-img">
+                    <h2 class="project-title">Work Timer</h2>
                 </div>
-                <h2 class="project-title">Work Timer</h2>
                 <p class="project-description">
                     A retro-style timer application for tracking work sessions and tasks. 
                     Manage multiple tasks, view statistics, and export your work history.
@@ -561,10 +578,10 @@
             </a>
 
             <a href="ip/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-map-marker-alt"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/ip.png" alt="IP Address Locator" class="project-icon-img">
+                    <h2 class="project-title">IP Address Locator</h2>
                 </div>
-                <h2 class="project-title">IP Address Locator</h2>
                 <p class="project-description">
                     Get comprehensive geographical and network information for any IP address. 
                     Displays all details from IPAPI including location, network, country, and timezone data.
@@ -583,10 +600,10 @@
             </a>
 
             <a href="subnet/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-network-wired"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/subnet.png" alt="Subnet Calculator" class="project-icon-img">
+                    <h2 class="project-title">Subnet Calculator</h2>
                 </div>
-                <h2 class="project-title">Subnet Calculator</h2>
                 <p class="project-description">
                     Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR notation. 
                     Demonstrates network engineering and security math with binary representation visualization.
@@ -605,10 +622,10 @@
             </a>
 
             <a href="kanban/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-tasks"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/kanban.png" alt="Kanban Board" class="project-icon-img">
+                    <h2 class="project-title">Kanban Board</h2>
                 </div>
-                <h2 class="project-title">Kanban Board</h2>
                 <p class="project-description">
                     A minimalist drag-and-drop task management board with three columns (To Do, In Progress, Done). 
                     Features local storage persistence, task editing, priority levels, CSV export/import, and user assignment.
@@ -627,10 +644,10 @@
             </a>
 
             <a href="resume-cover/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-file-alt"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/cv.png" alt="Resume & Cover Letter Generator" class="project-icon-img">
+                    <h2 class="project-title">Resume & Cover Letter Generator</h2>
                 </div>
-                <h2 class="project-title">Resume & Cover Letter Generator</h2>
                 <p class="project-description">
                     AI-powered ATS-friendly resume and cover letter generator optimized for international job markets. 
                     Uses Gemini AI to create keyword-rich, tailored documents that pass ATS screening.
@@ -650,10 +667,10 @@
             </a>
 
             <a href="cofounder-pie/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-chart-pie"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/founders.png" alt="Co-Founder Pie" class="project-icon-img">
+                    <h2 class="project-title">Co-Founder Pie</h2>
                 </div>
-                <h2 class="project-title">Co-Founder Pie</h2>
                 <p class="project-description">
                     Calculate fair equity distribution for startup co-founders based on contributions, tasks, and responsibilities. 
                     Supports 2-10 founders with weighted task scoring and automatic percentage calculations.
@@ -674,10 +691,10 @@
             </a>
 
             <a href="daybook/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-book"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/daybook.png" alt="Daybook" class="project-icon-img">
+                    <h2 class="project-title">Daybook</h2>
                 </div>
-                <h2 class="project-title">Daybook</h2>
                 <p class="project-description">
                     Track income and expenses for small shops with customer details, invoice generation, and data export. 
                     Perfect for small business bookkeeping with local storage and print-ready invoices.
@@ -698,10 +715,10 @@
             </a>
 
             <a href="favicon/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-image"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/ico.png" alt="Image to Favicon Converter" class="project-icon-img">
+                    <h2 class="project-title">Image to Favicon Converter</h2>
                 </div>
-                <h2 class="project-title">Image to Favicon Converter</h2>
                 <p class="project-description">
                     Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48, etc.) 
                     with preview and download options. Perfect for creating website icons.
@@ -720,11 +737,57 @@
                 </div>
             </a>
 
-            <a href="md/" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-file-alt"></i>
+            <a href="json/" class="app-card">
+                <div class="project-header-inline">
+                    <img src="../assets/json.png" alt="JSON Formatter" class="project-icon-img">
+                    <h2 class="project-title">JSON Formatter</h2>
                 </div>
-                <h2 class="project-title">Markdown Converter</h2>
+                <p class="project-description">
+                    Format, validate, minify, and beautify JSON instantly. Essential tool for developers working with APIs, 
+                    configuration files, and data structures.
+                </p>
+                <ul class="project-features">
+                    <li>Format and beautify JSON</li>
+                    <li>Minify JSON</li>
+                    <li>Validate JSON syntax</li>
+                    <li>Copy to clipboard</li>
+                    <li>Customizable indent size</li>
+                    <li>File size and compression stats</li>
+                </ul>
+                <div class="project-link">
+                    <span>View Project</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="habit/" class="app-card">
+                <div class="project-header-inline">
+                    <img src="../assets/habit.png" alt="Habit Tracker" class="project-icon-img">
+                    <h2 class="project-title">Habit Tracker</h2>
+                </div>
+                <p class="project-description">
+                    Track daily habits with streak counters and calendar views. Build better habits with minimal design 
+                    and powerful retention tracking features.
+                </p>
+                <ul class="project-features">
+                    <li>Daily habit tracking</li>
+                    <li>Recurring habits support</li>
+                    <li>Streak counter</li>
+                    <li>Calendar view</li>
+                    <li>Statistics dashboard</li>
+                    <li>Local storage persistence</li>
+                </ul>
+                <div class="project-link">
+                    <span>View Project</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+
+            <a href="md/" class="app-card">
+                <div class="project-header-inline">
+                    <img src="../assets/markdown.png" alt="Markdown Converter" class="project-icon-img">
+                    <h2 class="project-title">Markdown Converter</h2>
+                </div>
                 <p class="project-description">
                     Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload support, 
                     and word count. Perfect for documentation, reports, and content conversion.
@@ -744,10 +807,10 @@
             </a>
 
             <a href="https://wtfqr.com/" target="_blank" rel="noopener noreferrer" class="app-card">
-                <div class="project-icon">
-                    <i class="fas fa-qrcode"></i>
+                <div class="project-header-inline">
+                    <img src="../assets/qr.png" alt="WTFQR - QR Code Generator" class="project-icon-img">
+                    <h2 class="project-title">WTFQR - QR Code Generator</h2>
                 </div>
-                <h2 class="project-title">WTFQR - QR Code Generator</h2>
                 <p class="project-description">
                     Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for URLs, text, contact information, and more with customizable styling options.
                 </p>
