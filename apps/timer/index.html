@@ -3,213 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="Free Work Timer - Productivity timer application for tracking work sessions, breaks, and time management. Helps improve focus and maintain work-life balance with customizable timer settings, task management, and statistics.">
-    <meta name="keywords" content="work timer, productivity timer, pomodoro timer, stopwatch, countdown timer, time tracker, task timer, work session tracker, productivity app, time management">
+    <meta name="description" content="To-Do List with Pomodoro Timer - Task management app with Pomodoro technique. Track tasks, manage priority, set reminders, and boost productivity with built-in Pomodoro timer (25 min work, 5 min break cycles).">
+    <meta name="keywords" content="to-do list, task manager, pomodoro timer, productivity timer, task tracker, to-do app, task management, pomodoro technique, time management, productivity app">
     <meta name="author" content="Robin Thomas">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://robinthomasonline.github.io/apps/timer/">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Work Timer">
-    <link rel="apple-touch-icon" href="https://robinthomasonline.github.io/assets/worktimer.png">
+    <meta name="apple-mobile-web-app-title" content="To-Do Pomodoro">
+    <link rel="apple-touch-icon" href="https://robinthomasonline.github.io/assets/pomodoro.png">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://robinthomasonline.github.io/apps/timer/">
-    <meta property="og:title" content="Work Timer | Productivity Timer & Task Tracker">
-    <meta property="og:description" content="Productivity timer application for tracking work sessions, breaks, and time management. Helps improve focus and maintain work-life balance with customizable timer settings.">
+    <meta property="og:title" content="To-Do List with Pomodoro | Task Manager & Timer">
+    <meta property="og:description" content="Task management app with Pomodoro technique. Track tasks, manage priority, set reminders, and boost productivity with built-in Pomodoro timer.">
     <meta property="og:site_name" content="Robin Thomas - Apps">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/timer/">
-    <meta name="twitter:title" content="Work Timer | Productivity Timer & Task Tracker">
-    <meta name="twitter:description" content="Productivity timer application for tracking work sessions, breaks, and time management. Helps improve focus and maintain work-life balance.">
+    <meta name="twitter:title" content="To-Do List with Pomodoro | Task Manager & Timer">
+    <meta name="twitter:description" content="Task management app with Pomodoro technique. Track tasks, manage priority, set reminders, and boost productivity with built-in Pomodoro timer.">
     
-    <title>Work Timer | Productivity Timer & Task Tracker | Robin Thomas</title>
+    <title>To-Do List with Pomodoro | Task Manager | Robin Thomas</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="timer.css">
-    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon-worktimer.ico">
-    <meta property="og:image" content="https://robinthomasonline.github.io/assets/worktimer.png">
-    <meta name="twitter:image" content="https://robinthomasonline.github.io/assets/worktimer.png">
+    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon-pomodoro.ico">
+    <meta property="og:image" content="https://robinthomasonline.github.io/assets/pomodoro.png">
+    <meta name="twitter:image" content="https://robinthomasonline.github.io/assets/pomodoro.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Digital-7:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="timer-container">
-        <div class="timer-main">
-            <!-- Timer Display -->
-            <div class="timer-display-section">
-                <!-- Circular Progress for Preset Timers -->
-                <div class="circular-timer" id="circularTimer" style="display: none;">
-                    <div class="circular-progress-wrapper">
-                        <svg class="circular-progress" viewBox="0 0 200 200">
-                            <circle class="progress-bg" cx="100" cy="100" r="90"></circle>
-                            <circle class="progress-bar" id="progressBar" cx="100" cy="100" r="90"></circle>
-                        </svg>
-                        <div class="circular-time-content">
-                            <div class="circular-time" id="circularTimeDisplay">00:00</div>
-                            <div class="circular-status" id="circularStatus">Ready</div>
-                        </div>
-                    </div>
-                    <div class="remaining-time" id="remainingTime">Remaining time: 00:00</div>
-                </div>
-                
-                <!-- Regular Timer Display -->
-                <div class="timer-display" id="regularTimerDisplay">
-                    <div class="time-display" id="timeDisplay">00:00:00</div>
-                    <div class="current-task" id="currentTask">No active task</div>
-                </div>
-                
-                <!-- Timer Controls -->
-                <div class="timer-controls">
-                    <button class="btn-timer btn-start" id="startBtn" title="Start">
-                        <i class="fas fa-play"></i>
-                    </button>
-                    <button class="btn-timer btn-pause" id="pauseBtn" disabled title="Pause">
-                        <i class="fas fa-pause"></i>
-                    </button>
-                    <button class="btn-timer btn-stop" id="stopBtn" disabled title="Stop">
-                        <i class="fas fa-stop"></i>
-                    </button>
-                </div>
-                
-                <div class="preset-timers">
-                    <h3>Quick Start</h3>
-                    <div class="preset-buttons">
-                        <button class="btn-preset" data-minutes="5" onclick="timer.startPresetTimer(5)">
-                            <i class="fas fa-bolt"></i> 5 Min
-                        </button>
-                        <button class="btn-preset" data-minutes="10" onclick="timer.startPresetTimer(10)">
-                            <i class="fas fa-bolt"></i> 10 Min
-                        </button>
-                        <button class="btn-preset" data-minutes="30" onclick="timer.startPresetTimer(30)">
-                            <i class="fas fa-bolt"></i> 30 Min
-                        </button>
-                        <button class="btn-preset" data-minutes="60" onclick="timer.startPresetTimer(60)">
-                            <i class="fas fa-bolt"></i> 1 Hour
-                        </button>
-                    </div>
-                </div>
+    <div class="pomodoro-container">
+        <!-- Header -->
+        <div class="pomodoro-header">
+            <h1><img src="https://robinthomasonline.github.io/assets/pomodoro.png" alt="Pomodoro" style="width: 32px; height: 32px; margin-right: 10px; vertical-align: middle;"> To-Do List with Pomodoro</h1>
+        </div>
 
-                <!-- Custom Time Picker Modal -->
-                <div class="time-picker-modal" id="timePickerModal">
-                    <div class="time-picker-overlay" onclick="timer.closeCustomTimePicker()"></div>
-                    <div class="time-picker-container">
-                        <div class="time-picker-header">
-                            <h3>SET CUSTOM TIME</h3>
-                            <button class="time-picker-close" onclick="timer.closeCustomTimePicker()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="time-picker-wheels-wrapper">
-                            <div class="time-picker-labels">
-                                <div class="time-wheel-label">HOURS</div>
-                                <div class="time-wheel-label-spacer"></div>
-                                <div class="time-wheel-label">MINUTES</div>
-                            </div>
-                            <div class="time-picker-wheels">
-                                <div class="time-wheel" id="hoursWheel">
-                                    <div class="wheel-content" id="hoursContent"></div>
-                                </div>
-                                <div class="time-wheel-separator">:</div>
-                                <div class="time-wheel" id="minutesWheel">
-                                    <div class="wheel-content" id="minutesContent"></div>
-                                </div>
-                            </div>
-                            <div class="time-picker-selection">
-                                <div class="selection-indicator"></div>
-                            </div>
-                        </div>
-                        <div class="time-picker-actions">
-                            <button class="btn-picker-cancel" onclick="timer.closeCustomTimePicker()">Cancel</button>
-                            <button class="btn-picker-start" onclick="timer.startCustomTimer()">Start</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Task Name Popup Modal -->
-                <div class="task-name-modal" id="taskNameModal">
-                    <div class="task-name-overlay" onclick="timer.closeTaskNameModal()"></div>
-                    <div class="task-name-container">
-                        <div class="task-name-header">
-                            <h3>Enter Task Name</h3>
-                            <button class="task-name-close" onclick="timer.closeTaskNameModal()">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        <div class="task-name-body">
-                            <input type="text" id="taskNameInput" placeholder="Enter task name..." class="task-name-input" autofocus>
-                        </div>
-                        <div class="task-name-actions">
-                            <button class="btn-task-cancel" onclick="timer.closeTaskNameModal()">Cancel</button>
-                            <button class="btn-task-start" onclick="timer.confirmTaskAndStart()">Start Timer</button>
-                        </div>
-                    </div>
-                </div>
+        <!-- Pomodoro Timer Section -->
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="timer-type" id="timerType">Work Session</div>
+            <div class="timer-task" id="timerTask">No task selected</div>
+            
+            <div class="timer-controls">
+                <button class="btn-timer" id="startBtn" onclick="pomodoroApp.startTimer()">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn-timer btn-pause" id="pauseBtn" onclick="pomodoroApp.pauseTimer()" style="display: none;">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="btn-timer btn-danger" id="resetBtn" onclick="pomodoroApp.resetTimer()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="btn-timer btn-skip" id="skipBtn" onclick="pomodoroApp.skipSession()">
+                    <i class="fas fa-forward"></i> Skip
+                </button>
             </div>
 
-            <!-- Task Input -->
-            <div class="task-input-section">
+            <div class="pomodoro-stats">
+                <div class="stat">
+                    <span class="stat-label">Pomodoros Today:</span>
+                    <span class="stat-value" id="pomodoroCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Focus Time:</span>
+                    <span class="stat-value" id="focusTime">0h 0m</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Tasks Container -->
+        <div class="tasks-main-container">
+            <!-- Add Task Section -->
+            <div class="add-task-section">
                 <div class="input-group">
-                    <input type="text" id="taskInput" placeholder="Enter task name..." class="task-input">
-                    <button class="btn-add" id="addTaskBtn">
-                        <i class="fas fa-plus"></i> Add Task
+                    <input type="text" id="taskInput" placeholder="Add a new task..." class="task-input">
+                    <select id="prioritySelect" class="priority-select">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button class="btn-add" id="addTaskBtn" onclick="pomodoroApp.addTask()">
+                        <i class="fas fa-plus"></i> Add
                     </button>
                 </div>
             </div>
 
-            <!-- Active Tasks -->
-            <div class="tasks-section">
-                <h2><i class="fas fa-tasks"></i> Active Tasks</h2>
-                <div class="tasks-list" id="activeTasksList">
-                    <div class="empty-state">No active tasks. Add a task to start tracking!</div>
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="active-tasks" onclick="pomodoroApp.switchTab('active-tasks')">
+                    <i class="fas fa-list"></i> Active Tasks
+                </button>
+                <button class="tab-btn" data-tab="completed-tasks" onclick="pomodoroApp.switchTab('completed-tasks')">
+                    <i class="fas fa-check-circle"></i> Completed
+                </button>
+                <button class="tab-btn" data-tab="settings" onclick="pomodoroApp.switchTab('settings')">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </div>
+
+            <!-- Active Tasks Tab -->
+            <div class="tab-content active" id="active-tasks-content">
+                <div class="tasks-list" id="tasksList">
+                    <div class="empty-state">No tasks yet. Add one to get started!</div>
                 </div>
             </div>
 
-            <!-- Task History -->
-            <div class="history-section">
-                <div class="history-header">
-                    <h2><i class="fas fa-history"></i> Task History</h2>
-                    <div class="history-actions">
-                        <button class="btn-export" id="exportHistoryBtn">
-                            <i class="fas fa-download"></i> Export CSV
-                        </button>
-                        <button class="btn-clear" id="clearHistoryBtn">
-                            <i class="fas fa-trash"></i> Clear History
-                        </button>
-                    </div>
-                </div>
-                <div class="history-list" id="historyList">
+            <!-- Completed Tasks Tab -->
+            <div class="tab-content" id="completed-tasks-content">
+                <div class="completed-tasks-list" id="completedTasksList">
                     <div class="empty-state">No completed tasks yet.</div>
                 </div>
+                <button class="btn-clear-completed" id="clearCompletedBtn" onclick="pomodoroApp.clearCompleted()" style="display: none;">
+                    <i class="fas fa-trash"></i> Clear Completed
+                </button>
             </div>
 
-            <!-- Statistics -->
-            <div class="stats-section">
-                <h2><i class="fas fa-chart-bar"></i> Today's Statistics</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="totalTimeToday">0h 0m</div>
-                            <div class="stat-label">Total Time</div>
-                        </div>
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-content">
+                <div class="settings-panel">
+                    <div class="setting-group">
+                        <label for="workDuration">Work Session Duration (minutes):</label>
+                        <input type="number" id="workDuration" min="1" max="60" value="25" class="setting-input">
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="tasksCompleted">0</div>
-                            <div class="stat-label">Tasks Completed</div>
-                        </div>
+                    <div class="setting-group">
+                        <label for="breakDuration">Break Duration (minutes):</label>
+                        <input type="number" id="breakDuration" min="1" max="30" value="5" class="setting-input">
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-value" id="avgTaskTime">0m</div>
-                            <div class="stat-label">Avg Task Time</div>
-                        </div>
+                    <div class="setting-group">
+                        <label for="longBreakDuration">Long Break Duration (minutes):</label>
+                        <input type="number" id="longBreakDuration" min="5" max="60" value="15" class="setting-input">
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="soundToggle" checked class="checkbox">
+                            Enable sound notification
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="autoStartToggle" class="checkbox">
+                            Auto-start next session
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <button class="btn-export" id="exportBtn" onclick="pomodoroApp.exportData()">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                        <button class="btn-danger" id="resetDataBtn" onclick="pomodoroApp.resetAllData()">
+                            <i class="fas fa-trash"></i> Reset All
+                        </button>
                     </div>
                 </div>
             </div>
@@ -233,8 +181,8 @@
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Work Timer",
-        "description": "Productivity timer application for tracking work sessions, breaks, and time management. Helps improve focus and maintain work-life balance with customizable timer settings.",
+        "name": "To-Do List with Pomodoro",
+        "description": "Task management app with Pomodoro technique. Track tasks, manage priority, set reminders, and boost productivity with built-in Pomodoro timer.",
         "url": "https://robinthomasonline.github.io/apps/timer/",
         "applicationCategory": "ProductivityApplication",
         "operatingSystem": "Any",
@@ -249,11 +197,13 @@
             "url": "https://robinthomasonline.github.io"
         },
         "featureList": [
-            "Stopwatch and countdown modes",
-            "Task management",
-            "Quick preset timers",
-            "Daily statistics",
-            "CSV export functionality"
+            "To-Do list management",
+            "Pomodoro timer (25 min work, 5 min break)",
+            "Task priority levels",
+            "Long break tracking",
+            "Task completion tracking",
+            "Settings customization",
+            "Data export functionality"
         ]
     }
     </script>
