@@ -2343,8 +2343,8 @@ a:focus, button:focus, .btn:focus, .project-card:focus, .business-card:focus, .e
 
 /* Update project icon */
 .project-icon {
-    background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
 }
