@@ -49,6 +49,40 @@ document.addEventListener('DOMContentLoaded', () => {
     type();
 });
 
+// Load and render contact information
+document.addEventListener('DOMContentLoaded', () => {
+    const contactContainer = document.getElementById('contact-info-container');
+    if (!contactContainer || typeof CONTACT_CONFIG === 'undefined') return;
+
+    // Clear container
+    contactContainer.innerHTML = '';
+
+    // Render each contact item
+    CONTACT_CONFIG.contacts.forEach(contact => {
+        const contactItem = document.createElement('a');
+        contactItem.href = contact.href;
+        contactItem.className = 'contact-item';
+        
+        if (contact.target) {
+            contactItem.target = contact.target;
+        }
+        
+        if (contact.rel) {
+            contactItem.rel = contact.rel;
+        }
+
+        contactItem.innerHTML = `
+            <i class="${contact.icon}"></i>
+            <div class="contact-details">
+                <h3>${contact.title}</h3>
+                <span>${contact.label}</span>
+            </div>
+        `;
+
+        contactContainer.appendChild(contactItem);
+    });
+});
+
 // Sidebar Toggle
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');

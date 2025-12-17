@@ -1060,77 +1060,8 @@
         <h2 class="section-title">Let's Chat</h2>
         <p style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">Ready to optimize your infrastructure? Let's discuss your next project.</p>
         <div class="contact-content">
-            <div class="contact-info">
-                <a href="mailto:robinthomasonline@gmail.com" class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <div class="contact-details">
-                        <h3>Personal</h3>
-                        <span>Email</span>
-                    </div>
-                </a>
-                <a href="mailto:robin@opsbin.com" class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <div class="contact-details">
-                        <h3>Opsbin</h3>
-                        <span>Email</span>
-                    </div>
-                </a>
-                <a href="mailto:robin@bitstrail.com" class="contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <div class="contact-details">
-                        <h3>Bitstrail</h3>
-                        <span>Email</span>
-                    </div>
-                </a>
-                <a href="tel:+919746995385" class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <div class="contact-details">
-                        <h3>Phone India</h3>
-                        <span>Call</span>
-                    </div>
-                </a>
-                <a href="tel:+61423453240" class="contact-item">
-                    <i class="fas fa-phone"></i>
-                    <div class="contact-details">
-                        <h3>Phone Australia</h3>
-                        <span>Call</span>
-                    </div>
-                </a>
-                <a href="https://wa.me/qr/PEQ7J2OHI2JPC1" class="contact-item">
-                    <i class="fab fa-whatsapp"></i>
-                    <div class="contact-details">
-                        <h3>WhatsApp</h3>
-                        <span>Chat</span>
-                    </div>
-                </a>
-                <a href="https://calendly.com/robinthomasonline/meet" target="_blank" rel="noopener noreferrer" class="contact-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <div class="contact-details">
-                        <h3>Calendly</h3>
-                        <span>Schedule Meeting</span>
-                    </div>
-                </a>
-                <a href="https://linkedin.com/in/robinthomasonline" class="contact-item">
-                    <i class="fab fa-linkedin-in"></i>
-                    <div class="contact-details">
-                        <h3>LinkedIn</h3>
-                        <span>Connect</span>
-                    </div>
-                </a>
-                <a href="https://facebook.com/robinthomasonline" class="contact-item">
-                    <i class="fab fa-facebook-f"></i>
-                    <div class="contact-details">
-                        <h3>Facebook</h3>
-                        <span>Follow</span>
-                    </div>
-                </a>
-                <a href="https://instagram.com/robinthomasonline" class="contact-item">
-                    <i class="fab fa-instagram"></i>
-                    <div class="contact-details">
-                        <h3>Instagram</h3>
-                        <span>Follow</span>
-                    </div>
-                </a>
+            <div class="contact-info" id="contact-info-container">
+                <!-- Contact items will be dynamically loaded here -->
             </div>
         </div>
     </section>
@@ -1214,6 +1145,7 @@
     }
     </script>
 
+    <script src="contact-config.js"></script>
     <script src="script.js"></script>
     <script type="application/ld+json">
     {
@@ -1228,13 +1160,15 @@
             "name": "Self-Employed"
         },
         "email": "robinthomasonline@gmail.com",
-        "telephone": "+61423453240",
         "sameAs": [
             "https://linkedin.com/in/robinthomasonline",
             "https://facebook.com/robinthomasonline",
             "https://instagram.com/robinthomasonline",
             "https://opsbin.com",
             "https://bitstrail.com"
+            "https://bookingtrails.com",
+            "https://smarthomi.app",
+            "https://wtfqr.com"
         ],
         "knowsAbout": [
             "IT Security",
@@ -1251,6 +1185,12 @@
         "alumniOf": {
             "@type": "Organization",
             "name": "ValueMentor Infosec Pvt Ltd"
+            "url": "https://valuementor.com"
+            {
+                "@type": "Organization",
+                "name": "ValueMentor Infosec Pvt Ltd",
+                "url": "https://valuementor.com"
+            }
         },
         "hasOccupation": {
             "@type": "Occupation",
@@ -1270,6 +1210,21 @@
                 "@type": "Organization",
                 "name": "Bitstrail",
                 "url": "https://bitstrail.com"
+            },
+            {
+                "@type": "Organization",
+                "name": "Bookingtrails",
+                "url": "https://bookingtrails.com"
+            },
+            {
+                "@type": "Organization",
+                "name": "Smarthomi",
+                "url": "https://smarthomi.app"
+            },
+            {
+                "@type": "Organization",
+                "name": "WTFQR",
+                "url": "https://wtfqr.com"
             }
         ]
     }

@@ -555,11 +555,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Register Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-            .then(reg => console.log('ServiceWorker registered'))
-            .catch(err => console.log('ServiceWorker registration failed:', err));
-    });
-}
+// Service Worker registration removed - PWA functionality disabled
 
