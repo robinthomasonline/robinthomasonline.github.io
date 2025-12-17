@@ -27,6 +27,7 @@ Allow: /apps/cofounder-pie/
 Allow: /apps/resume-cover/
 Allow: /apps/daybook/
 Allow: /apps/favicon/
+Allow: /apps/sydney_myrta_booking_system_monitoring_system/
 
 # Allow static assets
 Allow: /assets/

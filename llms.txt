@@ -60,6 +60,9 @@ The site hosts several free web applications:
 12. Markdown Converter - Convert Markdown files to DOC and PDF formats instantly with live preview, file upload support, and word count
     URL: https://robinthomasonline.github.io/apps/md/
 
+13. MyRTA Booking System Monitor - Free browser extension that monitors MyRTA booking availability changes and alerts you when new test dates become available. Works with Chrome, Edge, and other Chromium browsers.
+    URL: https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/
+
 # External Apps & Projects
 - WTFQR: https://wtfqr.com (QR Code Generator)
 - Smart HOMI: https://smarthomi.app (Smart Home Operations Platform)

@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free browser extension to monitor MyRTA booking availability changes. Get instant alerts when new test dates become available. Works with Chrome, Edge, and other Chromium browsers. Step-by-step installation guide included.">
+    <meta name="keywords" content="MyRTA booking monitor, MyRTA availability tracker, Sydney driving test booking, MyRTA date change monitor, booking system monitor, MyRTA extension, test booking alert, MyRTA slot monitor, browser extension, Chrome extension, Edge extension, driving test booking, MyRTA booking system, availability checker, booking alert system">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#dc2626">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/">
+    <meta property="og:title" content="MyRTA Booking Monitor - Free Browser Extension | Get Alerts for Available Test Dates">
+    <meta property="og:description" content="Monitor MyRTA booking availability changes and get instant alerts when new test dates become available. Free browser extension for Chrome and Edge. Easy step-by-step installation guide.">
+    <meta property="og:image" content="https://robinthomasonline.github.io/assets/myrta.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="MyRTA Booking System Monitor Extension">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/">
+    <meta name="twitter:title" content="MyRTA Booking Monitor - Free Browser Extension | Get Alerts for Available Test Dates">
+    <meta name="twitter:description" content="Monitor MyRTA booking availability changes and get instant alerts when new test dates become available. Free browser extension for Chrome and Edge.">
+    <meta name="twitter:image" content="https://robinthomasonline.github.io/assets/myrta.png">
+    <meta name="twitter:image:alt" content="MyRTA Booking System Monitor Extension">
+    
+    <title>MyRTA Booking Monitor - Free Browser Extension | Get Alerts for Available Test Dates</title>
+    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon-myrta.ico">
+    <link rel="apple-touch-icon" href="https://robinthomasonline.github.io/assets/myrta.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0f1c;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #dc2626;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 1rem;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            display: block;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .step-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            min-height: 500px;
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .step-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .step-content h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-content p {
+            margin-bottom: 1rem;
+        }
+
+        .step-content ul, .step-content ol {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .step-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .step-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        .step-content a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .step-content a:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+
+        .info-box {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-box i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box i {
+            color: #ffc107;
+            margin-right: 0.5rem;
+        }
+
+        .browser-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .browser-item {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .browser-item i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .browser-item span {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: #ffffff;
+            color: var(--bg-dark);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+
+        .download-btn:hover {
+            background: #ffffff;
+            opacity: 0.9;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem 0;
+            border: none;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: #b91c1c;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: #b91c1c;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.prev {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-btn.prev:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent);
+        }
+
+        .step-indicator {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .app-footer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .app-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .app-footer a:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+
+        .app-footer .footer-link {
+            color: var(--accent);
+        }
+
+        .app-footer .footer-link:hover {
+            color: #b91c1c;
+        }
+
+        .app-footer .bmc-logo {
+            display: inline-block;
+            margin-top: 1rem;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .app-footer .bmc-logo:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        .app-footer .bmc-logo img {
+            height: 60px;
+            width: 217px;
+        }
+
+        .app-footer .view-all-apps-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem auto 0 auto;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .app-footer .view-all-apps-btn:hover {
+            background: #b91c1c;
+            text-decoration: none;
+        }
+
+        .cta-section, .disclaimer-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 900px;
+        }
+
+        .cta-section h2, .disclaimer-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .cta-section h2 i, .disclaimer-section h2 i {
+            color: var(--accent);
+        }
+
+        .cta-section p, .disclaimer-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .share-btn:hover {
+            background: #b91c1c;
+        }
+
+        .disclaimer-section {
+            border-left: 4px solid var(--accent);
+            border-right: 4px solid var(--accent);
+        }
+
+        .disclaimer-section strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .step-container {
+                padding: 1.5rem;
+                min-height: auto;
+            }
+
+            .step-title {
+                font-size: 1.4rem;
+            }
+
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .browser-list {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "MyRTA Booking System Monitor",
+        "description": "Free browser extension that monitors MyRTA booking availability changes and alerts you instantly when new test dates become available. Works with Chrome, Edge, and other Chromium browsers.",
+        "url": "https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/",
+        "applicationCategory": "BrowserExtension",
+        "operatingSystem": "Chrome, Edge, Chromium-based browsers",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Robin Thomas",
+            "url": "https://robinthomasonline.github.io/"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "ratingCount": "1"
+        },
+        "screenshot": "https://robinthomasonline.github.io/assets/myrta.png",
+        "featureList": [
+            "Monitor MyRTA booking page for visual changes",
+            "Instant sound and desktop notifications",
+            "Automatic page refresh every 10 minutes",
+            "Background monitoring while you work",
+            "Easy step-by-step installation guide",
+            "Free and open source"
+        ]
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "How to Install and Use MyRTA Booking Monitor Extension",
+        "description": "Step-by-step guide to install and configure the MyRTA Booking System Monitor browser extension",
+        "image": "https://robinthomasonline.github.io/assets/myrta.png",
+        "totalTime": "PT15M",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Download Extension",
+                "text": "Download the browser extension ZIP file from the provided link"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Enable Developer Mode",
+                "text": "Open browser extensions page and enable Developer Mode"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Load Extension",
+                "text": "Load the unpacked extension from the extracted folder"
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Configure and Start Monitoring",
+                "text": "Configure extension settings and start monitoring for booking availability changes"
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Apps</span>
+        </a>
+
+        <div class="header">
+            <img src="https://robinthomasonline.github.io/assets/myrta.png" alt="MyRTA Booking Monitor" class="header-logo">
+            <h1>Sydney MyRTA Booking System Monitoring</h1>
+            <p>A browser extension that monitors the Sydney MyRTA booking system for visual changes and alerts you instantly when booking availability changes.</p>
+        </div>
+
+        <!-- Step 1: Download -->
+        <div class="step-container active" data-step="1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">Download Extension</div>
+            </div>
+            <div class="step-content">
+                <p>Download the browser extension ZIP file to get started.</p>
+                <div style="text-align: center; margin: 2rem 0;">
+                    <a href="https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/sydney_myrta_booking_system_monitoring_system.zip" 
+                       class="download-btn" 
+                       target="_blank" 
+                       rel="noopener noreferrer">
+                        <i class="fas fa-download"></i>
+                        Download Extension (ZIP)
+                    </a>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>After downloading:</strong> Extract the ZIP file to a folder on your computer. You'll need this folder in the next steps.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()" disabled>
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 1 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Supported Browsers -->
+        <div class="step-container" data-step="2">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">Check Browser Compatibility</div>
+            </div>
+            <div class="step-content">
+                <p>This extension works in Chrome-based browsers. Make sure you're using one of the following:</p>
+                <div class="browser-list">
+                    <div class="browser-item">
+                        <i class="fab fa-chrome"></i>
+                        <span>Google Chrome</span>
+                    </div>
+                    <div class="browser-item">
+                        <i class="fab fa-edge"></i>
+                        <span>Microsoft Edge</span>
+                    </div>
+                    <div class="browser-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Brave Browser</span>
+                    </div>
+                    <div class="browser-item">
+                        <i class="fab fa-opera"></i>
+                        <span>Opera</span>
+                    </div>
+                    <div class="browser-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Vivaldi</span>
+                    </div>
+                    <div class="browser-item">
+                        <i class="fas fa-code"></i>
+                        <span>Chromium</span>
+                    </div>
+                </div>
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> Firefox and Safari are not supported.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 2 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Enable Developer Mode -->
+        <div class="step-container" data-step="3">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">Enable Developer Mode</div>
+            </div>
+            <div class="step-content">
+                <p>To install the extension, you need to enable Developer Mode in your browser.</p>
+                <ol>
+                    <li>Open your browser's Extensions page:
+                        <ul style="margin-top: 0.5rem;">
+                            <li>Click the button below to open Extensions page, or navigate to <code>chrome://extensions/</code> (or <code>edge://extensions/</code> for Edge)</li>
+                            <li>Or go to <strong>Menu → More Tools → Extensions</strong></li>
+                        </ul>
+                        <div style="margin: 1rem 0;">
+                            <button class="action-btn" onclick="openExtensionsPage()">
+                                <i class="fas fa-external-link-alt"></i>
+                                Open Extensions Page
+                            </button>
+                        </div>
+                    </li>
+                    <li>Toggle the <strong>"Developer mode"</strong> switch in the top-right corner of the Extensions page</li>
+                </ol>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Developer Mode</strong> allows you to load unpacked extensions from your computer.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 3 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Load Extension -->
+        <div class="step-container" data-step="4">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">Load the Extension</div>
+            </div>
+            <div class="step-content">
+                <p>Now load the unpacked extension from the folder you extracted earlier.</p>
+                <ol>
+                    <li>On the Extensions page, click the <strong>"Load unpacked"</strong> button</li>
+                    <li>Select the folder containing the extracted extension files (the folder you unzipped in Step 1)</li>
+                    <li>The extension will appear as <strong>"Booking System Monitor"</strong> in your extensions list</li>
+                </ol>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Tip:</strong> Make sure you select the folder that contains the extension files (manifest.json, etc.), not the ZIP file.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 4 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 5: Pin Extension -->
+        <div class="step-container" data-step="5">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title">Pin the Extension (Recommended)</div>
+            </div>
+            <div class="step-content">
+                <p>Pin the extension to your browser toolbar for easy access.</p>
+                <ol>
+                    <li>Click the <strong>puzzle icon</strong> in your browser toolbar (extensions menu)</li>
+                    <li>Find <strong>"Booking System Monitor"</strong> in the list</li>
+                    <li>Click the <strong>pin icon</strong> next to it to keep it visible in your toolbar</li>
+                </ol>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Why pin it?</strong> Having the extension icon visible makes it easier to access when configuring and monitoring.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 5 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 6: Book a Test -->
+        <div class="step-container" data-step="6">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title">Book a Test with Any Available Date</div>
+            </div>
+            <div class="step-content">
+                <p>Book a test with any available date to get started.</p>
+                <ol>
+                    <li>Navigate to the MyRTA Login page:
+                        <ul style="margin-top: 0.5rem;">
+                            <li><a href="https://www.myrta.com/wps/portal/extvp/myrta/licence/tbs/tbs-login" target="_blank" rel="noopener noreferrer">https://www.myrta.com/wps/portal/extvp/myrta/licence/tbs/tbs-login</a></li>
+                        </ul>
+                    </li>
+                    <li>Log in with your MyRTA credentials</li>
+                    <li>Book a test with any available date</li>
+                </ol>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> You need to have an existing booking to change the date. Book with any available date first.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 6 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 7: Navigate to Change Date Page -->
+        <div class="step-container" data-step="7">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <div class="step-title">Navigate to Change Date Screen</div>
+            </div>
+            <div class="step-content">
+                <p>Go to the page you want to monitor for booking availability changes.</p>
+                <ol>
+                    <li>Navigate to the Change Date page:
+                        <ul style="margin-top: 0.5rem;">
+                            <li><a href="https://www.myrta.com/wps/portal/extvp/myrta/licence/tbs/tbs-change" target="_blank" rel="noopener noreferrer">https://www.myrta.com/wps/portal/extvp/myrta/licence/tbs/tbs-change</a></li>
+                        </ul>
+                    </li>
+                    <li>Log in with your booking details</li>
+                    <li>Select the location</li>
+                    <li><strong>Zoom out the page</strong> (press <code>Ctrl + -</code> or <code>Cmd + -</code> on Mac) so the date change section is fully visible on your screen</li>
+                    <li>Make sure the entire date selection area is visible without scrolling</li>
+                </ol>
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Important:</strong> The extension monitors visual changes on this page. Make sure the date selection area is fully visible for accurate monitoring.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 7 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 8: Configure Extension -->
+        <div class="step-container" data-step="8">
+            <div class="step-header">
+                <div class="step-number">8</div>
+                <div class="step-title">Configure Extension Settings</div>
+            </div>
+            <div class="step-content">
+                <p>Open and configure the extension with the recommended settings.</p>
+                <ol>
+                    <li>Click the <strong>"Booking System Monitor"</strong> extension icon in your browser toolbar</li>
+                    <li>Click <strong>"Use Current Tab"</strong> to capture the MyRTA page URL</li>
+                    <li>Configure the following settings:
+                        <ul class="checklist" style="margin-top: 0.5rem;">
+                            <li>✅ Check <strong>"Refresh page before checking"</strong></li>
+                            <li>Set <strong>Refresh Interval to 600 seconds (10 minutes)</strong></li>
+                            <li>✅ Enable <strong>"Play sound alert"</strong></li>
+                            <li>✅ Enable <strong>"Desktop notification"</strong></li>
+                        </ul>
+                    </li>
+                </ol>
+                <h3>Recommended Settings Summary</h3>
+                <ul class="checklist">
+                    <li><strong>Refresh Interval:</strong> 600 seconds (10 minutes)</li>
+                    <li><strong>Pixel Threshold:</strong> 1000 (default)</li>
+                    <li><strong>Sound Alert:</strong> Enabled</li>
+                    <li><strong>Desktop Notification:</strong> Enabled</li>
+                </ul>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 8 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 9: Start Monitoring -->
+        <div class="step-container" data-step="9">
+            <div class="step-header">
+                <div class="step-number">9</div>
+                <div class="step-title">Start Monitoring</div>
+            </div>
+            <div class="step-content">
+                <p>Start the monitoring process and view statistics.</p>
+                <ol>
+                    <li>Click <strong>"Start Monitoring"</strong> in the extension popup</li>
+                    <li>The status will show <strong>"Monitoring"</strong> with a green dot</li>
+                    <li>The page will automatically refresh every 10 minutes to check for changes</li>
+                </ol>
+                <h3>View Statistics</h3>
+                <p>While monitoring, you can see:</p>
+                <ul>
+                    <li>Last check time</li>
+                    <li>Next check time</li>
+                    <li>Number of changes detected</li>
+                    <li>Last change timestamp</li>
+                </ul>
+                <h3>Stop Monitoring</h3>
+                <p>To pause monitoring:</p>
+                <ul>
+                    <li>Click <strong>"Stop Monitoring"</strong> in the extension</li>
+                    <li>Your settings will be saved automatically</li>
+                </ul>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>The extension will automatically refresh the page every 10 minutes and alert you when booking availability changes are detected.</strong>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 9 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 10: Monitor and Update Dates -->
+        <div class="step-container" data-step="10">
+            <div class="step-header">
+                <div class="step-number">10</div>
+                <div class="step-title">Monitor and Update Your Booking</div>
+            </div>
+            <div class="step-content">
+                <p>Once monitoring is active, you can continue with your daily activities while the system watches for new dates.</p>
+                <ol>
+                    <li><strong>Engage in your day-to-day activities</strong> - The extension will continue monitoring in the background</li>
+                    <li>When new dates appear on the screen, the system will alert you with:
+                        <ul style="margin-top: 0.5rem;">
+                            <li>A <strong>sound alert</strong></li>
+                            <li>A <strong>desktop notification</strong></li>
+                        </ul>
+                    </li>
+                    <li>When you receive an alert, check the available dates</li>
+                    <li><strong>Change to the available next date</strong> if it suits your schedule</li>
+                    <li><strong>Repeat this process</strong> until you get the comfortable/required date for your testing</li>
+                </ol>
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Tip:</strong> The extension runs in the background, so you can work on other tasks while it monitors for new booking dates. You'll be notified immediately when changes are detected.
+                </div>
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Remember:</strong> Act quickly when you see a desirable date, as slots may be taken by others. The extension helps you catch new dates as soon as they become available.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 10 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 11: Support -->
+        <div class="step-container" data-step="11">
+            <div class="step-header">
+                <div class="step-number">11</div>
+                <div class="step-title">Support This Plugin</div>
+            </div>
+            <div class="step-content">
+                <p>If you find this plugin helpful, please consider supporting its development:</p>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <a href="https://www.buymeacoffee.com/robinthomasonline" 
+                       target="_blank" 
+                       rel="noopener noreferrer">
+                        <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me a Coffee" style="height: 60px; width: auto; max-width: 100%;">
+                    </a>
+                </div>
+
+                <h3>Share with Someone in Need</h3>
+                <p>Know someone who's struggling to find a booking slot? Share this extension with them so they can monitor for available dates and get notified when new slots become available.</p>
+                
+                <div style="text-align: center; margin: 1.5rem 0;">
+                    <button class="action-btn" onclick="navigator.share ? navigator.share({title: 'MyRTA Booking System Monitor', text: 'Check out this extension that monitors MyRTA booking availability', url: window.location.href}) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'))">
+                        <i class="fas fa-share"></i>
+                        Share Link
+                    </button>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Thank you for your support!</strong> Your contributions help maintain and improve this extension for everyone.
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 11 of 12</div>
+                <button class="nav-btn" onclick="nextStep()">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 12: Troubleshooting -->
+        <div class="step-container" data-step="12">
+            <div class="step-header">
+                <div class="step-number">12</div>
+                <div class="step-title">Troubleshooting</div>
+            </div>
+            <div class="step-content">
+                <p>If you encounter any issues, try these solutions:</p>
+                
+                <h3>Extension Not Working</h3>
+                <ul>
+                    <li>Make sure the extension is enabled. Click the button below to open Extensions page:
+                        <div style="margin: 0.5rem 0;">
+                            <button class="action-btn" onclick="openExtensionsPage()">
+                                <i class="fas fa-external-link-alt"></i>
+                                Open Extensions Page
+                            </button>
+                        </div>
+                    </li>
+                    <li>Try reloading the extension by clicking the reload icon on the Extensions page</li>
+                </ul>
+
+                <h3>No Changes Detected</h3>
+                <ul>
+                    <li>Lower the pixel threshold if needed (in extension settings)</li>
+                    <li>Make sure you're on the correct MyRTA page (<a href="https://www.myrta.com/wps/portal/extvp/myrta/licence/tbs/tbs-change" target="_blank" rel="noopener noreferrer">Change Date page</a>)</li>
+                    <li>Make sure the date change section is fully visible on screen (zoom out if needed)</li>
+                </ul>
+
+                <h3>Notifications Not Showing</h3>
+                <ul>
+                    <li>Check browser notification settings: <code>chrome://settings/content/notifications</code></li>
+                    <li>Make sure "Desktop Notification" is enabled in extension settings</li>
+                    <li>Allow notifications for your browser when prompted</li>
+                </ul>
+            </div>
+            <div class="navigation">
+                <button class="nav-btn prev" onclick="previousStep()">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                <div class="step-indicator">Step 12 of 12</div>
+                <button class="nav-btn" onclick="nextStep()" disabled>
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2><i class="fas fa-share-alt"></i> Share with Someone in Need</h2>
+        <p>Know someone who's struggling to find a booking slot? Share this extension with them so they can monitor for available dates and get notified when new slots become available.</p>
+        <div class="share-buttons">
+            <button class="share-btn" onclick="navigator.share ? navigator.share({title: 'MyRTA Booking System Monitor', text: 'Check out this extension that monitors MyRTA booking availability', url: window.location.href}) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'))">
+                <i class="fas fa-share"></i> Share Link
+            </button>
+        </div>
+    </div>
+
+    <!-- Disclaimer Section -->
+    <div class="disclaimer-section">
+        <h2><i class="fas fa-exclamation-circle"></i> Use Responsibly</h2>
+        <p>
+            <strong>Important Disclaimer:</strong> This is a browser page visual change monitoring plugin. This extension:
+        </p>
+        <ul style="color: var(--text-secondary); margin-left: 2rem; margin-right: -2rem; margin-top: 0; line-height: 1.8;">
+            <li>Only monitors visual changes on the MyRTA booking page</li>
+            <li>Alerts you when new dates appear on the screen</li>
+            <li>Does NOT create new booking slots</li>
+            <li>Does NOT have any connection to Service NSW or any other government organization</li>
+            <li>Does NOT manipulate or interfere with the booking system</li>
+        </ul>
+        <p>
+            This extension is simply a monitoring tool that helps you stay informed about available dates. It does not create slots, modify the booking system, or have any affiliation with government services. Use it responsibly and in accordance with the terms of service of the MyRTA website.
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="../index.html" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 12;
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(container => {
+                container.classList.remove('active');
+            });
+
+            // Show current step
+            const stepContainer = document.querySelector(`[data-step="${step}"]`);
+            if (stepContainer) {
+                stepContainer.classList.add('active');
+                stepContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Update navigation buttons
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            // Update previous button
+            const prevButtons = document.querySelectorAll('.nav-btn.prev');
+            prevButtons.forEach(btn => {
+                btn.disabled = currentStep === 1;
+            });
+
+            // Update next button
+            const nextButtons = document.querySelectorAll('.nav-btn:not(.prev)');
+            nextButtons.forEach(btn => {
+                btn.disabled = currentStep === totalSteps;
+            });
+
+            // Update step indicator
+            document.querySelectorAll('.step-indicator').forEach(indicator => {
+                indicator.textContent = `Step ${currentStep} of ${totalSteps}`;
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Initialize
+        showStep(1);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                previousStep();
+            } else if (e.key === 'ArrowRight') {
+                nextStep();
+            }
+        });
+
+        // Open Extensions Page in new tab
+        function openExtensionsPage() {
+            // Detect browser and use appropriate URL
+            const isEdge = navigator.userAgent.indexOf('Edg') > -1;
+            const url = isEdge ? 'edge://extensions/' : 'chrome://extensions/';
+            
+            // Try to open in new tab
+            const newWindow = window.open(url, '_blank');
+            
+            // If blocked or fails, fallback to copying URL
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                // Fallback: copy to clipboard
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('Popup blocked. URL copied to clipboard! Please paste it in your browser address bar.');
+                    }).catch(() => {
+                        alert(`Please copy this URL and paste it in your browser address bar:\n\n${url}`);
+                    });
+                } else {
+                    alert(`Please copy this URL and paste it in your browser address bar:\n\n${url}`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

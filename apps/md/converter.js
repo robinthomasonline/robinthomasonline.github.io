@@ -266,7 +266,7 @@ function exportToDoc() {
 </head>
 <body>
     <div class="content-wrapper">
-        ${html}
+    ${html}
     </div>
 </body>
 </html>`;
@@ -393,15 +393,15 @@ async function exportToPdf() {
         // Primary method: Use browser print dialog for selectable text
         // This preserves text selectability better than html2canvas
         showToast('Opening print dialog for PDF export...', 'info');
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
             showToast('Please allow popups to export PDF. Trying alternative method...', 'error');
             // Fallback to jsPDF if popup is blocked
             await exportToPdfWithJsPDF(html, tempContainer);
-            return;
-        }
-        
-        printWindow.document.write(`<!DOCTYPE html>
+                return;
+            }
+            
+            printWindow.document.write(`<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -485,7 +485,7 @@ async function exportToPdf() {
 </head>
 <body>
     <div class="content-wrapper">
-        ${html}
+    ${html}
     </div>
     <script>
         window.onload = function() {
@@ -496,8 +496,8 @@ async function exportToPdf() {
     </script>
 </body>
 </html>`);
-        printWindow.document.close();
-        
+            printWindow.document.close();
+            
         showToast('Use "Save as PDF" in the print dialog. Text will be selectable!', 'info');
         
         // Clean up
