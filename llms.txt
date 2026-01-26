@@ -63,6 +63,12 @@ The site hosts several free web applications:
 13. MyRTA Booking System Monitor - Free browser extension that monitors MyRTA booking availability changes and alerts you when new test dates become available. Works with Chrome, Edge, and other Chromium browsers.
     URL: https://robinthomasonline.github.io/apps/sydney_myrta_booking_system_monitoring_system/
 
+14. POS & Billing System - Comprehensive Point of Sale and Billing System for small shops and retail businesses. Features barcode/QR code scanning, product management, customer management, invoicing, transaction tracking, and expense management with role-based access control (Admin, Manager, Sales Person).
+    URL: https://robinthomasonline.github.io/apps/pos/
+
+15. Crontab Entry Creator - Web-based tool for creating, understanding, and managing crontab entries. Generate custom cron schedules with a visual builder, explore common templates, and parse existing crontab entries to understand what they do.
+    URL: https://robinthomasonline.github.io/apps/cron/
+
 # External Apps & Projects
 - WTFQR: https://wtfqr.com (QR Code Generator)
 - Smart HOMI: https://smarthomi.app (Smart Home Operations Platform)

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free POS and Billing System - Complete point of sale system with barcode scanning, product management, customer management, invoicing, and day book. Perfect for small shops and retail businesses.">
+    <meta name="keywords" content="POS, point of sale, billing system, barcode scanner, QR code scanner, invoice generator, retail management, shop management, inventory management">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/pos/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/pos/">
+    <meta property="og:title" content="POS & Billing System | Free Point of Sale Software">
+    <meta property="og:description" content="Complete POS system with barcode scanning, product management, customer management, invoicing, and day book. Perfect for small shops and retail businesses.">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/pos/">
+    <meta name="twitter:title" content="POS & Billing System | Free Point of Sale Software">
+    <meta name="twitter:description" content="Complete POS system with barcode scanning, product management, customer management, invoicing, and day book.">
+    
+    <title>POS & Billing System | Free Point of Sale Software | Robin Thomas</title>
+    <link rel="stylesheet" href="pos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1><i class="fas fa-cash-register"></i> POS System</h1>
+                <p>Point of Sale & Billing System</p>
+            </div>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="loginUsername"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password">
+                </div>
+                <button class="btn btn-primary" id="loginBtn">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="main-app" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="shop-logo-container" id="shopLogoContainer">
+                    <img id="shopLogo" src="" alt="Shop Logo" style="display: none;">
+                    <span id="shopNameDisplay" class="shop-name">POS System</span>
+                </div>
+            </div>
+            <div class="header-bottom">
+                <nav class="main-nav" id="mainNav">
+                    <button class="nav-btn active" data-page="pos" title="POS">
+                        <i class="fas fa-cash-register"></i> <span class="nav-text">POS</span>
+                    </button>
+                    <button class="nav-btn" data-page="products" title="Products">
+                        <i class="fas fa-box"></i> <span class="nav-text">Products</span>
+                    </button>
+                    <button class="nav-btn" data-page="customers" title="Customers">
+                        <i class="fas fa-users"></i> <span class="nav-text">Customers</span>
+                    </button>
+                    <button class="nav-btn" data-page="transactions" title="Transactions">
+                        <i class="fas fa-book"></i> <span class="nav-text">Transactions</span>
+                    </button>
+                    <button class="nav-btn" data-page="settings" id="settingsNavBtn" title="Settings">
+                        <i class="fas fa-cog"></i> <span class="nav-text">Settings</span>
+                    </button>
+                </nav>
+                <div class="header-user-section">
+                    <span id="currentUserDisplay" class="user-name"></span>
+                    <button class="btn btn-small btn-secondary" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> <span class="logout-text">Logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- POS Page -->
+            <div id="posPage" class="page active">
+                <div class="pos-container">
+                    <div class="pos-left">
+                        <div class="pos-header">
+                            <h2><i class="fas fa-shopping-cart"></i> New Sale</h2>
+                            <div class="pos-controls">
+                                <button class="btn btn-secondary" id="scanBarcodeBtn">
+                                    <i class="fas fa-barcode"></i> Scan Barcode
+                                </button>
+                                <button class="btn btn-secondary" id="scanQRBtn">
+                                    <i class="fas fa-qrcode"></i> Scan QR
+                                </button>
+                                <button class="btn btn-secondary" id="addProductByCodeBtn">
+                                    <i class="fas fa-search"></i> Add by Code
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-search">
+                            <input type="text" id="productSearchInput" placeholder="Search products by name..." autocomplete="off">
+                            <div id="productSearchResults" class="search-results"></div>
+                        </div>
+                        <div class="cart-section">
+                            <div class="cart-header">
+                                <h3><i class="fas fa-shopping-basket"></i> Cart</h3>
+                                <span class="cart-count" id="cartCount">0</span>
+                            </div>
+                            <div class="cart-items" id="cartItems">
+                                <div class="empty-cart">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <p>Cart is empty. Add products to get started.</p>
+                                </div>
+                            </div>
+                            <div class="cart-footer">
+                                <div class="cart-totals">
+                                    <div class="total-row">
+                                        <span>Subtotal:</span>
+                                        <span id="cartSubtotal">₹0.00</span>
+                                    </div>
+                                    <div class="total-row">
+                                        <span>Tax (0%):</span>
+                                        <span id="cartTax">₹0.00</span>
+                                    </div>
+                                    <div class="total-row total-final">
+                                        <span>Total:</span>
+                                        <span id="cartTotal">₹0.00</span>
+                                    </div>
+                                </div>
+                                <div class="cart-actions">
+                                    <button class="btn btn-secondary" id="clearCartBtn">
+                                        <i class="fas fa-trash"></i> Clear
+                                    </button>
+                                    <button class="btn btn-primary" id="checkoutBtn">
+                                        <i class="fas fa-check"></i> Checkout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pos-right">
+                        <div class="customer-section">
+                            <h3><i class="fas fa-user"></i> Customer</h3>
+                            <div class="customer-search">
+                                <input type="text" id="customerSearchInput" placeholder="Search by phone or name..." autocomplete="off">
+                                <div id="customerSearchResults" class="customer-search-results"></div>
+                            </div>
+                            <div class="customer-select">
+                                <select id="customerSelect">
+                                    <option value="">Walk-in Customer</option>
+                                </select>
+                                <button class="btn btn-small btn-secondary" id="addCustomerQuickBtn">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </div>
+                            <div id="selectedCustomerInfo" class="selected-customer-info" style="display: none;">
+                                <div class="customer-info-card">
+                                    <strong id="selectedCustomerName"></strong>
+                                    <div class="customer-info-details">
+                                        <span id="selectedCustomerPhone"></span>
+                                        <span id="selectedCustomerEmail"></span>
+                                    </div>
+                                    <button class="btn btn-small btn-secondary" id="clearCustomerBtn" style="margin-top: 8px;">
+                                        <i class="fas fa-times"></i> Clear
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quick-products">
+                            <h3><i class="fas fa-box"></i> Quick Products</h3>
+                            <div class="quick-products-grid" id="quickProductsGrid">
+                                <!-- Quick products will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Page -->
+            <div id="productsPage" class="page">
+                <div class="page-header">
+                    <h2><i class="fas fa-box"></i> Products</h2>
+                    <button class="btn btn-primary" id="addProductBtn">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+                <div class="page-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="productsSearchInput" placeholder="Search products...">
+                    </div>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Customers Page -->
+            <div id="customersPage" class="page">
+                <div class="page-header">
+                    <h2><i class="fas fa-users"></i> Customers</h2>
+                    <button class="btn btn-primary" id="addCustomerBtn">
+                        <i class="fas fa-plus"></i> Add Customer
+                    </button>
+                </div>
+                <div class="page-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="customersSearchInput" placeholder="Search customers...">
+                    </div>
+                </div>
+                <div class="customers-table-container">
+                    <table class="data-table" id="customersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Customers will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transactions Page -->
+            <div id="transactionsPage" class="page">
+                <div class="page-header">
+                    <h2><i class="fas fa-book"></i> Transactions</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addExpenseBtn">
+                            <i class="fas fa-minus-circle"></i> Add Expense
+                        </button>
+                        <button class="btn btn-secondary" id="exportTransactionsBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div class="page-controls">
+                    <select id="transactionsDateFilter" class="date-filter">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="thisWeek">This Week</option>
+                        <option value="lastWeek">Last Week</option>
+                        <option value="thisMonth">This Month</option>
+                        <option value="lastMonth">Last Month</option>
+                        <option value="last3Months">Last 3 Months</option>
+                        <option value="last6Months">Last 6 Months</option>
+                        <option value="last12Months">Last 12 Months</option>
+                        <option value="lastYear">Last Year</option>
+                    </select>
+                    <select id="transactionsTypeFilter" class="type-filter">
+                        <option value="all">All (Sales & Expenses)</option>
+                        <option value="sales">Sales Only</option>
+                        <option value="expenses">Expenses Only</option>
+                    </select>
+                </div>
+                <div class="transactions-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon sales">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Total Sales</h3>
+                            <p id="totalSales">₹0.00</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon expenses">
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Total Expenses</h3>
+                            <p id="totalExpenses">₹0.00</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon net">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Net Balance</h3>
+                            <p id="netBalance">₹0.00</p>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon transactions">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h3>Transactions</h3>
+                            <p id="totalTransactions">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="transactions-table-container">
+                    <table class="data-table" id="transactionsTable">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date & Time</th>
+                                <th>Invoice/Ref #</th>
+                                <th>Customer/Vendor</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Payment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <!-- Transactions and expenses will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page">
+                <div class="page-header">
+                    <h2><i class="fas fa-cog"></i> Settings</h2>
+                </div>
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-store"></i> Shop Information</h3>
+                        <div class="form-group">
+                            <label for="settingsShopName">Shop Name</label>
+                            <input type="text" id="settingsShopName" placeholder="Enter shop name">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsShopAddress">Address</label>
+                            <textarea id="settingsShopAddress" rows="3" placeholder="Enter shop address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsShopPhone">Phone</label>
+                            <input type="tel" id="settingsShopPhone" placeholder="Enter phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsShopEmail">Email</label>
+                            <input type="email" id="settingsShopEmail" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingsShopLogo">Shop Logo</label>
+                            <input type="file" id="settingsShopLogo" accept="image/*">
+                            <div class="logo-preview" id="logoPreview"></div>
+                        </div>
+                        <button class="btn btn-primary" id="saveShopSettingsBtn">Save Shop Settings</button>
+                    </div>
+                    <div class="settings-section">
+                        <h3><i class="fas fa-tags"></i> Category Management</h3>
+                        <div id="categoriesList">
+                            <!-- Categories will be loaded here -->
+                        </div>
+                        <button class="btn btn-primary" id="addCategoryBtn">
+                            <i class="fas fa-plus"></i> Add Category
+                        </button>
+                    </div>
+                    <div class="settings-section">
+                        <h3><i class="fas fa-users-cog"></i> User Management</h3>
+                        <div id="usersList">
+                            <!-- Users will be loaded here -->
+                        </div>
+                        <button class="btn btn-primary" id="addUserBtn">
+                            <i class="fas fa-plus"></i> Add User
+                        </button>
+                    </div>
+                    <div class="settings-section">
+                        <h3><i class="fas fa-database"></i> Data Management</h3>
+                        <div class="data-actions">
+                            <button class="btn btn-secondary" id="exportDataBtn">
+                                <i class="fas fa-download"></i> Export All Data (Excel)
+                            </button>
+                            <button class="btn btn-secondary" id="importDataBtn">
+                                <i class="fas fa-upload"></i> Import Data (Excel)
+                            </button>
+                            <input type="file" id="importDataInput" accept=".xlsx,.xls" style="display: none;">
+                            <button class="btn btn-danger" id="clearAllDataBtn">
+                                <i class="fas fa-trash"></i> Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle"><i class="fas fa-box"></i> Add Product</h2>
+                <button class="modal-close" id="closeProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Product Name *</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCode">Product Code / Barcode</label>
+                        <input type="text" id="productCode" placeholder="Auto-generated if empty">
+                        <button type="button" class="btn btn-small btn-secondary" id="generateBarcodeBtn">
+                            <i class="fas fa-barcode"></i> Generate
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productType">Type</label>
+                        <select id="productType">
+                            <option value="product">Product</option>
+                            <option value="service">Service</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productMRP">MRP (Maximum Retail Price) *</label>
+                        <input type="number" id="productMRP" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Sale Price *</label>
+                        <input type="number" id="productPrice" step="0.01" min="0" required>
+                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Price used for sales</small>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity *</label>
+                        <input type="number" id="productQuantity" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDiscount">Discount %</label>
+                        <input type="number" id="productDiscount" step="0.01" min="0" max="100" readonly style="background: var(--bg-color);">
+                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Auto-calculated from MRP and Sale Price</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="productImage">Product Image</label>
+                    <input type="file" id="productImage" accept="image/*">
+                    <div class="image-preview" id="productImagePreview"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelProductBtn">Cancel</button>
+                <button class="btn btn-save" id="saveProductBtn">Save Product</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Expense Modal -->
+    <div class="modal" id="expenseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="expenseModalTitle"><i class="fas fa-minus-circle"></i> Add Expense</h2>
+                <button class="modal-close" id="closeExpenseModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseDate">Date *</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseTime">Time *</label>
+                        <input type="time" id="expenseTime" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="expenseVendor">Vendor/Supplier</label>
+                    <input type="text" id="expenseVendor" placeholder="Enter vendor name (optional)">
+                </div>
+                <div class="form-group">
+                    <label for="expenseDescription">Description *</label>
+                    <input type="text" id="expenseDescription" placeholder="Enter expense description" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseCategory">Category</label>
+                        <select id="expenseCategory">
+                            <option value="">Select Category</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Supplies">Supplies</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseAmount">Amount *</label>
+                        <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="expensePaymentMethod">Payment Method</label>
+                    <select id="expensePaymentMethod">
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="upi">UPI</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="credit">Credit (Not Paid)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="expenseReferenceGroup" style="display: none;">
+                    <label for="expenseReference">Reference/Transaction ID</label>
+                    <input type="text" id="expenseReference" placeholder="Enter reference number (optional)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelExpenseBtn">Cancel</button>
+                <button class="btn btn-save" id="saveExpenseBtn">Save Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="customerModalTitle"><i class="fas fa-user"></i> Add Customer</h2>
+                <button class="modal-close" id="closeCustomerModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerName">Name *</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Phone</label>
+                        <input type="tel" id="customerPhone">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerEmail">Email</label>
+                        <input type="email" id="customerEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerAddress">Address</label>
+                        <textarea id="customerAddress" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelCustomerBtn">Cancel</button>
+                <button class="btn btn-save" id="saveCustomerBtn">Save Customer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle"><i class="fas fa-tag"></i> Add Category</h2>
+                <button class="modal-close" id="closeCategoryModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="categoryName">Category Name *</label>
+                    <input type="text" id="categoryName" placeholder="Enter category name" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description</label>
+                    <textarea id="categoryDescription" rows="3" placeholder="Enter category description (optional)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelCategoryBtn">Cancel</button>
+                <button class="btn btn-save" id="saveCategoryBtn">Save Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle"><i class="fas fa-user-plus"></i> Add User</h2>
+                <button class="modal-close" id="closeUserModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="userUsername">Username *</label>
+                    <input type="text" id="userUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password *</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role *</label>
+                    <select id="userRole" required>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Shop Manager</option>
+                        <option value="sales">Sale Person</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelUserBtn">Cancel</button>
+                <button class="btn btn-save" id="saveUserBtn">Save User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Modal -->
+    <div class="modal" id="barcodeScannerModal">
+        <div class="modal-content scanner-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-barcode"></i> Barcode Scanner</h2>
+                <button class="modal-close" id="closeBarcodeScannerModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="barcodeScannerContainer"></div>
+                <div class="manual-entry">
+                    <input type="text" id="manualBarcodeInput" placeholder="Or enter barcode manually">
+                    <button class="btn btn-primary" id="searchByBarcodeBtn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal" id="qrScannerModal">
+        <div class="modal-content scanner-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-qrcode"></i> QR Code Scanner</h2>
+                <button class="modal-close" id="closeQRScannerModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="qrScannerContainer"></div>
+                <div class="manual-entry">
+                    <input type="text" id="manualQRInput" placeholder="Or enter QR code manually">
+                    <button class="btn btn-primary" id="searchByQRBtn">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cash-register"></i> Payment</h2>
+                <button class="modal-close" id="closeCheckoutModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="checkoutSubtotal">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax:</span>
+                        <span id="checkoutTax">₹0.00</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total Amount:</span>
+                        <span id="checkoutTotal">₹0.00</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method *</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="upi">UPI</option>
+                        <option value="credit">Credit (Not Paid)</option>
+                    </select>
+                </div>
+                <div class="form-group" id="cashAmountGroup" style="display: none;">
+                    <label for="cashAmount">Cash Received *</label>
+                    <input type="number" id="cashAmount" step="0.01" min="0" placeholder="0.00">
+                    <div id="returnAmountDisplay" class="return-amount" style="display: none;">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Return Amount: <strong id="returnAmount">₹0.00</strong></span>
+                    </div>
+                </div>
+                <div class="form-group" id="paymentReferenceGroup" style="display: none;">
+                    <label for="paymentReference">Reference/Transaction ID</label>
+                    <input type="text" id="paymentReference" placeholder="Enter reference number (optional)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelCheckoutBtn">Cancel</button>
+                <button class="btn btn-save" id="confirmCheckoutBtn">
+                    <i class="fas fa-check"></i> Complete Payment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content invoice-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-invoice"></i> Invoice</h2>
+                <div class="invoice-actions">
+                    <button class="btn btn-small" id="printInvoiceBtn">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="modal-close" id="closeInvoiceModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" id="invoiceBody">
+                <!-- Invoice content will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="https://robinthomasonline.github.io/apps/" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
+    </footer>
+
+    <script src="pos.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "POS & Billing System",
+        "description": "Complete POS system with barcode scanning, product management, customer management, invoicing, and day book. Perfect for small shops and retail businesses.",
+        "url": "https://robinthomasonline.github.io/apps/pos/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Robin Thomas",
+            "url": "https://robinthomasonline.github.io"
+        },
+        "featureList": [
+            "Barcode and QR code scanning",
+            "Product management with categories",
+            "Customer management",
+            "Invoice generation",
+            "Day book transaction log",
+            "User role management",
+            "Shop customization",
+            "Local storage persistence"
+        ]
+    }
+    </script>
+</body>
+</html>

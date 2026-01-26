@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Crontab Entry Creator - Generate, parse, and understand cron job schedules. Create custom crontab entries with visual builder and copy ready-to-use cron commands.">
+    <meta name="keywords" content="crontab, cron job, cron schedule, cron generator, cron builder, cron parser, cron expression, task scheduler, linux cron, unix cron">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/cron/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/cron/">
+    <meta property="og:title" content="Crontab Entry Creator | Free Cron Job Generator">
+    <meta property="og:description" content="Generate, parse, and understand cron job schedules. Create custom crontab entries with visual builder and copy ready-to-use cron commands.">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/cron/">
+    <meta name="twitter:title" content="Crontab Entry Creator | Free Cron Job Generator">
+    <meta name="twitter:description" content="Generate, parse, and understand cron job schedules. Create custom crontab entries with visual builder.">
+    
+    <title>Crontab Entry Creator | Free Cron Job Generator | Robin Thomas</title>
+    <link rel="stylesheet" href="cron.css">
+    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-clock"></i> Crontab Entry Creator</h1>
+            <p class="subtitle">Generate, parse, and understand cron job schedules</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="builder" onclick="cronApp.switchTab('builder')">
+                <i class="fas fa-plus-circle"></i> Create Entry
+            </button>
+            <button class="tab-btn" data-tab="templates" onclick="cronApp.switchTab('templates')">
+                <i class="fas fa-bookmark"></i> Templates
+            </button>
+            <button class="tab-btn" data-tab="parser" onclick="cronApp.switchTab('parser')">
+                <i class="fas fa-search"></i> Parse Entry
+            </button>
+        </div>
+
+        <!-- Builder Tab -->
+        <div class="tab-content active" id="builder-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cog"></i> Build Crontab Entry</h2>
+                </div>
+                
+                <div class="form-section">
+                    <!-- Minute -->
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Minute (0-59)</label>
+                        <div class="input-row">
+                            <input type="text" id="minute" placeholder="* or 0-59" class="cron-input">
+                            <button class="btn-quick-select" onclick="cronApp.showQuickSelect('minute')">
+                                <i class="fas fa-list"></i> Quick Select
+                            </button>
+                        </div>
+                        <div class="quick-select-panel" id="minute-quick-select" style="display: none;">
+                            <div class="quick-select-grid">
+                                <label><input type="checkbox" value="*"> Every minute (*)</label>
+                                <label><input type="checkbox" value="0"> At minute 0</label>
+                                <label><input type="checkbox" value="15"> At minute 15</label>
+                                <label><input type="checkbox" value="30"> At minute 30</label>
+                                <label><input type="checkbox" value="45"> At minute 45</label>
+                                <label><input type="checkbox" value="*/5"> Every 5 minutes</label>
+                                <label><input type="checkbox" value="*/10"> Every 10 minutes</label>
+                                <label><input type="checkbox" value="*/15"> Every 15 minutes</label>
+                                <label><input type="checkbox" value="*/30"> Every 30 minutes</label>
+                            </div>
+                            <button class="btn-apply" onclick="cronApp.applyQuickSelect('minute')">Apply Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Hour -->
+                    <div class="form-group">
+                        <label><i class="fas fa-hourglass-half"></i> Hour (0-23)</label>
+                        <div class="input-row">
+                            <input type="text" id="hour" placeholder="* or 0-23" class="cron-input">
+                            <button class="btn-quick-select" onclick="cronApp.showQuickSelect('hour')">
+                                <i class="fas fa-list"></i> Quick Select
+                            </button>
+                        </div>
+                        <div class="quick-select-panel" id="hour-quick-select" style="display: none;">
+                            <div class="quick-select-grid">
+                                <label><input type="checkbox" value="*"> Every hour (*)</label>
+                                <label><input type="checkbox" value="0"> Midnight (0)</label>
+                                <label><input type="checkbox" value="6"> 6 AM</label>
+                                <label><input type="checkbox" value="9"> 9 AM</label>
+                                <label><input type="checkbox" value="12"> Noon (12)</label>
+                                <label><input type="checkbox" value="18"> 6 PM</label>
+                                <label><input type="checkbox" value="21"> 9 PM</label>
+                                <label><input type="checkbox" value="*/2"> Every 2 hours</label>
+                                <label><input type="checkbox" value="*/6"> Every 6 hours</label>
+                                <label><input type="checkbox" value="*/12"> Every 12 hours</label>
+                            </div>
+                            <button class="btn-apply" onclick="cronApp.applyQuickSelect('hour')">Apply Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Day of Month -->
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-day"></i> Day of Month (1-31)</label>
+                        <div class="input-row">
+                            <input type="text" id="day" placeholder="* or 1-31" class="cron-input">
+                            <button class="btn-quick-select" onclick="cronApp.showQuickSelect('day')">
+                                <i class="fas fa-list"></i> Quick Select
+                            </button>
+                        </div>
+                        <div class="quick-select-panel" id="day-quick-select" style="display: none;">
+                            <div class="quick-select-grid">
+                                <label><input type="checkbox" value="*"> Every day (*)</label>
+                                <label><input type="checkbox" value="1"> 1st of month</label>
+                                <label><input type="checkbox" value="15"> 15th of month</label>
+                                <label><input type="checkbox" value="28"> 28th of month</label>
+                                <label><input type="checkbox" value="*/7"> Every 7 days</label>
+                                <label><input type="checkbox" value="1,15"> 1st and 15th</label>
+                                <label><input type="checkbox" value="1-5"> Days 1-5</label>
+                                <label><input type="checkbox" value="L"> Last day of month</label>
+                            </div>
+                            <button class="btn-apply" onclick="cronApp.applyQuickSelect('day')">Apply Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Month -->
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Month (1-12)</label>
+                        <div class="input-row">
+                            <input type="text" id="month" placeholder="* or 1-12" class="cron-input">
+                            <button class="btn-quick-select" onclick="cronApp.showQuickSelect('month')">
+                                <i class="fas fa-list"></i> Quick Select
+                            </button>
+                        </div>
+                        <div class="quick-select-panel" id="month-quick-select" style="display: none;">
+                            <div class="quick-select-grid">
+                                <label><input type="checkbox" value="*"> Every month (*)</label>
+                                <label><input type="checkbox" value="1"> January</label>
+                                <label><input type="checkbox" value="3"> March</label>
+                                <label><input type="checkbox" value="6"> June</label>
+                                <label><input type="checkbox" value="9"> September</label>
+                                <label><input type="checkbox" value="12"> December</label>
+                                <label><input type="checkbox" value="1-6"> Jan-Jun</label>
+                                <label><input type="checkbox" value="*/3"> Every 3 months</label>
+                            </div>
+                            <button class="btn-apply" onclick="cronApp.applyQuickSelect('month')">Apply Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Day of Week -->
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-week"></i> Day of Week (0-7, 0 or 7 = Sunday)</label>
+                        <div class="input-row">
+                            <input type="text" id="weekday" placeholder="* or 0-7" class="cron-input">
+                            <button class="btn-quick-select" onclick="cronApp.showQuickSelect('weekday')">
+                                <i class="fas fa-list"></i> Quick Select
+                            </button>
+                        </div>
+                        <div class="quick-select-panel" id="weekday-quick-select" style="display: none;">
+                            <div class="quick-select-grid">
+                                <label><input type="checkbox" value="*"> Every day (*)</label>
+                                <label><input type="checkbox" value="0"> Sunday</label>
+                                <label><input type="checkbox" value="1"> Monday</label>
+                                <label><input type="checkbox" value="5"> Friday</label>
+                                <label><input type="checkbox" value="6"> Saturday</label>
+                                <label><input type="checkbox" value="1-5"> Weekdays (Mon-Fri)</label>
+                                <label><input type="checkbox" value="0,6"> Weekend (Sat-Sun)</label>
+                                <label><input type="checkbox" value="*/2"> Every 2 days</label>
+                            </div>
+                            <button class="btn-apply" onclick="cronApp.applyQuickSelect('weekday')">Apply Selected</button>
+                        </div>
+                    </div>
+
+                    <!-- Command -->
+                    <div class="form-group">
+                        <label><i class="fas fa-terminal"></i> Command</label>
+                        <input type="text" id="command" placeholder="e.g., /usr/bin/backup.sh" class="cron-input command-input">
+                        <small class="help-text">Enter the command or script path to execute</small>
+                    </div>
+
+                    <button class="btn-generate" onclick="cronApp.generateCron()">
+                        <i class="fas fa-magic"></i> Generate Crontab Entry
+                    </button>
+                </div>
+
+                <!-- Output -->
+                <div class="output-section" id="output-section" style="display: none;">
+                    <div class="output-header">
+                        <h3><i class="fas fa-code"></i> Generated Crontab Entry</h3>
+                    </div>
+                    <div class="output-box">
+                        <code id="cron-output" class="cron-output"></code>
+                        <button class="btn-copy" onclick="cronApp.copyToClipboard('cron-output')" title="Copy to clipboard">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates Tab -->
+        <div class="tab-content" id="templates-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-bookmark"></i> Common Crontab Templates</h2>
+                    <p class="card-subtitle">Click copy to use these ready-made cron entries</p>
+                </div>
+                
+                <div class="templates-grid" id="templates-grid"></div>
+            </div>
+        </div>
+
+        <!-- Parser Tab -->
+        <div class="tab-content" id="parser-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-search"></i> Parse Crontab Entry</h2>
+                    <p class="card-subtitle">Enter an existing crontab entry to understand what it does</p>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-group">
+                        <label><i class="fas fa-code"></i> Crontab Entry</label>
+                        <textarea id="parse-input" placeholder="e.g., 0 2 * * * /usr/bin/backup.sh" class="cron-textarea" rows="3"></textarea>
+                        <small class="help-text">Paste your crontab entry here (format: minute hour day month weekday command)</small>
+                    </div>
+                    
+                    <button class="btn-parse" onclick="cronApp.parseCron()">
+                        <i class="fas fa-search"></i> Parse Entry
+                    </button>
+                </div>
+
+                <!-- Parse Output -->
+                <div class="parse-output" id="parse-output" style="display: none;">
+                    <div class="parse-result">
+                        <h3><i class="fas fa-info-circle"></i> Explanation</h3>
+                        <div id="parse-explanation" class="explanation-box"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+            <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="https://robinthomasonline.github.io/apps/" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
+    </footer>
+
+    <script src="cron.js"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Crontab Entry Creator",
+        "description": "Generate, parse, and understand cron job schedules. Create custom crontab entries with visual builder and copy ready-to-use cron commands.",
+        "url": "https://robinthomasonline.github.io/apps/cron/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Robin Thomas",
+            "url": "https://robinthomasonline.github.io"
+        },
+        "featureList": [
+            "Visual crontab builder",
+            "Quick select options for common values",
+            "Common crontab templates",
+            "Crontab entry parser and explainer",
+            "One-click copy functionality"
+        ]
+    }
+    </script>
+</body>
+</html>

@@ -124,5 +124,21 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- POS & Billing System App -->
+  <url>
+    <loc>https://robinthomasonline.github.io/apps/pos/</loc>
+    <lastmod>2025-01-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Crontab Entry Creator App -->
+  <url>
+    <loc>https://robinthomasonline.github.io/apps/cron/</loc>
+    <lastmod>2025-01-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
 
