@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description"
+        content="Free Online Barcode Generator - Create barcodes in various formats (Code 128, EAN, UPC, etc.) instantly. Download as PNG or SVG. API functionality included.">
+    <meta name="keywords"
+        content="barcode generator, free barcode maker, online barcode, code 128, ean 13, upc, qr code, barcode api">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/barcode/">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/barcode/">
+    <meta property="og:title" content="Barcode Generator | Create & Download Barcodes">
+    <meta property="og:description"
+        content="Generate customizable barcodes instantly. Support for Code 128, EAN, UPC, and more.">
+    <meta property="og:site_name" content="Robin Thomas - Apps">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://robinthomasonline.github.io/apps/barcode/">
+    <meta name="twitter:title" content="Barcode Generator | Create & Download Barcodes">
+    <meta name="twitter:description"
+        content="Generate customizable barcodes instantly. Support for Code 128, EAN, UPC, and more.">
+
+    <title>Barcode Generator | Free Online Tool | Robin Thomas</title>
+    <link rel="stylesheet" href="barcode.css">
+    <!-- Using a generic barcode icon for now or reusing favicon if available -->
+    <link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon.ico">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <h1><i class="fas fa-barcode" style="margin-right: 10px;"></i> Barcode Generator</h1>
+        </div>
+
+        <div class="main-content">
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="input-group full-width">
+                    <label for="barcodeValue">Barcode Value</label>
+                    <input type="text" id="barcodeValue" placeholder="Enter text or numbers..." class="app-input"
+                        value="123456789">
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="barcodeFormat">Format</label>
+                        <select id="barcodeFormat" class="app-select">
+                            <option value="CODE128">Code 128 (Default)</option>
+                            <option value="CODE39">Code 39</option>
+                            <option value="EAN13">EAN-13</option>
+                            <option value="UPC">UPC</option>
+                            <option value="EAN8">EAN-8</option>
+                            <option value="ITF14">ITF-14</option>
+                            <option value="MSI">MSI</option>
+                            <option value="pharmacode">Pharmacode</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="lineColor">Bar Color</label>
+                        <input type="color" id="lineColor" class="app-color" value="#000000">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bgColor">Background</label>
+                        <input type="color" id="bgColor" class="app-color" value="#ffffff">
+                    </div>
+                </div>
+
+                <div class="options-row">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="showText" checked> Show Text
+                    </label>
+                </div>
+
+                <button id="generateBtn" class="btn-primary">
+                    <i class="fas fa-sync-alt"></i> Generate
+                </button>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <div class="barcode-wrapper" id="barcodeWrapper">
+                    <svg id="barcode"></svg>
+                </div>
+                <div class="action-buttons">
+                    <button id="downloadPngBtn" class="btn-secondary">
+                        <i class="fas fa-download"></i> PNG
+                    </button>
+                    <button id="downloadSvgBtn" class="btn-secondary">
+                        <i class="fas fa-code"></i> SVG
+                    </button>
+                </div>
+                <div class="api-info">
+                    <p><small>API Usage: <code id="apiLink">?value=123&format=CODE128</code></small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank"
+                rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.
+        </p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer"
+            class="bmc-logo">
+            <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+        </a>
+        <a href="https://robinthomasonline.github.io/apps/" class="view-all-apps-btn">
+            <i class="fas fa-th"></i> View All Apps
+        </a>
+    </footer>
+
+    <script src="barcode.js"></script>
+</body>
+
+</html>

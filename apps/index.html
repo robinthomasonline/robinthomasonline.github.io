@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,7 +173,7 @@
             height: 56px;
             object-fit: contain;
             border-radius: 8px;
-            background: rgba(255,255,255,0.02);
+            background: rgba(255, 255, 255, 0.02);
             padding: 6px;
         }
 
@@ -288,6 +289,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -409,95 +411,97 @@
             #cyber-canvas {
                 display: none;
             }
-            
+
             .app-card {
                 transition: none;
             }
-            
+
             * {
                 animation: none !important;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Neural Network Background Canvas -->
-    <canvas id="cyber-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #0a0f1c;"></canvas>
+    <canvas id="cyber-canvas"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #0a0f1c;"></canvas>
     <script>
-    const canvas = document.getElementById('cyber-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let particles = [];
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
 
-    // Configuration
-    const particleCount = 60;
-    const connectionDistance = 150;
+        // Configuration
+        const particleCount = 60;
+        const connectionDistance = 150;
 
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-    }
-
-    class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.size = Math.random() * 2 + 1;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
 
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < 0 || this.x > width) this.vx *= -1;
-            if (this.y < 0 || this.y > height) this.vy *= -1;
-        }
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
 
-        draw() {
-            ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
 
-    function init() {
-        resize();
-        particles = [];
-        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                if (dist < connectionDistance) {
-                    ctx.strokeStyle = `rgba(0, 242, 255, ${1 - dist/connectionDistance * 0.2})`;
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.stroke();
-                }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
-        requestAnimationFrame(animate);
-    }
 
-    // Respect reduced motion preference
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        window.addEventListener('resize', resize);
-        init();
-        animate();
-    } else {
-        canvas.style.display = 'none';
-    }
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < connectionDistance) {
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - dist / connectionDistance * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // Respect reduced motion preference
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            window.addEventListener('resize', resize);
+            init();
+            animate();
+        } else {
+            canvas.style.display = 'none';
+        }
     </script>
     <div class="container">
         <a href="https://robinthomasonline.github.io" class="back-link">
@@ -511,13 +515,36 @@
         </div>
 
         <div class="apps-grid">
+            <a href="barcode/" class="app-card">
+                <div class="project-header-inline">
+                    <i class="fas fa-barcode"
+                        style="font-size: 3rem; margin-right: 1.5rem; background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                    <h2 class="project-title">Barcode Generator</h2>
+                </div>
+                <p class="project-description">
+                    Free online barcode generator supporting multiple formats (Code 128, EAN, UPC, etc.).
+                    Generate, customize colors, and download as PNG or SVG. Includes URL-based API functionality.
+                </p>
+                <ul class="project-features">
+                    <li>Multiple barcode formats</li>
+                    <li>Customizable colors</li>
+                    <li>PNG & SVG Export</li>
+                    <li>API-like functionality via URL</li>
+                    <li>Client-side generation</li>
+                </ul>
+                <div class="project-link">
+                    <span>View Project</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
             <a href="mood/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/mood.png" alt="Mood Logger" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/mood.png" alt="Mood Logger"
+                        class="project-icon-img">
                     <h2 class="project-title">Mood Logger</h2>
                 </div>
                 <p class="project-description">
-                    Track your emotional wellbeing with a comprehensive mood logging application. 
+                    Track your emotional wellbeing with a comprehensive mood logging application.
                     Visualize your mood trends over time and gain insights into your emotional patterns.
                 </p>
                 <ul class="project-features">
@@ -535,11 +562,12 @@
 
             <a href="password/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/password.png" alt="Password Generator" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/password.png" alt="Password Generator"
+                        class="project-icon-img">
                     <h2 class="project-title">Password Generator</h2>
                 </div>
                 <p class="project-description">
-                    Generate secure, compliant passwords with customizable settings. 
+                    Generate secure, compliant passwords with customizable settings.
                     Includes presets for ISO, PCI, CSA, HIPAA, NIST, and GDPR compliance standards.
                 </p>
                 <ul class="project-features">
@@ -557,11 +585,12 @@
 
             <a href="timer/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/worktimer.png" alt="Work Timer" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/worktimer.png" alt="Work Timer"
+                        class="project-icon-img">
                     <h2 class="project-title">Work Timer</h2>
                 </div>
                 <p class="project-description">
-                    A retro-style timer application for tracking work sessions and tasks. 
+                    A retro-style timer application for tracking work sessions and tasks.
                     Manage multiple tasks, view statistics, and export your work history.
                 </p>
                 <ul class="project-features">
@@ -579,11 +608,12 @@
 
             <a href="ip/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/ip.png" alt="IP Address Locator" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/ip.png" alt="IP Address Locator"
+                        class="project-icon-img">
                     <h2 class="project-title">IP Address Locator</h2>
                 </div>
                 <p class="project-description">
-                    Get comprehensive geographical and network information for any IP address. 
+                    Get comprehensive geographical and network information for any IP address.
                     Displays all details from IPAPI including location, network, country, and timezone data.
                 </p>
                 <ul class="project-features">
@@ -601,11 +631,12 @@
 
             <a href="subnet/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/subnet.png" alt="Subnet Calculator" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/subnet.png" alt="Subnet Calculator"
+                        class="project-icon-img">
                     <h2 class="project-title">Subnet Calculator</h2>
                 </div>
                 <p class="project-description">
-                    Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR notation. 
+                    Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR notation.
                     Demonstrates network engineering and security math with binary representation visualization.
                 </p>
                 <ul class="project-features">
@@ -623,12 +654,14 @@
 
             <a href="kanban/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/kanban.png" alt="Kanban Board" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/kanban.png" alt="Kanban Board"
+                        class="project-icon-img">
                     <h2 class="project-title">Kanban Board</h2>
                 </div>
                 <p class="project-description">
-                    A minimalist drag-and-drop task management board with three columns (To Do, In Progress, Done). 
-                    Features local storage persistence, task editing, priority levels, CSV export/import, and user assignment.
+                    A minimalist drag-and-drop task management board with three columns (To Do, In Progress, Done).
+                    Features local storage persistence, task editing, priority levels, CSV export/import, and user
+                    assignment.
                 </p>
                 <ul class="project-features">
                     <li>Drag-and-drop task management</li>
@@ -645,11 +678,12 @@
 
             <a href="resume-cover/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/cv.png" alt="Resume & Cover Letter Generator" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/cv.png" alt="Resume & Cover Letter Generator"
+                        class="project-icon-img">
                     <h2 class="project-title">Resume & Cover Letter Generator</h2>
                 </div>
                 <p class="project-description">
-                    AI-powered ATS-friendly resume and cover letter generator optimized for international job markets. 
+                    AI-powered ATS-friendly resume and cover letter generator optimized for international job markets.
                     Uses Gemini AI to create keyword-rich, tailored documents that pass ATS screening.
                 </p>
                 <ul class="project-features">
@@ -668,11 +702,13 @@
 
             <a href="cofounder-pie/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/founders.png" alt="Co-Founder Pie" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/founders.png" alt="Co-Founder Pie"
+                        class="project-icon-img">
                     <h2 class="project-title">Co-Founder Pie</h2>
                 </div>
                 <p class="project-description">
-                    Calculate fair equity distribution for startup co-founders based on contributions, tasks, and responsibilities. 
+                    Calculate fair equity distribution for startup co-founders based on contributions, tasks, and
+                    responsibilities.
                     Supports 2-10 founders with weighted task scoring and automatic percentage calculations.
                 </p>
                 <ul class="project-features">
@@ -692,11 +728,13 @@
 
             <a href="daybook/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/daybook.png" alt="Daybook" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/daybook.png" alt="Daybook"
+                        class="project-icon-img">
                     <h2 class="project-title">Daybook</h2>
                 </div>
                 <p class="project-description">
-                    Track income and expenses for small shops with customer details, invoice generation, and data export. 
+                    Track income and expenses for small shops with customer details, invoice generation, and data
+                    export.
                     Perfect for small business bookkeeping with local storage and print-ready invoices.
                 </p>
                 <ul class="project-features">
@@ -720,7 +758,7 @@
                     <h2 class="project-title">Image to Favicon Converter</h2>
                 </div>
                 <p class="project-description">
-                    Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48, etc.) 
+                    Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48, etc.)
                     with preview and download options. Perfect for creating website icons.
                 </p>
                 <ul class="project-features">
@@ -743,7 +781,8 @@
                     <h2 class="project-title">JSON Formatter</h2>
                 </div>
                 <p class="project-description">
-                    Format, validate, minify, and beautify JSON instantly. Essential tool for developers working with APIs, 
+                    Format, validate, minify, and beautify JSON instantly. Essential tool for developers working with
+                    APIs,
                     configuration files, and data structures.
                 </p>
                 <ul class="project-features">
@@ -766,7 +805,7 @@
                     <h2 class="project-title">Habit Tracker</h2>
                 </div>
                 <p class="project-description">
-                    Track daily habits with streak counters and calendar views. Build better habits with minimal design 
+                    Track daily habits with streak counters and calendar views. Build better habits with minimal design
                     and powerful retention tracking features.
                 </p>
                 <ul class="project-features">
@@ -789,7 +828,7 @@
                     <h2 class="project-title">Markdown Converter</h2>
                 </div>
                 <p class="project-description">
-                    Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload support, 
+                    Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload support,
                     and word count. Perfect for documentation, reports, and content conversion.
                 </p>
                 <ul class="project-features">
@@ -808,11 +847,13 @@
 
             <a href="sydney_myrta_booking_system_monitoring_system/" class="app-card">
                 <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/myrta.png" alt="MyRTA Booking System Monitor" class="project-icon-img">
+                    <img src="https://robinthomasonline.github.io/assets/myrta.png" alt="MyRTA Booking System Monitor"
+                        class="project-icon-img">
                     <h2 class="project-title">MyRTA Booking System Monitor</h2>
                 </div>
                 <p class="project-description">
-                    Free browser extension that monitors MyRTA booking availability changes and alerts you instantly when new test dates become available. Get notified with sound alerts and desktop notifications.
+                    Free browser extension that monitors MyRTA booking availability changes and alerts you instantly
+                    when new test dates become available. Get notified with sound alerts and desktop notifications.
                 </p>
                 <ul class="project-features">
                     <li>Monitor booking page for visual changes</li>
@@ -834,7 +875,8 @@
                     <h2 class="project-title">WTFQR - QR Code Generator</h2>
                 </div>
                 <p class="project-description">
-                    Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for URLs, text, contact information, and more with customizable styling options.
+                    Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for URLs,
+                    text, contact information, and more with customizable styling options.
                 </p>
                 <ul class="project-features">
                     <li>Custom QR code generation</li>
@@ -856,7 +898,9 @@
                     <h2 class="project-title">POS & Billing System</h2>
                 </div>
                 <p class="project-description">
-                    A comprehensive Point of Sale (POS) and Billing System for small shops and retail businesses. Features barcode/QR code scanning, product management, customer management, invoicing, transactions, and expense tracking.
+                    A comprehensive Point of Sale (POS) and Billing System for small shops and retail businesses.
+                    Features barcode/QR code scanning, product management, customer management, invoicing, transactions,
+                    and expense tracking.
                 </p>
                 <ul class="project-features">
                     <li>Barcode & QR code scanning</li>
@@ -880,7 +924,9 @@
                     <h2 class="project-title">Crontab Entry Creator</h2>
                 </div>
                 <p class="project-description">
-                    A web-based tool for creating, understanding, and managing crontab entries. Generate custom cron schedules with a visual builder, explore common templates, and parse existing crontab entries to understand what they do.
+                    A web-based tool for creating, understanding, and managing crontab entries. Generate custom cron
+                    schedules with a visual builder, explore common templates, and parse existing crontab entries to
+                    understand what they do.
                 </p>
                 <ul class="project-features">
                     <li>Visual crontab builder</li>
@@ -900,12 +946,15 @@
 
     <!-- Footer -->
     <footer class="app-footer">
-        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
-        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
-        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank"
+                rel="noopener noreferrer">Robin Thomas</a></p>
+        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.
+        </p>
+        <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer"
+            class="bmc-logo">
             <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
         </a>
     </footer>
 </body>
-</html>
 
+</html>

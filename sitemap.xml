@@ -140,5 +140,13 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Barcode Generator App -->
+  <url>
+    <loc>https://robinthomasonline.github.io/apps/barcode/</loc>
+    <lastmod>2026-02-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
 </urlset>
 

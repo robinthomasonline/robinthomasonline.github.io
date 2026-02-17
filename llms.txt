@@ -69,6 +69,9 @@ The site hosts several free web applications:
 15. Crontab Entry Creator - Web-based tool for creating, understanding, and managing crontab entries. Generate custom cron schedules with a visual builder, explore common templates, and parse existing crontab entries to understand what they do.
     URL: https://robinthomasonline.github.io/apps/cron/
 
+16. Barcode Generator - Free online barcode generator supporting multiple formats (Code 128, EAN, UPC, etc.) with customizable colors and PNG/SVG export.
+    URL: https://robinthomasonline.github.io/apps/barcode/
+
 # External Apps & Projects
 - WTFQR: https://wtfqr.com (QR Code Generator)
 - Smart HOMI: https://smarthomi.app (Smart Home Operations Platform)

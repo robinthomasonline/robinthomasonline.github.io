@@ -636,9 +636,16 @@
 
     // Gemini API call
     async function callGeminiAI(prompt, apiKey) {
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+        // Use a Gemini thinking-capable model (3-series).
+        const model = "gemini-3-flash-preview";
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
         const body = {
-            contents: [{ parts: [{ text: prompt }] }]
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+                thinkingConfig: {
+                    thinkingLevel: "high"
+                }
+            }
         };
         const response = await fetch(url, {
             method: "POST",
@@ -706,28 +713,28 @@
         keywordsDisplay.style.display = 'block';
     }
 
-    // ATS-Friendly Resume Prompt with Australian Standards
+    // ATS-Friendly Resume Prompt (Zero-hallucination / ATS compliant)
     function getResumePrompt(jobType, userResume, jobDescription) {
         const jsonSchema = `{
-"profile_summary": "A 3-5 sentence professional summary that includes the exact job title and top keywords from the job description. Use strong action verbs and quantify achievements where possible.",
-"core_competencies": {
-"Category 1 (e.g., Leadership & Management)": ["Competency with quantified results", "Competency with quantified results"],
-"Category 2 (e.g., Communication & Collaboration)": ["Competency with quantified results", "Competency with quantified results"]
-},
+"professional_summary": "3-4 sentences max. Only claims supported by the Master Resume. Use JD-aligned keywords only when they are explicitly supported by the Master Resume. Never add new facts.",
 "technical_skills": {
-"Category 1 (e.g., Software & Tools)": ["Skill 1", "Skill 2", "Skill 3"],
-"Category 2 (e.g., Systems & Platforms)": ["Skill 1", "Skill 2", "Skill 3"]
+"Category 1 (e.g., Languages)": ["Skill 1", "Skill 2"],
+"Category 2 (e.g., Tools & Platforms)": ["Skill 1", "Skill 2"]
+},
+"professional_skills": {
+"Category 1 (e.g., Stakeholder Management)": ["Skill 1", "Skill 2"],
+"Category 2 (e.g., Delivery & Process)": ["Skill 1", "Skill 2"]
 },
 "professional_experience": [
 {
-  "title": "Exact Job Title (match job description)",
+  "title": "Exact Job Title (from Master Resume only — do not change titles)",
   "company": "Company Name",
+  "location": "City, State/Province, Country (only if present in Master Resume; otherwise omit or empty string)",
   "location": "City, State/Province, Country",
   "date": "Month YYYY – Month YYYY",
-  "bullets": ["Action verb + quantified achievement + relevant keyword", "Action verb + quantified achievement + relevant keyword", "Action verb + quantified achievement + relevant keyword"]
+  "bullets": ["Front-load metrics EXACTLY as stated in Master Resume (if any) + action verb + outcome + JD-aligned keyword only if supported", "Bullet 2", "Bullet 3"]
 }
 ],
-"accomplishments": ["Quantified accomplishment with relevant keywords", "Quantified accomplishment with relevant keywords"],
 "education": [
 {"degree": "Degree Name", "institution": "University Name", "year": "YYYY"}
 ],
@@ -736,56 +743,70 @@
 
         let focus = '';
         if (jobType.includes('tech')) {
-            focus = 'Focus on technical skills, programming languages, software tools, and measurable technical achievements. Include both acronyms and full terms (e.g., "JavaScript (JS)", "Application Programming Interface (API)").';
+            focus = 'Focus on verified technical skills (languages, tools, platforms) and verified technical outcomes. Include acronyms and full terms only when both forms appear in the Master Resume OR when one is a straightforward expansion that does not imply new experience (e.g., "API" → "Application Programming Interface (API)").';
         } else if (jobType.includes('fulltime')) {
-            focus = 'Focus on leadership, teamwork, customer service, and measurable business achievements. Emphasize reliability, work ethic, and professional growth.';
+            focus = 'Focus on verified leadership, teamwork, customer service, delivery/process, and measurable business outcomes — but ONLY when the Master Resume contains evidence.';
         } else { // part-time non-tech
-            focus = 'Focus on flexibility, reliability, customer service, and teamwork. Emphasize adaptability and willingness to learn.';
+            focus = 'Focus on verified reliability, flexibility, customer service, teamwork, and adaptability — but ONLY when supported by the Master Resume.';
         }
 
-        return `You are an expert ATS-friendly resume writer specializing in international job market standards. Generate a clean, keyword-rich resume that will pass ATS screening and appeal to human recruiters.
+        return `You are a **Resume Strategist and ATS Compliance Officer** tasked with optimizing the user's resume for a specific job description. You operate within strict ethical boundaries where factual accuracy takes absolute precedence over keyword matching or aesthetic appeal. Applicant Tracking Systems (ATS) filter resumes using keywords, but human recruiters decide based on authenticity and demonstrated impact.
 
-**CRITICAL ATS REQUIREMENTS:**
-1. Use exact keywords from the job description throughout the resume
-2. Include both acronyms and full terms (e.g., "Customer Relationship Management (CRM)")
-3. Start all bullet points with strong action verbs (Managed, Developed, Implemented, Achieved, etc.)
-4. Quantify achievements with numbers, percentages, or metrics wherever possible
-5. Use standard date format (Month YYYY – Month YYYY or MM/YYYY – MM/YYYY based on the master resume format)
-6. Include location in standard format (City, State/Province, Country or City, Country based on the master resume format)
-7. Match job titles exactly as they appear in the job description
-8. Use appropriate spelling and terminology based on the target job location (US English, UK English, Australian English, etc.)
+PRIME DIRECTIVE — ZERO-HALLUCINATION RULE (NON-NEGOTIABLE):
+- The Master Resume is the ONLY source of factual truth.
+- The Job Description is ONLY a source of keywords and prioritization.
+- NEVER add, infer, or suggest skills, tools, certifications, job titles, metrics, or experiences not explicitly present in the Master Resume.
+- If a skill appears in the JD but NOT in the Master Resume: EXCLUDE it entirely.
+- If a concept in the Master Resume is semantically equivalent to JD language: REPHRASE it (e.g., "Led a squad" → "Team Leadership") without adding meaning.
+- If a metric exists in the Master Resume: PRESERVE it EXACTLY as stated (no rounding, no new numbers).
 
-**CONTENT STRATEGY:**
-- Extract and naturally integrate the top 10-15 keywords from the job description
-- Rewrite the professional summary to include the exact job title and most relevant keywords
-- Tailor each work experience bullet point to demonstrate skills mentioned in the job description
-- Use the STAR method (Situation, Task, Action, Result) for achievements
-- Focus on results and accomplishments, not just duties
+Operational Constraints:
+- NO PLAGIARISM: Do not copy sentences/responsibilities from the Job Description.
+- NO EMBELLISHMENT: Do not inflate numbers, add responsibilities, or upgrade job titles.
+- ATS FORMAT: Standard headings; bullet points only; no tables, columns, graphics, icons, or text boxes.
+- LENGTH: Target 2–3 pages; hard maximum 5 pages.
 
-**CRITICAL REQUIREMENT - PROFESSIONAL EXPERIENCE:**
-- You MUST include ALL professional experience entries from the master resume
-- Do NOT skip or omit any job positions, even if they seem less relevant
-- Include every role with tailored bullet points that highlight relevant skills
-- If a role has many responsibilities, select the most relevant 3-4 points for the target job
-- Maintain chronological order (most recent first)
-- Count the total number of positions in the master resume and ensure ALL are included
-- If you find 5 positions in the master resume, include all 5 in the generated resume
-- If you find 3 positions in the master resume, include all 3 in the generated resume
-- NO EXCEPTIONS - every single professional experience entry must be included
+Task:
+Optimize the user's current resume to align with the Job Description by:
+1) Extracting 15–20 high-value keywords and requirements from the Job Description.
+2) Verifying which keywords/concepts are explicitly supported by the Master Resume.
+3) Rewriting the resume using ATS-friendly formatting and JD-aligned language while preserving 100% factual accuracy.
+4) Organizing skills into a mandatory two-category Skills Matrix:
+   - Technical Skills (software, tools, programming languages, platforms, certifications) — ONLY if explicitly present in Master Resume
+   - Professional Skills (methodologies, leadership, workflows, soft skills) — ONLY if explicitly present in Master Resume
+   NOTE: ALL skills listed must be from (Skills explicitly in Master Resume) ∩ (Keywords in Job Description).
+5) Restructuring bullet points to front-load quantifiable achievements and use action verbs that mirror JD terminology ONLY when factually appropriate.
+
+Section-by-Section Execution Rules:
+- Header: Do NOT output a header block here (name/contact handled by the app UI). Do not add LinkedIn unless present in the Master Resume (the app will supply if user enters it).
+- Professional Summary: 3–4 sentences maximum. Use verified experience and verified keywords. Avoid generic claims ("expert", "highly motivated") unless directly evidenced in Master Resume.
+- Skills Matrix: Output as Technical Skills and Professional Skills categories (see schema).
+- Professional Experience:
+  - Reverse chronological order.
+  - Include ALL roles present in the Master Resume (do not omit positions).
+  - Rewrite bullets with JD-aligned language while maintaining factual accuracy.
+  - Preserve ALL original metrics exactly as stated.
+  - If a role has many points, select the most relevant 3–5 bullets, but do not add new content.
+- Education: Degree, institution, graduation date/year only if present.
+
+Internal Processing Protocol (do not output this as a separate section):
+1) EXTRACT: Top 15–20 keywords/requirements from JD.
+2) VERIFY: Cross-reference each against Master Resume for explicit presence.
+3) MAP: Determine the verified keyword list (supported vs unsupported).
+4) REWRITE: Use only supported keywords to revise sections.
+5) VALIDATE: Confirm no fabricated content; ATS-compliant; within 2–5 pages.
 
 ${focus}
 
-Return the result as a JSON object matching this schema:
+Return the result as a JSON object matching this schema exactly (no markdown fences, no extra keys):
 
 ${jsonSchema}
 
-**Master Resume:**
+Master Resume (ONLY source of truth):
 ${userResume}
 
-**Target Job Description:**
-${jobDescription}
-
-**Instructions:** Analyze the job description carefully, extract key requirements and keywords, then create a tailored resume that demonstrates how the candidate's experience directly matches what the employer is seeking. CRITICAL: Include ALL professional experience entries from the master resume - do not skip any positions. Ensure every section reinforces the candidate's fit for this specific role.`;
+Target Job Description (keyword source only):
+${jobDescription}`;
     }
 
     // ATS-Friendly Cover Letter Prompt with Australian Standards
@@ -840,7 +861,7 @@ ${jobDescription}
 **Instructions:** Analyze the job description to identify key requirements, skills, and company values. Create a compelling narrative that demonstrates how the candidate's experience directly addresses the employer's needs. Ensure the letter feels personal and authentic while being keyword-optimized for ATS systems.`;
     }
 
-    // Update renderResumeFromJSON to support advanced schema
+    // Update renderResumeFromJSON to support skills matrix schema
     function renderResumeFromJSON(resumeJSON) {
         const preview = document.getElementById('preview-content');
         preview.innerHTML = '';
@@ -854,25 +875,30 @@ ${jobDescription}
             return `<div style="margin-bottom:10px;"><strong>${sub}</strong><ul>${html}</ul></div>`;
         }
 
-        // Profile Summary
-        if (resumeJSON.profile_summary) {
-            preview.innerHTML += section('Profile Summary', `<p>${resumeJSON.profile_summary}</p>`);
+        // Professional Summary (preferred key)
+        const summary = resumeJSON.professional_summary || resumeJSON.profile_summary;
+        if (summary) {
+            preview.innerHTML += section('Professional Summary', `<p>${summary}</p>`);
         }
-        // Core Competencies
-        if (resumeJSON.core_competencies) {
+
+        // Skills Matrix (two-category format)
+        const professionalSkills = resumeJSON.professional_skills || resumeJSON.core_competencies;
+        const technicalSkills = resumeJSON.technical_skills;
+
+        if (technicalSkills) {
             let html = '';
-            for (const [sub, items] of Object.entries(resumeJSON.core_competencies)) {
-                html += subSection(sub, items.map(i => `<li>${i}</li>`).join(''));
-            }
-            preview.innerHTML += section('Core Competencies', html);
-        }
-        // Technical Skills
-        if (resumeJSON.technical_skills) {
-            let html = '';
-            for (const [sub, items] of Object.entries(resumeJSON.technical_skills)) {
-                html += subSection(sub, items.map(i => `<li>${i}</li>`).join(''));
+            for (const [sub, items] of Object.entries(technicalSkills)) {
+                html += subSection(sub, (items || []).map(i => `<li>${i}</li>`).join(''));
             }
             preview.innerHTML += section('Technical Skills', html);
+        }
+
+        if (professionalSkills) {
+            let html = '';
+            for (const [sub, items] of Object.entries(professionalSkills)) {
+                html += subSection(sub, (items || []).map(i => `<li>${i}</li>`).join(''));
+            }
+            preview.innerHTML += section('Professional Skills', html);
         }
         // Professional Experience
         if (resumeJSON.professional_experience) {
@@ -880,15 +906,11 @@ ${jobDescription}
             for (const job of resumeJSON.professional_experience) {
                 html += `<div class="job-entry">
                     <div class="job-title">${job.title}</div>
-                    <div class="company-duration">${job.company} | ${job.date}</div>
+                    <div class="company-duration">${job.company}${job.location ? ' | ' + job.location : ''} | ${job.date}</div>
                     <ul class="responsibilities">${(job.bullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
                 </div>`;
             }
             preview.innerHTML += section('Professional Experience', html);
-        }
-        // Accomplishments
-        if (resumeJSON.accomplishments) {
-            preview.innerHTML += section('Relevant Accomplishments', `<ul>${resumeJSON.accomplishments.map(a => `<li>${a}</li>`).join('')}</ul>`);
         }
         // Education
         if (resumeJSON.education) {
@@ -913,32 +935,34 @@ ${jobDescription}
         const editMode = document.getElementById('edit-mode');
         let html = '';
 
-        // Profile Summary
-        if (resumeJSON.profile_summary !== undefined) {
+        // Professional Summary
+        const summaryValue = resumeJSON.professional_summary ?? resumeJSON.profile_summary;
+        if (summaryValue !== undefined) {
             html += `<div class="edit-section">
-                <h5>Profile Summary</h5>
-                <textarea class="edit-textarea" data-field="profile_summary">${resumeJSON.profile_summary || ''}</textarea>
+                <h5>Professional Summary</h5>
+                <textarea class="edit-textarea" data-field="professional_summary">${summaryValue || ''}</textarea>
             </div>`;
         }
 
         // Note: Right to Work section removed for cleaner resume
 
-        // Core Competencies
-        if (resumeJSON.core_competencies) {
+        // Professional Skills (preferred key; supports legacy "core_competencies")
+        const professionalSkills = resumeJSON.professional_skills || resumeJSON.core_competencies;
+        if (professionalSkills) {
             html += `<div class="edit-section">
-                <h5>Core Competencies</h5>`;
-            for (const [category, items] of Object.entries(resumeJSON.core_competencies)) {
+                <h5>Professional Skills</h5>`;
+            for (const [category, items] of Object.entries(professionalSkills)) {
                 html += `<div style="margin-bottom: 15px;">
-                    <input type="text" class="edit-textarea" style="margin-bottom: 8px;" data-category="competency" data-original="${category}" value="${category}" placeholder="Category name">
-                    <div class="edit-bullets" data-category="competency" data-original="${category}">`;
-                items.forEach((item, index) => {
+                    <input type="text" class="edit-textarea" style="margin-bottom: 8px;" data-category="professional-skill" data-original="${category}" value="${category}" placeholder="Category name">
+                    <div class="edit-bullets" data-category="professional-skill" data-original="${category}">`;
+                (items || []).forEach((item, index) => {
                     html += `<div class="bullet-item">
                         <input type="text" data-index="${index}" value="${item}" placeholder="Competency">
                         <button type="button" class="remove-bullet" onclick="removeBullet(this)">×</button>
                     </div>`;
                 });
                 html += `</div>
-                    <button type="button" class="add-bullet" onclick="addBullet('competency', '${category}')">Add Competency</button>
+                    <button type="button" class="add-bullet" onclick="addBullet('professional-skill', '${category}')">Add Skill</button>
                 </div>`;
             }
             html += `</div>`;
@@ -950,16 +974,16 @@ ${jobDescription}
                 <h5>Technical Skills</h5>`;
             for (const [category, items] of Object.entries(resumeJSON.technical_skills)) {
                 html += `<div style="margin-bottom: 15px;">
-                    <input type="text" class="edit-textarea" style="margin-bottom: 8px;" data-category="skill" data-original="${category}" value="${category}" placeholder="Category name">
-                    <div class="edit-bullets" data-category="skill" data-original="${category}">`;
-                items.forEach((item, index) => {
+                    <input type="text" class="edit-textarea" style="margin-bottom: 8px;" data-category="technical-skill" data-original="${category}" value="${category}" placeholder="Category name">
+                    <div class="edit-bullets" data-category="technical-skill" data-original="${category}">`;
+                (items || []).forEach((item, index) => {
                     html += `<div class="bullet-item">
                         <input type="text" data-index="${index}" value="${item}" placeholder="Skill">
                         <button type="button" class="remove-bullet" onclick="removeBullet(this)">×</button>
                     </div>`;
                 });
                 html += `</div>
-                    <button type="button" class="add-bullet" onclick="addBullet('skill', '${category}')">Add Skill</button>
+                    <button type="button" class="add-bullet" onclick="addBullet('technical-skill', '${category}')">Add Skill</button>
                 </div>`;
             }
             html += `</div>`;
@@ -975,6 +999,7 @@ ${jobDescription}
                     <div class="job-edit-header">
                         <input type="text" data-field="title" value="${job.title}" placeholder="Job Title">
                         <input type="text" data-field="company" value="${job.company}" placeholder="Company">
+                        <input type="text" data-field="location" value="${job.location || ''}" placeholder="Location">
                         <input type="text" data-field="date" value="${job.date}" placeholder="Date Range">
                     </div>
                     <div class="edit-bullets" data-job-bullets="${jobIndex}">`;
@@ -1058,7 +1083,7 @@ ${jobDescription}
 
     function addBullet(category, originalCategory = null) {
         let container;
-        if (category === 'competency' || category === 'skill') {
+        if (category === 'professional-skill' || category === 'technical-skill') {
             container = document.querySelector(`[data-category="${category}"][data-original="${originalCategory}"]`);
         } else {
             container = document.querySelector(`[data-category="${category}"]`) || 
@@ -1072,8 +1097,8 @@ ${jobDescription}
                 <input type="text" data-index="${index}" placeholder="${category === 'accomplishments' ? 'Accomplishment' : 
                                                                        category === 'certifications' ? 'Certification' : 
                                                                        category === 'other_information' ? 'Information' : 
-                                                                       category === 'competency' ? 'Competency' :
-                                                                       category === 'skill' ? 'Skill' : 'Item'}">
+                                                                       category === 'professional-skill' ? 'Professional Skill' :
+                                                                       category === 'technical-skill' ? 'Technical Skill' : 'Item'}">
                 <button type="button" class="remove-bullet" onclick="removeBullet(this)">×</button>
             `;
             container.appendChild(bulletItem);
@@ -1148,30 +1173,37 @@ ${jobDescription}
     function saveEditedData() {
         const editedJSON = { ...lastAIResumeJSON };
 
-        // Profile Summary
-        const profileSummary = document.querySelector('[data-field="profile_summary"]');
-        if (profileSummary) {
-            editedJSON.profile_summary = profileSummary.value;
+        // Professional Summary
+        const professionalSummary = document.querySelector('[data-field="professional_summary"]');
+        if (professionalSummary) {
+            editedJSON.professional_summary = professionalSummary.value;
+            // Backward compatibility key is not used in rendering; keep minimal duplication.
         }
 
         // Note: Right to Work section removed for cleaner resume
 
-        // Core Competencies
-        const competencySection = document.querySelector('.edit-section h5');
-        if (competencySection && competencySection.textContent === 'Core Competencies') {
-            editedJSON.core_competencies = {};
-            const competencyContainer = competencySection.parentElement;
-            const categoryInputs = competencyContainer.querySelectorAll('input[data-category="competency"]');
+        // Professional Skills
+        const sectionHeaders = document.querySelectorAll('.edit-section h5');
+        let professionalSkillsSection = null;
+        for (const section of sectionHeaders) {
+            if (section.textContent === 'Professional Skills') {
+                professionalSkillsSection = section.parentElement;
+                break;
+            }
+        }
+        if (professionalSkillsSection) {
+            editedJSON.professional_skills = {};
+            const categoryInputs = professionalSkillsSection.querySelectorAll('input[data-category="professional-skill"]');
             categoryInputs.forEach(categoryInput => {
                 const categoryName = categoryInput.value.trim();
                 if (categoryName) {
-                    const bulletsContainer = categoryInput.parentElement.querySelector('.edit-bullets[data-category="competency"]');
+                    const bulletsContainer = categoryInput.parentElement.querySelector('.edit-bullets[data-category="professional-skill"]');
                     if (bulletsContainer) {
-                        const items = Array.from(bulletsContainer.children).map(item => 
+                        const items = Array.from(bulletsContainer.children).map(item =>
                             item.querySelector('input').value.trim()
                         ).filter(item => item);
                         if (items.length > 0) {
-                            editedJSON.core_competencies[categoryName] = items;
+                            editedJSON.professional_skills[categoryName] = items;
                         }
                     }
                 }
@@ -1179,9 +1211,8 @@ ${jobDescription}
         }
 
         // Technical Skills
-        const skillSections = document.querySelectorAll('.edit-section h5');
         let technicalSkillsSection = null;
-        for (const section of skillSections) {
+        for (const section of sectionHeaders) {
             if (section.textContent === 'Technical Skills') {
                 technicalSkillsSection = section.parentElement;
                 break;
@@ -1189,11 +1220,11 @@ ${jobDescription}
         }
         if (technicalSkillsSection) {
             editedJSON.technical_skills = {};
-            const categoryInputs = technicalSkillsSection.querySelectorAll('input[data-category="skill"]');
+            const categoryInputs = technicalSkillsSection.querySelectorAll('input[data-category="technical-skill"]');
             categoryInputs.forEach(categoryInput => {
                 const categoryName = categoryInput.value.trim();
                 if (categoryName) {
-                    const bulletsContainer = categoryInput.parentElement.querySelector('.edit-bullets[data-category="skill"]');
+                    const bulletsContainer = categoryInput.parentElement.querySelector('.edit-bullets[data-category="technical-skill"]');
                     if (bulletsContainer) {
                         const items = Array.from(bulletsContainer.children).map(item => 
                             item.querySelector('input').value.trim()
@@ -1214,6 +1245,7 @@ ${jobDescription}
             Array.from(jobs).forEach(job => {
                 const title = job.querySelector('[data-field="title"]').value;
                 const company = job.querySelector('[data-field="company"]').value;
+                const location = job.querySelector('[data-field="location"]')?.value || '';
                 const date = job.querySelector('[data-field="date"]').value;
                 const bulletsContainer = job.querySelector('.edit-bullets');
                 const bullets = Array.from(bulletsContainer.children).map(item => 
@@ -1222,19 +1254,10 @@ ${jobDescription}
 
                 if (title && company) {
                     editedJSON.professional_experience.push({
-                        title, company, date, bullets
+                        title, company, location, date, bullets
                     });
                 }
             });
-        }
-
-        // Accomplishments
-        const accomplishmentsContainer = document.querySelector('[data-field="accomplishments"]');
-        if (accomplishmentsContainer) {
-            const items = Array.from(accomplishmentsContainer.children).map(item => 
-                item.querySelector('input').value.trim()
-            ).filter(item => item);
-            editedJSON.accomplishments = items;
         }
 
         // Education
@@ -1491,27 +1514,29 @@ ${jobDescription}
             pdfBullets(items);
         }
 
-        // Profile Summary
-        if (resumeJSON.profile_summary) {
-            pdfSection('Profile Summary');
+        // Professional Summary
+        const summary = resumeJSON.professional_summary || resumeJSON.profile_summary;
+        if (summary) {
+            pdfSection('Professional Summary');
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(11);
-            const lines = doc.splitTextToSize(resumeJSON.profile_summary, contentWidth);
+            const lines = doc.splitTextToSize(summary, contentWidth);
             doc.text(lines, margin, currentY);
             currentY += lines.length * lineHeight + sectionSpacing;
-        }
-        // Core Competencies
-        if (resumeJSON.core_competencies) {
-            pdfSection('Core Competencies');
-            for (const [sub, items] of Object.entries(resumeJSON.core_competencies)) {
-                pdfSubSection(sub, items);
-            }
-            currentY += sectionSpacing / 2;
         }
         // Technical Skills
         if (resumeJSON.technical_skills) {
             pdfSection('Technical Skills');
             for (const [sub, items] of Object.entries(resumeJSON.technical_skills)) {
+                pdfSubSection(sub, items);
+            }
+            currentY += sectionSpacing / 2;
+        }
+        // Professional Skills (preferred; supports legacy core_competencies)
+        const professionalSkillsPdf = resumeJSON.professional_skills || resumeJSON.core_competencies;
+        if (professionalSkillsPdf) {
+            pdfSection('Professional Skills');
+            for (const [sub, items] of Object.entries(professionalSkillsPdf)) {
                 pdfSubSection(sub, items);
             }
             currentY += sectionSpacing / 2;
@@ -1524,17 +1549,12 @@ ${jobDescription}
                 doc.setFontSize(11);
                 doc.text(job.title, margin, currentY);
                 doc.setFont('helvetica', 'normal');
-                const companyText = `${job.company} | ${job.date}`;
+                const companyText = `${job.company}${job.location ? ' | ' + job.location : ''} | ${job.date}`;
                 doc.text(companyText, margin, currentY + lineHeight);
                 currentY += lineHeight * 2.2;
                 pdfBullets(job.bullets || []);
             }
             currentY += sectionSpacing / 2;
-        }
-        // Accomplishments
-        if (resumeJSON.accomplishments) {
-            pdfSection('Relevant Accomplishments');
-            pdfBullets(resumeJSON.accomplishments);
         }
         // Education
         if (resumeJSON.education) {
