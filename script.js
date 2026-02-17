@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const typingText = document.getElementById('typingText');
     if (!typingText) return;
-    
+
     const words = [
         'Cloud Architect',
         'Cybersecurity Consultant',
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function type() {
         const currentWord = words[wordIndex];
-        
+
         if (isDeleting) {
             typingText.textContent = currentWord.substring(0, charIndex - 1);
             charIndex--;
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             charIndex++;
             typingSpeed = 100;
         }
-        
+
         if (!isDeleting && charIndex === currentWord.length) {
             typingSpeed = 2000; // Pause at end of word
             isDeleting = true;
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wordIndex = (wordIndex + 1) % words.length;
             typingSpeed = 500; // Pause before next word
         }
-        
+
         setTimeout(type, typingSpeed);
     }
 
@@ -62,11 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const contactItem = document.createElement('a');
         contactItem.href = contact.href;
         contactItem.className = 'contact-item';
-        
+
         if (contact.target) {
             contactItem.target = contact.target;
         }
-        
+
         if (contact.rel) {
             contactItem.rel = contact.rel;
         }
@@ -95,7 +95,7 @@ if (sidebarToggle) {
         isMinimized = !isMinimized;
         sidebar.classList.toggle('minimized', isMinimized);
         document.body.classList.toggle('sidebar-minimized', isMinimized);
-        
+
         // Save state to localStorage
         localStorage.setItem('sidebarMinimized', isMinimized);
     });
@@ -134,7 +134,7 @@ function createMobileMenuButton() {
             backdrop-filter: blur(10px);
         `;
         document.body.appendChild(mobileMenuBtn);
-        
+
         mobileMenuBtn.addEventListener('click', () => {
             sidebar.classList.toggle('open');
             sidebarOverlay.classList.toggle('active');
@@ -188,16 +188,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (window.scrollY >= sectionTop - 200) {
-            current = section.getAttribute('id');
-        }
-    });
-    
+
+    // Check if we're at the bottom of the page
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+        current = 'contact';
+    } else {
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+    }
+
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
@@ -209,7 +215,7 @@ window.addEventListener('scroll', () => {
 // Contact Form Handling
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', function (e) {
         e.preventDefault();
         // Get form values
         const formData = {
@@ -239,7 +245,7 @@ if (contactForm) {
 
 // Add smooth scrolling for contact links
 document.querySelectorAll('.contact-link').forEach(link => {
-    link.addEventListener('click', function(e) {
+    link.addEventListener('click', function (e) {
         // Don't prevent default for actual links (email, phone, etc.)
         if (this.getAttribute('href').startsWith('#')) {
             e.preventDefault();
@@ -264,7 +270,7 @@ interactiveElements.forEach(element => {
     element.addEventListener('mouseenter', () => {
         cursor.classList.add('hover');
     });
-    
+
     element.addEventListener('mouseleave', () => {
         cursor.classList.remove('hover');
     });
@@ -292,7 +298,7 @@ if (isMobile()) {
 // Experience Cards Expand/Collapse
 document.addEventListener('DOMContentLoaded', () => {
     const experienceCards = document.querySelectorAll('.experience-card');
-    
+
     experienceCards.forEach(card => {
         card.addEventListener('click', () => {
             // Toggle expanded class
