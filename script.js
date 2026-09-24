@@ -15,14 +15,67 @@
     const yearEl = document.getElementById('year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+    /* ---------- Shared scroll & resize dispatch ----------
+       One passive listener each, batched to a frame; features register hooks. */
+    const onScrollHooks = [];
+    const onResizeHooks = [];
+    const batched = (hooks) => {
+        let queued = false;
+        return () => {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(() => {
+                queued = false;
+                hooks.forEach((fn) => fn());
+            });
+        };
+    };
+    window.addEventListener('scroll', batched(onScrollHooks), { passive: true });
+    window.addEventListener('resize', batched(onResizeHooks));
+
+    /* ---------- Contact cards (from contact-config.js) ---------- */
+    const contactList = document.getElementById('contact-info-container');
+    const contacts = typeof CONTACT_CONFIG !== 'undefined' ? CONTACT_CONFIG.contacts : [];
+
+    if (contactList && contacts.length) {
+        contactList.textContent = '';
+        contacts.forEach((ct) => {
+            const li = document.createElement('li');
+            li.className = 'reveal';
+            const a = document.createElement('a');
+            a.className = 'contact-card';
+            a.href = ct.href;
+            if (/^https?:/.test(ct.href)) {
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+            }
+            a.setAttribute('aria-label', `${ct.label}: ${ct.title}`);
+
+            const icon = document.createElement('i');
+            icon.className = `${ct.icon} contact-icon`;
+            icon.setAttribute('aria-hidden', 'true');
+            const title = document.createElement('span');
+            title.className = 'contact-title';
+            title.textContent = ct.title;
+            const value = document.createElement('span');
+            value.className = 'contact-value';
+            // Only the action is shown; the address/number lives in the href alone
+            value.textContent = ct.label;
+
+            a.append(icon, title, value);
+            li.append(a);
+            contactList.append(li);
+        });
+    }
+
     /* ---------- Stagger indices for grouped reveals ---------- */
-    const staggerGroups = [
+    [
         ['.bento', 2],
         ['.matrix', 2],
         ['.apps-grid', 3],
+        ['.contact-grid', 2],
         ['.timeline', 1],
-    ];
-    staggerGroups.forEach(([sel, cols]) => {
+    ].forEach(([sel, cols]) => {
         const group = document.querySelector(sel);
         if (!group) return;
         [...group.children].forEach((child, i) => child.style.setProperty('--i', cols > 1 ? i % cols : 0));
@@ -49,7 +102,9 @@
         const track = roleRoll.querySelector('.role-track');
         const fill = roleRoll.querySelector('.role-meter-fill');
         // Clone the first role onto the end so the roll wraps forward instead of rewinding
-        track.append(track.firstElementChild.cloneNode(true));
+        const clone = track.firstElementChild.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        track.append(clone);
         const words = [...track.children];
         let index = 0;
         let meter = null;
@@ -122,7 +177,7 @@
         document.addEventListener('visibilitychange', sync);
         roleRoll.addEventListener('pointerenter', sync);
         roleRoll.addEventListener('pointerleave', sync);
-        window.addEventListener('resize', placeInstantly);
+        onResizeHooks.push(placeInstantly);
         document.fonts?.ready.then(placeInstantly);
     }
 
@@ -170,13 +225,11 @@
         document.querySelectorAll('main section[id]').forEach((s) => navIO.observe(s));
     }
 
-    /* ---------- Scroll-linked vars (one rAF per scroll frame) ---------- */
+    /* ---------- Scroll-linked vars ---------- */
     const hero = document.querySelector('.hero');
     const progress = document.querySelector('.progress');
-    let scrollQueued = false;
 
     const onScrollFrame = () => {
-        scrollQueued = false;
         const y = window.scrollY;
         if (hero && !reduceMotion.matches && y < window.innerHeight * 1.3) {
             hero.style.setProperty('--sy', y.toFixed(1));
@@ -186,11 +239,7 @@
             progress.style.setProperty('--progress', max > 0 ? (y / max).toFixed(4) : 0);
         }
     };
-    window.addEventListener('scroll', () => {
-        if (scrollQueued) return;
-        scrollQueued = true;
-        requestAnimationFrame(onScrollFrame);
-    }, { passive: true });
+    onScrollHooks.push(onScrollFrame);
     onScrollFrame();
 
     /* ---------- Count-up on the spec sheet ---------- */
@@ -262,49 +311,6 @@
         });
     }
 
-    /* ---------- Contact cards (from contact-config.js) ---------- */
-    const contactList = document.getElementById('contact-info-container');
-    const contacts = typeof CONTACT_CONFIG !== 'undefined' ? CONTACT_CONFIG.contacts : [];
-
-    if (contactList && contacts.length) {
-        contactList.textContent = '';
-        contacts.forEach((ct) => {
-            const li = document.createElement('li');
-            li.className = 'reveal';
-            const a = document.createElement('a');
-            a.className = 'contact-card';
-            a.href = ct.href;
-            if (/^https?:/.test(ct.href)) {
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-            }
-            a.setAttribute('aria-label', `${ct.label}: ${ct.title}`);
-
-            const icon = document.createElement('i');
-            icon.className = `${ct.icon} contact-icon`;
-            icon.setAttribute('aria-hidden', 'true');
-            const title = document.createElement('span');
-            title.className = 'contact-title';
-            title.textContent = ct.title;
-            const value = document.createElement('span');
-            value.className = 'contact-value';
-            // Only the action is shown; the address/number lives in the href alone
-            value.textContent = ct.label;
-
-            a.append(icon, title, value);
-            li.append(a);
-            contactList.append(li);
-        });
-        [...contactList.children].forEach((li, i) => li.style.setProperty('--i', i % 2));
-        if (root.classList.contains('io') && 'IntersectionObserver' in window) {
-            // Fallback reveal for cards created after the observer was set up
-            const lateIO = new IntersectionObserver((entries) => entries.forEach((en) => {
-                if (en.isIntersecting) { en.target.classList.add('is-in'); lateIO.unobserve(en.target); }
-            }), { rootMargin: '0px 0px -12% 0px' });
-            contactList.querySelectorAll('.reveal').forEach((el) => lateIO.observe(el));
-        }
-    }
-
     /* ---------- Smooth scrolling ----------
        Eases wheel and in-page anchor scrolling with a single rAF lerp on the real
        document scroll, so sticky headers, scroll-driven CSS and the 3D scene all
@@ -354,7 +360,7 @@
         });
         window.addEventListener('touchstart', cancel, { passive: true });
         window.addEventListener('mousedown', (e) => { if (e.clientX >= document.documentElement.clientWidth) cancel(); });
-        window.addEventListener('resize', () => { target = clamp(target); });
+        onResizeHooks.push(() => { target = clamp(target); });
 
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="#"]');
@@ -472,8 +478,8 @@
             kick();
         });
         // Letter positions shift with the scroll parallax and on resize
-        window.addEventListener('scroll', () => { if (lensState.tr) measure(); }, { passive: true });
-        window.addEventListener('resize', measure);
+        onScrollHooks.push(() => { if (lensState.tr) measure(); });
+        onResizeHooks.push(measure);
     }
 
     /* =====================================================
@@ -500,24 +506,22 @@
         }
     };
 
-    if (dot && ring) {
+    const moveCursor = dot && ring ? (e) => {
+        pointer.x = e.clientX;
+        pointer.y = e.clientY;
+        dot.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0)`;
+        if (!root.classList.contains('has-cursor')) {
+            // First real mouse move: snap the ring here instead of sweeping in from a corner
+            ringPos.x = pointer.x;
+            ringPos.y = pointer.y;
+            root.classList.add('has-cursor');
+        }
+        root.classList.remove('cursor-out');
+        if (!cursorRaf) cursorRaf = requestAnimationFrame(cursorLoop);
+    } : null;
+
+    if (moveCursor) {
         const hoverSel = 'a, button, summary, input, label, .chips li, .filter-btn';
-
-        window.addEventListener('pointermove', (e) => {
-            if (e.pointerType !== 'mouse') return;
-            pointer.x = e.clientX;
-            pointer.y = e.clientY;
-            dot.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0)`;
-            if (!root.classList.contains('has-cursor')) {
-                // First real mouse move: snap the ring here instead of sweeping in from a corner
-                ringPos.x = pointer.x;
-                ringPos.y = pointer.y;
-                root.classList.add('has-cursor');
-            }
-            root.classList.remove('cursor-out');
-            if (!cursorRaf) cursorRaf = requestAnimationFrame(cursorLoop);
-        }, { passive: true });
-
         document.addEventListener('pointerover', (e) => {
             root.classList.toggle('cursor-hover', !!e.target.closest?.(hoverSel));
         });
@@ -547,24 +551,27 @@
         magnetRaf = moving ? requestAnimationFrame(magnetLoop) : 0;
     };
 
-    if (!reduceMotion.matches) {
-        window.addEventListener('pointermove', (e) => {
-            if (e.pointerType !== 'mouse') return;
-            magnets.forEach((m) => {
-                const r = m.el.getBoundingClientRect();
-                // Remove the offset we applied ourselves so the pull doesn't feed back
-                const cx = r.left + r.width / 2 - m.cur.x;
-                const cy = r.top + r.height / 2 - m.cur.y;
-                const dx = e.clientX - cx;
-                const dy = e.clientY - cy;
-                const reach = Math.max(r.width, r.height) * 0.5 + 36;
-                const inside = Math.hypot(dx, dy) < reach;
-                m.target.x = inside ? dx * m.strength : 0;
-                m.target.y = inside ? dy * m.strength : 0;
-            });
-            if (!magnetRaf) magnetRaf = requestAnimationFrame(magnetLoop);
-        }, { passive: true });
-    }
+    const pullMagnets = reduceMotion.matches ? null : (e) => {
+        magnets.forEach((m) => {
+            const r = m.el.getBoundingClientRect();
+            // Remove the offset we applied ourselves so the pull doesn't feed back
+            const cx = r.left + r.width / 2 - m.cur.x;
+            const cy = r.top + r.height / 2 - m.cur.y;
+            const dx = e.clientX - cx;
+            const dy = e.clientY - cy;
+            const reach = Math.max(r.width, r.height) * 0.5 + 36;
+            const inside = Math.hypot(dx, dy) < reach;
+            m.target.x = inside ? dx * m.strength : 0;
+            m.target.y = inside ? dy * m.strength : 0;
+        });
+        if (!magnetRaf) magnetRaf = requestAnimationFrame(magnetLoop);
+    };
+
+    window.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        moveCursor?.(e);
+        pullMagnets?.(e);
+    }, { passive: true });
 
     /* ---------- 3D tilt on project cards ---------- */
     if (!reduceMotion.matches) {

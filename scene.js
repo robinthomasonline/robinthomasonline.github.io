@@ -222,7 +222,7 @@ function init() {
 
     /* ---------- Input state ---------- */
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
-    const scroll = { p: 0, hero: 0, tp: 0, thero: 0, vel: 0, lastY: window.scrollY };
+    const scroll = { p: 0, hero: 0, tp: 0, thero: 0, vel: 0 };
     let isDesktop = window.innerWidth >= 1024;
     let isNarrow = window.innerWidth < 768;
 
@@ -242,7 +242,6 @@ function init() {
         pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
         pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
     }, { passive: true });
-    window.addEventListener('scroll', readScroll, { passive: true });
 
     /* ---------- Resize ---------- */
     let resizeQueued = false;
@@ -344,8 +343,9 @@ function init() {
             start();
         }
     });
-    // Reduced motion: still follow scroll, but only as discrete re-renders
+    // One scroll listener: update targets; when the loop is idle (reduced motion), re-render once
     window.addEventListener('scroll', () => {
+        readScroll();
         if (!running) requestAnimationFrame(() => renderFrame(0));
     }, { passive: true });
 
