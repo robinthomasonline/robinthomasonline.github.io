@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-webgl">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description"
         content="IT Consultant specializing in GRC, Cloud Infrastructure, and DevOps. I help businesses of all sizes—from startups to enterprises—secure their networks, optimize cloud operations, and build scalable software solutions.">
     <meta name="keywords"
         content="Robin Thomas, IT Consultant, Cybersecurity Consultant, DevOps Specialist, Cloud Specialist, GRC Consultant, PCI DSS, ISO 27001, Network Security, Infrastructure, Compliance Expert, System Architect, Opsbin, Bitstrail">
     <meta name="author" content="Robin Thomas">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#09090e">
+    <meta name="color-scheme" content="dark">
     <link rel="canonical" href="https://robinthomasonline.github.io/">
 
     <!-- Open Graph / Facebook -->
@@ -31,1323 +33,958 @@
 
     <title>Robin Thomas | Enterprise IT Consultant & Cybersecurity Expert</title>
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" } }
+    </script>
 </head>
 
 <body>
-    <div class="cursor-effect"></div>
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="logo">
-                <a href="#home">Robin Thomas</a>
-            </div>
-            <a href="#home" class="sidebar-avatar">
-                <img src="assets/robin.jpeg" alt="Robin Thomas">
-            </a>
-            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        </div>
-        <div class="nav-links">
-            <a href="#about" class="nav-link">
-                <i class="fas fa-user"></i>
-                <span class="nav-text">About</span>
-            </a>
-            <a href="#expertise" class="nav-link">
-                <i class="fas fa-star"></i>
-                <span class="nav-text">Expertise</span>
-            </a>
-            <a href="#experience" class="nav-link">
-                <i class="fas fa-briefcase"></i>
-                <span class="nav-text">Experience</span>
-            </a>
-            <a href="#tech" class="nav-link">
-                <i class="fas fa-laptop-code"></i>
-                <span class="nav-text">Tech</span>
-            </a>
-            <a href="#startups" class="nav-link">
-                <i class="fas fa-rocket"></i>
-                <span class="nav-text">Startups</span>
-            </a>
-            <a href="#apps" class="nav-link">
-                <i class="fas fa-code"></i>
-                <span class="nav-text">Apps</span>
-            </a>
-            <a href="#contact" class="nav-link">
-                <i class="fas fa-envelope"></i>
-                <span class="nav-text">Contact</span>
-            </a>
-        </div>
-    </nav>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <div class="hero-main">
-                <div class="hero-text">
-                    <div class="hero-greeting">Hey! I'm</div>
-                    <h1 class="hero-title">Robin Thomas</h1>
-                    <div class="hero-description">
-                        <p>Bridging the gap between complex infrastructure and business goals. Your partner in IT
-                            Security, Cloud DevOps, and Compliance.</p>
-                    </div>
-                    <div class="hero-role">
-                        <span class="static-text">I am a</span>
-                        <span class="typing-text" id="typingText"></span>
-                        <span class="typing-cursor">|</span>
+    <!-- Fixed layers: 3D scene, grain, progress, cursor -->
+    <canvas id="scene" class="scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <a href="#top" class="brand magnetic" aria-label="Robin Thomas, back to top">
+            <span class="brand-mark">RT</span>
+            <span class="brand-name">Robin Thomas</span>
+        </a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="primary-nav">
+            <span class="menu-btn-bars" aria-hidden="true"></span>
+            <span class="menu-btn-label">Menu</span>
+        </button>
+        <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+            <ul class="nav-list">
+                <li><a href="#about" class="nav-pill magnetic">About</a></li>
+                <li><a href="#expertise" class="nav-pill magnetic">Expertise</a></li>
+                <li><a href="#experience" class="nav-pill magnetic">Experience</a></li>
+                <li><a href="#tech" class="nav-pill magnetic">Tech</a></li>
+                <li><a href="#apps" class="nav-pill magnetic">Apps</a></li>
+                <li><a href="#contact" class="nav-pill nav-pill--cta magnetic">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main">
+        <!-- ============ HERO ============ -->
+        <section id="top" class="hero" aria-labelledby="hero-title">
+            <div class="hero-inner">
+                <p class="hero-meta mono">IT &amp; cybersecurity consultant, NSW, Australia</p>
+                <h1 id="hero-title" class="hero-name" aria-label="Robin Thomas">
+                    <span class="hero-line" aria-hidden="true"><span>Robin</span></span>
+                    <span class="hero-line hero-line--offset" aria-hidden="true"><span>Thomas</span></span>
+                </h1>
+                <div class="hero-foot">
+                    <p class="hero-lede">Bridging the gap between complex infrastructure and business goals. Your
+                        partner in IT Security, Cloud DevOps, and Compliance.</p>
+                    <div class="hero-role role-roll" id="roleRoll">
+                        <p class="role-lead">Your next</p>
+                        <div class="role-window" aria-hidden="true">
+                            <ul class="role-track">
+                                <li class="role-word"><span>Cloud Architect</span></li>
+                                <li class="role-word"><span>Cybersecurity Consultant</span></li>
+                                <li class="role-word"><span>DevOps Engineer</span></li>
+                                <li class="role-word"><span>GRC Specialist</span></li>
+                                <li class="role-word"><span>Infrastructure &amp; Network Specialist</span></li>
+                                <li class="role-word"><span>IT Management Professional</span></li>
+                                <li class="role-word"><span>Business Consultant</span></li>
+                                <li class="role-word"><span>Software Developer</span></li>
+                                <li class="role-word"><span>IT Support Specialist</span></li>
+                            </ul>
+                        </div>
+                        <span class="role-meter" aria-hidden="true"><span class="role-meter-fill"></span></span>
+                        <p class="visually-hidden">Roles: Cloud Architect, Cybersecurity Consultant, DevOps
+                            Engineer, GRC Specialist, Infrastructure &amp; Network Specialist, IT Management
+                            Professional, Business Consultant, Software Developer, IT Support Specialist.</p>
                     </div>
                     <div class="hero-actions">
-                        <a href="#apps" class="btn secondary">Apps</a>
-                        <a href="#contact" class="btn secondary">Contact</a>
+                        <a href="#contact" class="btn btn-primary magnetic">Start a conversation</a>
+                        <a href="#apps" class="btn btn-ghost magnetic">Browse the apps</a>
                         <a href="https://wtfqr.com/https://robinthomasonline.github.io/" target="_blank"
-                            rel="noopener noreferrer" class="btn secondary">QR Code</a>
+                            rel="noopener noreferrer" class="btn btn-ghost magnetic">QR code</a>
                     </div>
-                    <div class="hero-social">
-                        <a href="tel:+61423453240" target="_blank" class="social-link"><i class="fas fa-phone"></i></a>
-                        <a href="https://wa.me/qr/PEQ7J2OHI2JPC1" target="_blank" class="social-link"><i
-                                class="fab fa-whatsapp"></i></a>
-                        <a href="https://linkedin.com/in/robinthomasonline" target="_blank" class="social-link"><i
-                                class="fab fa-linkedin"></i></a>
-                        <a href="mailto:robinthomasonline@gmail.com" class="social-link"><i
-                                class="fas fa-envelope"></i></a>
-                        <a href="https://calendly.com/robinthomasonline/meet" target="_blank" class="social-link"><i
-                                class="fas fa-calendar-alt"></i></a>
-                    </div>
-                </div>
-                <div class="hero-image">
-                    <div class="hero-image-bg">
-                        <img src="assets/robin-hero.png" alt="Robin Thomas - GRC Consultant & IT Security Specialist">
-                    </div>
+                    <ul class="social-row" aria-label="Quick contact">
+                        <li><a href="tel:+61423453240" class="icon-link" aria-label="Call"><i
+                                    class="fas fa-phone" aria-hidden="true"></i></a></li>
+                        <li><a href="https://wa.me/qr/PEQ7J2OHI2JPC1" target="_blank" rel="noopener noreferrer"
+                                class="icon-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"
+                                    aria-hidden="true"></i></a></li>
+                        <li><a href="https://linkedin.com/in/robinthomasonline" target="_blank"
+                                rel="noopener noreferrer" class="icon-link" aria-label="LinkedIn"><i
+                                    class="fab fa-linkedin-in" aria-hidden="true"></i></a></li>
+                        <li><a href="mailto:robinthomasonline@gmail.com" class="icon-link" aria-label="Email"><i
+                                    class="fas fa-envelope" aria-hidden="true"></i></a></li>
+                        <li><a href="https://calendly.com/robinthomasonline/meet" target="_blank"
+                                rel="noopener noreferrer" class="icon-link" aria-label="Book a meeting"><i
+                                    class="fas fa-calendar-alt" aria-hidden="true"></i></a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <h2 class="section-title">My Story</h2>
-        <div class="about-content">
-            <div class="about-main">
-                <div class="about-image">
-                    <img src="assets/robin.jpeg" alt="Robin Thomas - GRC Consultant & IT Security Specialist">
-                </div>
-                <div class="about-text">
-                    <p>
-                        With over a decade of experience across the IT spectrum, I don't just write code or configure
-                        servers—I build resilient digital ecosystems. My background spans from hands-on network
-                        engineering to high-level governance and compliance (GRC).
+        <!-- ============ ABOUT ============ -->
+        <section id="about" class="sec" aria-labelledby="about-title">
+            <div class="sec-head">
+                <h2 id="about-title" class="sec-title reveal-title">My Story</h2>
+                <figure class="portrait reveal">
+                    <img src="assets/robin.jpeg" alt="Robin Thomas" width="480" height="480" loading="lazy"
+                        decoding="async">
+                </figure>
+            </div>
+            <div class="sec-body">
+                <div class="prose">
+                    <p class="prose-lead reveal">
+                        I've spent 11+ years across Cloud Infrastructure, DevOps, Cybersecurity and Governance, Risk
+                        &amp; Compliance, from racking servers and rotating LTO tapes to presenting PCI DSS findings to
+                        boards.
                     </p>
-                    <p>
-                        I partner with businesses of all sizes—from startups and small-to-medium enterprises to large
-                        corporations—to navigate the complexities of modern IT. Whether you're a growing startup needing
-                        scalable infrastructure, an SMB looking to enhance security, or an enterprise requiring
-                        compliance expertise, I ensure your infrastructure is not only robust and secure but also
-                        aligned with your strategic vision. From achieving compliance standards, migrating to the cloud,
-                        or automating deployment pipelines, I deliver solutions that stand the test of time.
+                    <p class="reveal">
+                        I've managed servers and systems across private and public cloud, delivered projects for SMB
+                        clients, and kept services at 99.9% uptime. My specialities are AWS cloud architecture, CI/CD
+                        automation, Docker containerisation, and PCI DSS and ISO 27001 compliance.
                     </p>
-                    <p>
-                        My approach combines technical excellence with business acumen, translating complex technical
-                        challenges into clear, actionable strategies that drive measurable results. I'm equally
-                        comfortable working on enterprise-level projects, freelance assignments, or helping startups
-                        build their technical foundation from the ground up.
+                    <p class="reveal">
+                        I also build things. I prototype full-stack web and mobile apps with React, Next.js, React
+                        Native and Supabase, including AI features like a RAG application on pgvector. And I lead
+                        teams: I've hired, mentored and grown engineers, DevOps and support staff into senior roles.
+                    </p>
+                    <p class="reveal about-where">
+                        Based in Abbotsford, Sydney. Australian permanent resident.
                     </p>
                 </div>
-            </div>
-            <div class="about-highlights">
-                <div class="highlight-item">
-                    <span class="highlight-number">10+</span>
-                    <span class="highlight-label">Industry Experience</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-number">100+</span>
-                    <span class="highlight-label">Successful Deployments</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-number">2</span>
-                    <span class="highlight-label">Business Ventures</span>
-                </div>
-                <div class="highlight-item">
-                    <span class="highlight-number">40+</span>
-                    <span class="highlight-label">Satisfied Clients</span>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="expertise" class="expertise">
-        <div class="container">
-            <h2 class="section-title">Core Competencies</h2>
-            <div class="expertise-grid">
-                <div class="expertise-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>GRC & Cyber Security</h3>
-                    <p class="expertise-description">Safeguarding your assets through rigorous compliance frameworks
-                        (PCI DSS, ISO 27001) and proactive security operations. I turn security from a bottleneck into a
-                        business enabler.</p>
-                    <ul>
-                        <li>PCI DSS & ISO 27001 Implementation</li>
-                        <li>VAPT & Security Audits</li>
-                        <li>Risk Assessment & Management</li>
-                        <li>Security Monitoring & Operations</li>
-                    </ul>
-                </div>
-
-                <div class="expertise-card">
-                    <i class="fas fa-network-wired"></i>
-                    <h3>Infrastructure & Network</h3>
-                    <p class="expertise-description">Building the backbone of your digital operations. Deeply
-                        knowledgeable in high-availability server administration, secure VPNs, and load balancing for
-                        uninterrupted service.</p>
-                    <ul>
-                        <li>Server Administration</li>
-                        <li>Network Security & VPN</li>
-                        <li>Firewall & Load Balancing</li>
-                        <li>Network & Infrastructure Security</li>
-                    </ul>
-                </div>
-
-                <div class="expertise-card">
-                    <i class="fas fa-cloud"></i>
-                    <h3>Cloud & DevOps</h3>
-                    <p class="expertise-description">Architecting scalable, self-healing infrastructure on AWS, Azure,
-                        and GCP. Leveraging Kubernetes and Terraform to automate operations and reduce time-to-market.
-                    </p>
-                    <ul>
-                        <li>AWS, Azure, GCP</li>
-                        <li>Docker, Kubernetes</li>
-                        <li>Ansible, Terraform</li>
-                        <li>CI/CD Implementation</li>
-                    </ul>
-                </div>
-
-                <div class="expertise-card">
-                    <i class="fas fa-tasks"></i>
-                    <h3>Project Management</h3>
-                    <p class="expertise-description">Leading cross-functional teams with Agile methodologies to deliver
-                        complex IT projects on time and within budget. I transform technical requirements into
-                        actionable roadmaps that align with business objectives.</p>
-                    <ul>
-                        <li>Agile Methodologies</li>
-                        <li>Risk Assessment</li>
-                        <li>Team Leadership</li>
-                        <li>Strategic Planning</li>
-                    </ul>
-                </div>
-
-                <div class="expertise-card">
-                    <i class="fas fa-code"></i>
-                    <h3>Website Development</h3>
-                    <p class="expertise-description">Building modern, scalable web applications that deliver exceptional
-                        user experiences. From static sites to complex e-commerce platforms, I create solutions that are
-                        both performant and maintainable.</p>
-                    <ul>
-                        <li>Static Website Development</li>
-                        <li>Dynamic Web Applications</li>
-                        <li>CMS Development</li>
-                        <li>E-commerce Solutions</li>
-                    </ul>
-                </div>
-
-                <div class="expertise-card">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3>Mobile Development</h3>
-                    <p class="expertise-description">Creating native and cross-platform mobile applications that engage
-                        users and drive business growth. Leveraging React Native and modern frameworks to deliver
-                        seamless experiences across iOS and Android.</p>
-                    <ul>
-                        <li>iOS App Development</li>
-                        <li>Android App Development</li>
-                        <li>Cross-Platform Solutions</li>
-                        <li>Progressive Web Apps</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="experience" class="experience">
-        <div class="container">
-            <h2 class="section-title">Where I've Been</h2>
-            <div class="experience-grid">
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>Freelance Consultant</h3>
-                            <span class="company">Self-Employed</span>
-                            <span class="duration">Jul 2022 – Present</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
+                <dl class="spec-sheet reveal" aria-label="By the numbers">
+                    <div class="spec-row">
+                        <dt>Years in IT</dt>
+                        <dd><span class="count" data-count="11">11</span>+</dd>
                     </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Directed company-wide technology strategy and business roadmap, aligning IT initiatives
-                                with business objectives, investor priorities, and evolving market trends to support
-                                sustainable profitability and organizational growth</li>
-                            <li>Architected and implemented scalable AWS cloud infrastructure with High Availability
-                                (HA), Disaster Recovery (DR), robust security controls, and cost-optimized resource
-                                provisioning, ensuring 99.9% service uptime</li>
-                            <li>Implemented DevOps pipelines using CI/CD tools, Docker, and Kubernetes for efficient
-                                software delivery and infrastructure automation, significantly improving DevOps
-                                efficiency and reducing operational overhead</li>
-                            <li>Developed web, mobile, and B2C MVP applications using React Native, Supabase,
-                                TypeScript, and AI/ML APIs through the full Software Development Lifecycle (SDLC),
-                                delivering scalable digital platforms and internal automation tools</li>
-                            <li>Managed cross-functional teams across Software Engineering, DevOps, and Technical
-                                Support, delivering IT support and Managed Services to over 50 SMB clients totaling 100+
-                                small to medium-sized projects; Oversaw email and collaboration platforms including G
-                                Suite (Google Workspace) setup and administration; Managed and developed WordPress and
-                                Shopify websites, optimizing for performance, SEO, and user experience</li>
-                            <li>Consulted on cybersecurity best practices, implementing policies, audits, and risk
-                                assessments to secure infrastructure and data, maintaining compliance with ISO 27001 and
-                                PCI DSS standards; Championed Agile methodologies and Vibe coding practices, fostering
-                                collaborative work culture by hiring, training, and mentoring engineering, DevOps, and
-                                IT support teams</li>
-                        </ul>
+                    <div class="spec-row">
+                        <dt>Servers, VMs and containers assessed</dt>
+                        <dd><span class="count" data-count="5000">5,000</span>+</dd>
                     </div>
-                </div>
+                    <div class="spec-row">
+                        <dt>SMB clients served</dt>
+                        <dd><span class="count" data-count="50">50</span>+</dd>
+                    </div>
+                    <div class="spec-row">
+                        <dt>Projects delivered</dt>
+                        <dd><span class="count" data-count="100">100</span>+</dd>
+                    </div>
+                    <div class="spec-row">
+                        <dt>Service uptime on AWS builds</dt>
+                        <dd><span class="count" data-count="99.9" data-decimals="1">99.9</span>%</dd>
+                    </div>
+                    <div class="spec-row">
+                        <dt>Operational overhead cut with CI/CD</dt>
+                        <dd><span class="count" data-count="60">60</span>%</dd>
+                    </div>
+                </dl>
 
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>GRC Consultant - PCI DSS</h3>
-                            <span class="company">ValueMentor Infosec Pvt Ltd</span>
-                            <span class="duration">Aug 2021 – Jul 2022</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
-                    </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Conducted end-to-end security audits and compliance assessments for client systems and
-                                servers against Payment Card Industry Data Security Standard (PCI DSS) requirements,
-                                identifying in-scope components and control gaps</li>
-                            <li>Prepared and finalized critical compliance documentation including GAP Analysis Reports,
-                                Attestation of Compliance (AOC), and Reports on Compliance (ROC) for multiple client
-                                engagements</li>
-                            <li>Executed comprehensive Risk Assessments and Vulnerability Assessments across various
-                                client IT environments to quantify security risks and inform strategic audit planning
+                <div class="creds">
+                    <article class="panel reveal">
+                        <i class="fas fa-certificate panel-icon" aria-hidden="true"></i>
+                        <h3>Certifications</h3>
+                        <ul class="cred-list">
+                            <li><span>Red Hat Certified System Administrator (RHCSA)</span><span>Red Hat</span></li>
+                            <li><span>Certified Ethical Hacking Associate (E|HA)</span><span>EC-Council</span></li>
+                            <li><span>Certified Cyber Forensics Associate (C|FA)</span><span>EC-Council</span></li>
+                            <li><span>Microsoft Technology Associate: Security Fundamentals</span><span>Microsoft</span>
                             </li>
-                            <li>Developed strategic remediation methods and techniques, collaborating with
-                                cross-functional teams to implement security controls and data security best practices
-                                achieving compliance objectives</li>
-                            <li>Acted as Subject Matter Expert (SME), interpreting and analyzing complex regulatory
-                                requirements related to data security and privacy during client engagements and
-                                presentations</li>
-                            <li>Led client engagement kickoff meetings and scoping sessions to define project
-                                boundaries, timelines, and resource requirements for PCI DSS compliance initiatives;
-                                Conducted technical testing and validation of security controls including firewall
-                                rules, encryption implementations, and access control mechanisms to verify compliance
-                                posture</li>
-                            <li>Presented compliance findings and recommendations to executive leadership, C-level
-                                management, and board members in formal assessment meetings and quarterly reviews;
-                                Coordinated with Qualified Security Assessors (QSAs) during formal validation
-                                assessments, preparing clients for onsite audits and facilitating evidence collection
-                                processes</li>
-                            <li>Developed customized remediation roadmaps with prioritized action items, resource
-                                estimates, and implementation timelines aligned with client business objectives and
-                                compliance deadlines; Deployed and administered security tools and technologies,
-                                monitoring and troubleshooting security incidents and system performance issues</li>
+                            <li><span>Introduction to Cybersecurity</span><span>Cisco Networking Academy</span></li>
                         </ul>
-                    </div>
+                    </article>
+                    <article class="panel reveal">
+                        <i class="fas fa-graduation-cap panel-icon" aria-hidden="true"></i>
+                        <h3>Education</h3>
+                        <ul class="cred-list">
+                            <li><span>Bachelor of Science (B.Sc.), Electronics</span><span>Kannur University, College
+                                    of Applied Science, Pattuvam, 2014</span></li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ EXPERTISE ============ -->
+        <section id="expertise" class="sec" aria-labelledby="expertise-title">
+            <div class="sec-head">
+                <h2 id="expertise-title" class="sec-title reveal-title">Core Competencies</h2>
+                <p class="sec-lead reveal">Six disciplines, one goal: infrastructure that stays up, stays secure and
+                    passes the audit.</p>
+            </div>
+            <div class="sec-body">
+                <div class="bento">
+                    <article class="panel panel--wide reveal">
+                        <i class="fas fa-cloud panel-icon" aria-hidden="true"></i>
+                        <h3>Cloud &amp; DevOps</h3>
+                        <p>AWS architecture with High Availability and Disaster Recovery built in, from on-premises
+                            migrations to multi-environment setups. CI/CD pipelines with GitLab CI, GitHub Actions and
+                            Docker, managed as Infrastructure as Code.</p>
+                        <ul class="pill-list">
+                            <li>AWS &amp; GCP</li>
+                            <li>HA / DR design</li>
+                            <li>CI/CD pipelines</li>
+                            <li>Docker &amp; IaC</li>
+                            <li>Cost optimisation</li>
+                        </ul>
+                    </article>
+                    <article class="panel reveal">
+                        <i class="fas fa-shield-alt panel-icon" aria-hidden="true"></i>
+                        <h3>GRC &amp; Cybersecurity</h3>
+                        <p>PCI DSS audits and assessments, from scoping and gap analysis to AOC and ROC. Risk and
+                            vulnerability management, penetration testing and security hardening.</p>
+                        <ul class="pill-list">
+                            <li>PCI DSS &amp; PCI 3DS</li>
+                            <li>ISO 27001</li>
+                            <li>VAPT &amp; DAST</li>
+                            <li>Risk assessment</li>
+                        </ul>
+                    </article>
+                    <article class="panel reveal">
+                        <i class="fas fa-network-wired panel-icon" aria-hidden="true"></i>
+                        <h3>Infrastructure &amp; Network</h3>
+                        <p>Linux and Windows servers, virtualisation, and the network underneath them: VPNs,
+                            firewalls, VLANs, DNS and proxies, monitored with Zabbix and Nagios.</p>
+                        <ul class="pill-list">
+                            <li>Server lifecycle</li>
+                            <li>KVM, Proxmox, VMware</li>
+                            <li>VPN, VLAN &amp; firewalls</li>
+                            <li>BCP / DR testing</li>
+                        </ul>
+                    </article>
+                    <article class="panel panel--wide reveal">
+                        <i class="fas fa-chess panel-icon" aria-hidden="true"></i>
+                        <h3>IT Strategy &amp; Leadership</h3>
+                        <p>Technology roadmaps aligned with business and investor priorities. Leading teams of 10+,
+                            owning IT budgets and vendor contracts, and running services against agreed SLAs and KPIs.
+                        </p>
+                        <ul class="pill-list">
+                            <li>Technology roadmaps</li>
+                            <li>Team leadership</li>
+                            <li>Budget &amp; vendors</li>
+                            <li>SLAs &amp; KPIs</li>
+                            <li>IT governance</li>
+                        </ul>
+                    </article>
+                    <article class="panel reveal">
+                        <i class="fas fa-code panel-icon" aria-hidden="true"></i>
+                        <h3>Full-stack &amp; AI Prototyping</h3>
+                        <p>MVPs and prototypes across web and mobile, taken through the full SDLC. Headless CMS
+                            sites, e-commerce, and AI features built on LLMs and vector search.</p>
+                        <ul class="pill-list">
+                            <li>React &amp; Next.js</li>
+                            <li>React Native &amp; Expo</li>
+                            <li>Supabase</li>
+                            <li>RAG with pgvector</li>
+                        </ul>
+                    </article>
+                    <article class="panel reveal">
+                        <i class="fas fa-headset panel-icon" aria-hidden="true"></i>
+                        <h3>Service Delivery &amp; Support</h3>
+                        <p>Managed services and Tier 1 to 3 support for 50+ SMB clients. Incident response, root
+                            cause analysis and escalation handling that keep clients running.</p>
+                        <ul class="pill-list">
+                            <li>Managed services</li>
+                            <li>Tier 1–3 support</li>
+                            <li>Incident management</li>
+                            <li>Client escalations</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ EXPERIENCE ============ -->
+        <section id="experience" class="sec" aria-labelledby="experience-title">
+            <div class="sec-head">
+                <h2 id="experience-title" class="sec-title reveal-title">Where I've Been</h2>
+                <p class="sec-lead reveal">From support desks to server rooms to boardroom audits. Open any role for
+                    the detail.</p>
+            </div>
+            <div class="sec-body">
+                <ol class="timeline">
+                    <li class="tl-item reveal">
+                        <details open>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2025-01">Jan 2025</time> – <time
+                                        datetime="2026-05">May 2026</time></span>
+                                <span class="tl-role">Technical Consultant</span>
+                                <span class="tl-org">Hola World Pty Ltd, NSW, Australia</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Migrated on-premises servers to AWS, architecting a scalable cloud infrastructure
+                                    with High Availability (HA), Disaster Recovery (DR), strong security controls, and
+                                    cost-optimised resource provisioning, ensuring 99.9% service uptime</li>
+                                <li>Implemented multiple environments (development, staging, production) with
+                                    environment-specific configuration management, enabling consistent and reliable
+                                    release workflows</li>
+                                <li>Designed and automated DevOps pipelines using GitHub Actions and Docker for CI/CD,
+                                    infrastructure deployment, and system monitoring, using Infrastructure as Code (IaC)
+                                    and automation tools to streamline operations and reduce downtime</li>
+                                <li>Managed and updated company websites alongside Strapi headless CMS backend systems,
+                                    ensuring content delivery performance, reliability, and integration with frontend
+                                    applications</li>
+                                <li>Managed, maintained, and extended the company CRM application, implementing new
+                                    features, improving user workflows, and ensuring data integrity across the platform
+                                </li>
+                                <li>Conducted a comprehensive security audit of AWS infrastructure, identifying
+                                    vulnerabilities, enforcing IAM least-privilege policies, implementing security
+                                    controls, risk assessments, and proactive incident management, aligned with industry
+                                    best practices and compliance requirements</li>
+                                <li>Developed and maintained backend systems, APIs, and databases, ensuring performance,
+                                    security, and reliability across all client-facing and internal platforms</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2022-07">Jul 2022</time> – <time
+                                        datetime="2025-12">Dec 2025</time></span>
+                                <span class="tl-role">Technology &amp; Cybersecurity Consultant</span>
+                                <span class="tl-org">Freelance</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Directed company-wide technology strategy and business roadmap, aligning IT
+                                    initiatives with business objectives, investor priorities, and evolving market
+                                    trends to support sustainable profitability and organisational growth</li>
+                                <li>Architected and implemented scalable AWS cloud infrastructure with High
+                                    Availability (HA), Disaster Recovery (DR), strong security controls, and
+                                    cost-optimised resource provisioning, ensuring 99.9% service uptime</li>
+                                <li>Automated DevOps pipelines using CI/CD tools (GitLab CI, GitHub Actions) and Docker
+                                    for efficient software delivery, infrastructure deployment, and system monitoring,
+                                    reducing operational overhead</li>
+                                <li>Designed and deployed containerised environments for web and mobile applications
+                                    using Docker, enabling scalable and reliable application deployment</li>
+                                <li>Developed MVPs and prototypes using React Native, Supabase, TypeScript, and AI/ML
+                                    APIs through the full Software Development Lifecycle (SDLC), delivering scalable
+                                    digital platforms and internal automation tools</li>
+                                <li>Developed RAG AI application using LLM and vector embeddings via Supabase pgvector
+                                </li>
+                                <li>Managed cross-functional teams across Software Engineering, DevOps, and Technical
+                                    Support, delivering IT support and Managed Services to 50+ SMB clients across 100+
+                                    projects</li>
+                                <li>Oversaw email and collaboration platforms including Zoho and Google Workspace (G
+                                    Suite) setup, administration, and troubleshooting for enterprise clients</li>
+                                <li>Managed and developed WordPress and Shopify websites, optimising for performance,
+                                    SEO, and user experience</li>
+                                <li>Consulted on cybersecurity best practices, implementing policies, risk assessments,
+                                    and compliance programmes maintaining ISO 27001 and PCI DSS standards through
+                                    continuous monitoring and proactive incident management</li>
+                                <li>Managed end-to-end financial planning, budgeting, resource allocation, vendor
+                                    relationships, and licence management for scalable and cost-effective operations
+                                </li>
+                                <li>Championed Agile methodologies, hiring, training, and mentoring engineering, DevOps,
+                                    and IT support teams to facilitate career development and cross-functional skill
+                                    growth</li>
+                                <li>Spearheaded business development efforts in cloud computing, managed services, and
+                                    IT consulting, increasing client retention and revenue growth</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2021-08">Aug 2021</time> – <time
+                                        datetime="2022-07">Jul 2022</time></span>
+                                <span class="tl-role">GRC Consultant – PCI DSS</span>
+                                <span class="tl-org">ValueMentor Infosec Pvt Ltd</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Conducted end-to-end security audits and compliance assessments for client systems
+                                    against PCI DSS requirements, identifying in-scope components and control gaps
+                                    across 5000+ servers, VMs, and containers</li>
+                                <li>Prepared and finalised critical compliance documentation including GAP Analysis
+                                    Reports, Attestation of Compliance (AOC), and Reports on Compliance (ROC) for
+                                    multiple client engagements</li>
+                                <li>Executed comprehensive Risk Assessments and Vulnerability Assessments across client
+                                    IT environments, informing strategic audit planning and executive decision-making
+                                </li>
+                                <li>Developed strategic remediation methods and roadmaps, collaborating with
+                                    cross-functional teams to implement security controls and achieve compliance
+                                    objectives</li>
+                                <li>Reviewed and revised organisational security policies and procedures, ensuring
+                                    alignment with PCI DSS requirements and industry best practices</li>
+                                <li>Delivered targeted PCI DSS awareness and training programmes to stakeholders,
+                                    increasing compliance understanding and preparedness</li>
+                                <li>Acted as Subject Matter Expert (SME) interpreting complex regulatory requirements
+                                    during client engagements and presentations</li>
+                                <li>Led client engagement kick-off meetings and scoping sessions to define project
+                                    boundaries, timelines, and resource requirements</li>
+                                <li>Facilitated client interviews with IT, business unit, and executive stakeholders to
+                                    gather evidence and validate control implementations</li>
+                                <li>Performed network segmentation analysis and documented cardholder data environment
+                                    (CDE) boundaries to identify scope reduction opportunities</li>
+                                <li>Managed client relationships throughout the compliance lifecycle, serving as the
+                                    primary point of contact for technical guidance and remediation support</li>
+                                <li>Presented compliance findings and recommendations to executive leadership, C-level
+                                    management, and board members</li>
+                                <li>Developed customised remediation roadmaps with prioritised action items, resource
+                                    estimates, and implementation timelines</li>
+                                <li>Created detailed network diagrams, data flow documentation, and system architecture
+                                    diagrams to support compliance evidence requirements</li>
+                                <li>Coordinated with QSAs during formal validation assessments, preparing clients for
+                                    onsite audits and facilitating evidence collection</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2019-11">Nov 2019</time> – <time
+                                        datetime="2021-08">Aug 2021</time></span>
+                                <span class="tl-role">Head – Internal Systems Administrator</span>
+                                <span class="tl-org">Poornam Info Vision Pvt Ltd (Bobcares)</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Directed enterprise-wide system security operations, overseeing vulnerability
+                                    assessments, risk analyses, DAST penetration testing, and timely security patching
+                                    initiatives</li>
+                                <li>Managed advanced access controls using multi-layered authentication protocols (AAA
+                                    server, RADIUS, KEY, IP, OTP token), implementing security response protocols based
+                                    on continuous monitoring and log analysis</li>
+                                <li>Engineered and maintained core network infrastructure including routers, switches,
+                                    VPNs, firewalls, VLANs, DNS, DHCP, and Proxy/Radius Servers</li>
+                                <li>Led BCP and DR testing, implementing multi-region backup synchronisation and
+                                    high-availability infrastructure ensuring operational resilience and minimal
+                                    downtime</li>
+                                <li>Managed complete server lifecycle from installation and configuration to
+                                    monitoring, troubleshooting, live deployments, migrations, and security updates
+                                    across Web, Mail, Proxy, MySQL, DNS, DHCP, Zabbix, VoIP, and VPN servers</li>
+                                <li>Directed configuration, security hardening, and troubleshooting of VMs and
+                                    containers on KVM, Docker, Xen-server, Proxmox, OpenStack, and VirtualBox</li>
+                                <li>Developed and implemented custom Shell/Bash scripts to automate day-to-day
+                                    operational tasks, configuration management, and system health monitoring using
+                                    Zabbix</li>
+                                <li>Oversaw team operations, task delegation, and compliance enforcement, managing IT
+                                    inventory, vendor relationships, technical item budgeting (CCTV, UPS), and regular
+                                    reporting to management</li>
+                                <li>Conducted real-time network traffic monitoring using Tcpdump, Nessus, and Snort;
+                                    performed website security audits using OSINT tools and penetration testing tools
+                                    (Kali Linux, Burp Suite, Nmap, Wireshark, Metasploit, OWASP-ZAP)</li>
+                                <li>Configured and managed Linux servers and workstations using Ansible, Zabbix, Bash
+                                    scripts, and cron jobs, ensuring 100% uptime for BCP/DR readiness</li>
+                                <li>Supervised and led 10+ staff members, conducting performance reviews, goal setting,
+                                    career development planning, and succession planning</li>
+                                <li>Established SLAs and KPIs for system availability, incident response times, and
+                                    service delivery metrics, consistently meeting or exceeding targets</li>
+                                <li>Managed vendor contracts and service agreements, negotiating pricing, terms, and
+                                    service levels with technology suppliers</li>
+                                <li>Implemented IT governance frameworks including change management procedures,
+                                    configuration management standards, and security control frameworks</li>
+                                <li>Managed IT budget planning, expense tracking, and cost optimisation, delivering
+                                    consistent financial performance against targets</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2017-05">May 2017</time> – <time
+                                        datetime="2019-11">Nov 2019</time></span>
+                                <span class="tl-role">Internal System/Server Administrator</span>
+                                <span class="tl-org">Poornam Info Vision Pvt Ltd (Bobcares)</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Secured servers, workstations, and network infrastructure using Iptables, CSF, UFW,
+                                    Fail2ban, and Pfsense, conducting vulnerability and risk assessments on
+                                    servers/VMs/containers</li>
+                                <li>Managed access controls using AAA server, RADIUS, and OTP authentication,
+                                    monitoring real-time logs via Zabbix and Bash scripts</li>
+                                <li>Performed DAST on web applications and conducted real-time network traffic
+                                    monitoring using Tcpdump, Nessus, and Snort</li>
+                                <li>Configured and managed Edge and Juniper routers/switches including VPN, firewall,
+                                    VLAN, DNS, and DHCP configurations</li>
+                                <li>Installed, configured, monitored, and troubleshot Linux servers including Web
+                                    (Apache/Nginx), Mail (Postfix), Proxy (Squid), Spam Filter, MySQL, DNS, DHCP,
+                                    Zabbix, VoIP, and VPN</li>
+                                <li>Executed live server deployments, migrations, and security patch updates following
+                                    staged testing, ensuring minimal downtime and service continuity</li>
+                                <li>Created, configured, and secured VMs and containers on KVM, Docker, Xen-server,
+                                    Proxmox, OpenStack, and VirtualBox</li>
+                                <li>Monitored servers and network devices via Zabbix and custom scripts, identifying and
+                                    resolving issues by analysing log files</li>
+                                <li>Configured Ansible, Bash scripts, and cron jobs ensuring 100% uptime for BCP/DR
+                                    readiness</li>
+                                <li>Performed routine backups using Rsnapshot, Automysqlbackup, and Barracuda; performed
+                                    malware/rootkit scans using Clam AV and RKhunter</li>
+                                <li>Conducted monthly BCP/DR tests including CCTV and physical security audits;
+                                    participated in after-hours on-call rotation</li>
+                                <li>Created and maintained comprehensive system documentation including configuration
+                                    guides, troubleshooting procedures, and disaster recovery runbooks</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2015-10">Oct 2015</time> – <time
+                                        datetime="2017-05">May 2017</time></span>
+                                <span class="tl-role">Server Administrator</span>
+                                <span class="tl-org">Aforeserve.com Ltd</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Managed Linux and Windows servers for optimal performance and uptime, installing,
+                                    configuring, and updating software and applications</li>
+                                <li>Conducted system monitoring to identify and resolve performance bottlenecks,
+                                    implementing backup and recovery solutions using HP Data Protector Express</li>
+                                <li>Maintained and monitored HP storage arrays, troubleshooting MySQL and storage (RAID)
+                                    issues, performing regular backups using LTO tapes</li>
+                                <li>Managed the Electronic Document Management System (EDMS) Project, maintaining DO and
+                                    BO EDMS servers via remote access for policy servicing operations</li>
+                                <li>Automated system maintenance using shell scripts; conducted daily/weekly health
+                                    checks including database re-indexing and vacuuming</li>
+                                <li>Maintained environmental monitoring of server room temperature and power conditions
+                                    including UPS and Diesel Generator</li>
+                                <li>Collected logs from servers and storage controller CLI, identified hardware failure
+                                    indicators, and managed LTO tape rotation</li>
+                                <li>Supported Helpdesk operations, resolving issues within 48-hour TAT, coordinating
+                                    with partner engineers, HP Backend team, and Support Manager</li>
+                                <li>Managed IT inventory, prepared MIS reports using Microsoft Excel, and supported DO
+                                    Coordinator in handling HP Invoices and ATPs</li>
+                                <li>Conducted user access reviews and privilege audits to ensure compliance with
+                                    security policies and regulatory requirements</li>
+                                <li>Participated in IT project teams for system upgrades and migrations, contributing
+                                    technical expertise with minimal service disruption</li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li class="tl-item reveal">
+                        <details>
+                            <summary>
+                                <span class="tl-date mono"><time datetime="2015-03">Mar 2015</time> – <time
+                                        datetime="2015-10">Oct 2015</time></span>
+                                <span class="tl-role">Technical Support Engineer</span>
+                                <span class="tl-org">Team Computers Pvt Ltd</span>
+                                <span class="tl-toggle" aria-hidden="true"></span>
+                            </summary>
+                            <ul class="tl-points">
+                                <li>Installed and configured Linux and Windows workstations, replacing and upgrading
+                                    hardware components to maintain optimal performance</li>
+                                <li>Provided technical support via phone, email, and in-person visits, resolving issues
+                                    promptly with detailed troubleshooting documentation</li>
+                                <li>Managed user accounts, permissions, and access controls; configured Microsoft
+                                    Outlook, performed desktop/laptop troubleshooting, and provided remote support</li>
+                                <li>Automated routine maintenance tasks using shell scripts, streamlining workstation
+                                    deployment and configuration processes</li>
+                                <li>Coordinated with vendors for hardware replacements and warranty claims; managed
+                                    service ticket lifecycle from logging through resolution</li>
+                                <li>Participated in on-site client visits to install and configure hardware and
+                                    software; assisted in IT onboarding for new employees</li>
+                            </ul>
+                        </details>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============ TECH ============ -->
+        <section id="tech" class="sec" aria-labelledby="tech-title">
+            <div class="sec-head">
+                <h2 id="tech-title" class="sec-title reveal-title">Tech I Work With</h2>
+                <p class="sec-lead reveal">Pick a discipline to focus the matrix.</p>
+            </div>
+            <div class="sec-body">
+                <div class="matrix-filter reveal" role="group" aria-label="Filter technologies">
+                    <button type="button" class="filter-btn" data-filter="all" aria-pressed="true">All</button>
+                    <button type="button" class="filter-btn" data-filter="cloud" aria-pressed="false">Cloud &amp;
+                        DevOps</button>
+                    <button type="button" class="filter-btn" data-filter="security"
+                        aria-pressed="false">Security</button>
+                    <button type="button" class="filter-btn" data-filter="network"
+                        aria-pressed="false">Networking</button>
+                    <button type="button" class="filter-btn" data-filter="servers" aria-pressed="false">Servers
+                        &amp; OS</button>
+                    <button type="button" class="filter-btn" data-filter="data" aria-pressed="false">Data &amp;
+                        Monitoring</button>
+                    <button type="button" class="filter-btn" data-filter="dev"
+                        aria-pressed="false">Development</button>
+                    <button type="button" class="filter-btn" data-filter="tools"
+                        aria-pressed="false">Productivity</button>
                 </div>
 
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>Head – Internal Systems Administrator</h3>
-                            <span class="company">Poornam Info Vision Pvt Ltd (Bobcares)</span>
-                            <span class="duration">Nov 2019 – Aug 2021</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
-                    </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Directed enterprise-wide system security operations, overseeing vulnerability
-                                assessments, risk analyses, penetration testing including DAST on web applications, and
-                                timely security patching initiatives; Managed advanced server and service access
-                                controls using robust authentication protocols (AAA server, RADIUS, KEY, IP, OTP token),
-                                implementing security response protocols based on continuous monitoring and access log
-                                analysis</li>
-                            <li>Engineered and maintained core network infrastructure, configuring and managing critical
-                                components including routers, switches, VPNs, firewalls, VLANs, DNS, DHCP, Proxy, and
-                                Radius Servers</li>
-                            <li>Led Business Continuity Planning (BCP) and Disaster Recovery (DR) testing efforts,
-                                implementing multi-region backup synchronization and high-availability infrastructure
-                                ensuring operational resilience and minimal downtime</li>
-                            <li>Managed complete server lifecycle from installation and configuration to monitoring,
-                                troubleshooting, live deployments, migrations, and security updates across all
-                                environments including Web, Mail, Proxy, MySQL, DNS, DHCP, Zabbix, VoIP, and VPN servers
-                            </li>
-                            <li>Directed creation, configuration, security hardening, and troubleshooting of Virtual
-                                Machines (VMs) and containers on KVM, Docker, Xen-server, Proxmox, OpenStack, and
-                                VirtualBox platforms</li>
-                            <li>Developed and implemented custom Shell and Bash scripts to automate day-to-day
-                                operational tasks, configuration management, and system health monitoring using Zabbix,
-                                significantly enhancing team efficiency</li>
-                            <li>Conducted real-time network traffic monitoring using Tcpdump, shell scripts, Nessus, and
-                                Snort, performing website security audits using OSINT tools and penetration testing
-                                tools including Kali Linux, Burp Suite, Nmap, Wireshark, Metasploit, and OWASP-ZAP</li>
-                            <li>Configured and managed Linux servers and workstations using Ansible, Zabbix, Bash
-                                scripts, and cron jobs, ensuring high-availability servers with 100% uptime for BCP/DR
-                                readiness; Secured servers, workstations, and network infrastructure using Iptables,
-                                CSF, UFW, Fail2ban, Pfsense, and Router Firewall, managing user accounts via AFS,
-                                Radius, LDAP, and Kerberos</li>
-                            <li>Supervised team of 10+ staff members, conducting performance reviews, goal setting, and
-                                career development planning, identifying training needs and succession planning
-                                opportunities; Established Service Level Agreements (SLAs) and Key Performance
-                                Indicators (KPIs) for system availability, incident response times, and service delivery
-                                metrics</li>
-                            <li>Managed vendor contracts and service agreements, negotiating pricing, terms, and service
-                                levels; Prepared and presented regular IT status reports, budget analyses, and strategic
-                                recommendations to senior management and executive leadership; Implemented IT governance
-                                frameworks and policies including change management procedures</li>
+                <div class="matrix">
+                    <div class="matrix-group reveal" data-group="cloud">
+                        <h3><i class="fas fa-cloud" aria-hidden="true"></i> Cloud &amp; Infrastructure</h3>
+                        <ul class="chips">
+                            <li>AWS</li><li>AWS EC2</li><li>Google Cloud Platform</li><li>OpenStack</li>
+                            <li>High Availability</li><li>Disaster Recovery</li><li>Infrastructure as Code</li>
+                            <li>Ansible</li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>Internal System/Server Administrator</h3>
-                            <span class="company">Poornam Info Vision Pvt Ltd (Bobcares)</span>
-                            <span class="duration">May 2017 – Nov 2019</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
-                    </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Secured servers, workstations, and network infrastructure using Iptables, CSF, UFW,
-                                Fail2ban, Pfsense, and Router Firewall, conducting vulnerability and risk assessments on
-                                Servers/VMs/Containers and implementing security countermeasures</li>
-                            <li>Performed Dynamic Application Security Testing (DAST) on web applications and conducted
-                                real-time network traffic monitoring using Tcpdump, shell scripts, Nessus, and Snort;
-                                Audited website security using OSINT tools and penetration testing tools including Kali
-                                Linux, Burp Suite, Nmap, Wireshark, Metasploit, and OWASP-ZAP, implementing
-                                vulnerability checks and security patching</li>
-                            <li>Configured and managed Edge and Jupiter routers/switches including VPN, firewall, VLAN,
-                                DNS, and DHCP configurations, securing network access via VPN, Firewall, Proxy, and
-                                Radius Servers</li>
-                            <li>Installed, configured, monitored, and troubleshooted various Linux servers including Web
-                                server, Mail server, Proxy (Squid) server, Spam Mail Filter, MySQL Server, DNS server,
-                                DHCP server, Zabbix Server, VoIP Server, and VPN server</li>
-                            <li>Created, configured, secured, and troubleshooted VMs and containers on KVM, Docker,
-                                Xen-server, Proxmox, OpenStack, and VirtualBox platforms supporting organizational needs
-                            </li>
-                            <li>Monitored servers and network devices using Zabbix monitoring system and custom scripts
-                                for proactive management, identifying and resolving server issues by analyzing log
-                                files; Installed, configured, managed, and troubleshooted Asterisk servers, 3CX servers,
-                                PBX servers, and VoIP phones, maintaining high-availability (HA) servers ensuring 100%
-                                uptime and BCP/DR readiness</li>
-                            <li>Managed user accounts using AFS, Radius, LDAP, and Kerberos, configuring and managing
-                                Linux servers and workstations using Ansible, Zabbix, Bash scripts, and cron jobs</li>
-                            <li>Conducted monthly Business Continuity Planning (BCP) and Disaster Recovery (DR) tests
-                                including CCTV and physical security audits, performing periodic risk management
-                                assessments to identify and mitigate potential threats</li>
-                            <li>Performed system performance tuning and optimization activities, analyzing resource
-                                utilization patterns and implementing improvements to enhance system efficiency;
-                                Participated in after-hours on-call rotation to provide emergency support for critical
-                                system issues, ensuring 24/7 availability</li>
+                    <div class="matrix-group reveal" data-group="cloud">
+                        <h3><i class="fas fa-cubes" aria-hidden="true"></i> Virtualisation &amp; Containers</h3>
+                        <ul class="chips">
+                            <li>Docker</li><li>KVM</li><li>Proxmox</li><li>VMware ESXi</li><li>Xen-server</li>
+                            <li>VirtualBox</li><li>OpenVZ</li><li>LXC</li><li>LXD</li><li>Ovirt</li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>Server Administrator</h3>
-                            <span class="company">Aforeserve.com Ltd</span>
-                            <span class="duration">Oct 2015 – May 2017</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
-                    </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Managed and maintained Linux and Windows servers ensuring optimal performance and
-                                uptime, installing, configuring, and updating server software and applications according
-                                to organizational requirements</li>
-                            <li>Conducted regular system monitoring to identify and resolve performance bottlenecks and
-                                issues promptly, implementing backup and recovery solutions for servers and critical
-                                data using HP Data Protector Express</li>
-                            <li>Maintained and monitored HP storage arrays, troubleshooting issues with MySQL and
-                                storage (RAID), performing weekly, monthly, and quarterly backups using HP Data
-                                Protector Express and LTO tapes</li>
-                            <li>Managed Electronic Document Management System (EDMS) Project, handling maintenance and
-                                upkeep of DO EDMS Server and BO EDMS Server (Remote access & support) for Policy
-                                servicing services</li>
-                            <li>Automated system maintenance tasks using shell scripts to streamline routine operations,
-                                conducting daily and weekly health checks on DO and BO servers including database
-                                re-indexing and vacuuming utilities</li>
-                            <li>Supported Helpdesk operations resolving reported problems within 48-hour Turnaround Time
-                                (TAT), coordinating with Partner onsite engineers, HP Backend team, Support Manager, and
-                                SDM for case resolution</li>
-                            <li>Provided technical support and guidance to end-users and IT support staff, training and
-                                supporting junior team members and new hires fostering collaborative work environment;
-                                Assisted in capacity planning and scalability of server infrastructure to support
-                                business growth, participating in disaster recovery planning and testing to ensure
-                                business continuity</li>
+                    <div class="matrix-group reveal" data-group="cloud">
+                        <h3><i class="fas fa-infinity" aria-hidden="true"></i> DevOps &amp; CI/CD</h3>
+                        <ul class="chips">
+                            <li>Git</li><li>GitLab CI</li><li>GitHub Actions</li><li>CI/CD Pipelines</li>
+                            <li>SDLC</li><li>Agile</li><li>Shell / Bash</li><li>Python</li><li>PowerShell</li>
+                            <li>Make.com</li><li>n8n</li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="experience-card">
-                    <div class="experience-card-header">
-                        <div class="experience-card-basic">
-                            <h3>Technical Support Engineer</h3>
-                            <span class="company">Team Computers Pvt Ltd</span>
-                            <span class="duration">Mar 2015 – Oct 2015</span>
-                        </div>
-                        <i class="fas fa-chevron-down expand-icon"></i>
+                    <div class="matrix-group reveal" data-group="security">
+                        <h3><i class="fas fa-shield-alt" aria-hidden="true"></i> Security &amp; Compliance</h3>
+                        <ul class="chips">
+                            <li>PCI DSS</li><li>PCI 3DS</li><li>ISO 27001</li><li>SWIFT</li><li>VAPT</li>
+                            <li>Audit Readiness</li><li>Risk Assessment</li><li>Vulnerability Management</li>
+                            <li>Penetration Testing</li><li>DAST</li><li>Iptables</li><li>CSF</li><li>UFW</li>
+                            <li>Fail2ban</li><li>pfSense</li><li>ModSecurity</li><li>Nessus</li><li>Qualys</li>
+                            <li>Burp Suite</li><li>Metasploit</li><li>OWASP ZAP</li><li>Nmap</li><li>Wireshark</li>
+                            <li>Snort</li><li>Kali Linux</li><li>OSINT Tools</li><li>ClamAV</li><li>RKhunter</li>
+                            <li>Tcpdump</li>
+                        </ul>
                     </div>
-                    <div class="experience-card-details">
-                        <ul class="responsibilities">
-                            <li>Installed and configured Linux and Windows workstations to meet client specifications,
-                                configuring and troubleshooting client software to ensure smooth operation</li>
-                            <li>Provided technical support to end-users via phone, email, and in-person visits,
-                                resolving issues promptly and ensuring timely resolution of support tickets</li>
-                            <li>Maintained and managed user accounts, permissions, and access controls on client
-                                systems, conducting initial system setup and configuration for new clients ensuring
-                                smooth transition</li>
-                            <li>Configured Microsoft Outlook for email client setup, performed complete troubleshooting
-                                of desktops and laptops, and provided remote support for end-users</li>
-                            <li>Managed service ticket lifecycle from initial logging through resolution, ensuring
-                                accurate documentation, timely updates, and customer satisfaction throughout support
-                                process; Conducted remote troubleshooting sessions using remote desktop tools, screen
-                                sharing, and diagnostic utilities to efficiently resolve customer technical issues</li>
-                            <li>Assisted in IT onboarding processes for new employees, setting up workstations,
-                                configuring email accounts, and providing initial technology orientation and training
-                            </li>
+                    <div class="matrix-group reveal" data-group="security">
+                        <h3><i class="fas fa-user-lock" aria-hidden="true"></i> Identity &amp; Access</h3>
+                        <ul class="chips">
+                            <li>LDAP</li><li>Active Directory</li><li>RADIUS</li><li>Kerberos</li><li>AFS</li>
+                            <li>Google SSO</li><li>MFA / OTP</li><li>AAA Server</li><li>IAM</li>
+                            <li>SSH Key Management</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="network">
+                        <h3><i class="fas fa-network-wired" aria-hidden="true"></i> Networking</h3>
+                        <ul class="chips">
+                            <li>OpenVPN</li><li>IPSec</li><li>Firewalls</li><li>Switches</li><li>Routers</li>
+                            <li>Edge / Juniper Routers</li><li>VLANs</li><li>DNS</li><li>DHCP</li>
+                            <li>Squid Proxy</li><li>RADIUS</li><li>Network Segmentation</li><li>IDS / IPS</li>
+                            <li>Ubiquiti UniFi</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="servers">
+                        <h3><i class="fab fa-linux" aria-hidden="true"></i> Operating Systems</h3>
+                        <ul class="chips">
+                            <li>Ubuntu</li><li>RHEL</li><li>CentOS</li><li>Debian</li><li>Kali Linux</li>
+                            <li>Windows Server</li><li>macOS</li><li>Linux Mint</li><li>Rocky Linux</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="servers">
+                        <h3><i class="fas fa-server" aria-hidden="true"></i> Server Technologies</h3>
+                        <ul class="chips">
+                            <li>Apache</li><li>NGINX</li><li>IIS</li><li>OpenLiteSpeed</li><li>HAProxy</li>
+                            <li>Load Balancers</li><li>Postfix</li><li>Dovecot</li><li>Spam Mail Filter</li>
+                            <li>Squid</li><li>BIND</li><li>Asterisk</li><li>3CX</li><li>PBX</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="servers">
+                        <h3><i class="fas fa-hdd" aria-hidden="true"></i> Storage &amp; Hardware</h3>
+                        <ul class="chips">
+                            <li>HP Storage Arrays</li><li>HP Servers</li><li>Storage Controllers</li><li>RAID</li>
+                            <li>LTO Tapes</li><li>UPS</li><li>CCTV</li><li>Network Printers</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="data">
+                        <h3><i class="fas fa-database" aria-hidden="true"></i> Databases</h3>
+                        <ul class="chips">
+                            <li>MySQL</li><li>MariaDB</li><li>PostgreSQL</li><li>MongoDB</li><li>MSSQL</li>
+                            <li>Supabase</li><li>Firebase</li><li>MySQL Replication</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="data">
+                        <h3><i class="fas fa-chart-line" aria-hidden="true"></i> Monitoring &amp; Backup</h3>
+                        <ul class="chips">
+                            <li>Zabbix</li><li>Nagios</li><li>HP Data Protector Express</li><li>Rsnapshot</li>
+                            <li>Automysqlbackup</li><li>Barracuda Backup</li><li>System Health Checks</li>
+                            <li>Logging</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="dev">
+                        <h3><i class="fas fa-code" aria-hidden="true"></i> Development</h3>
+                        <ul class="chips">
+                            <li>React</li><li>Next.js</li><li>React Native</li><li>Expo</li><li>TypeScript</li>
+                            <li>JavaScript</li><li>Node.js</li><li>PHP</li><li>Python</li><li>HTML</li><li>CSS</li>
+                            <li>Supabase pgvector</li><li>RAG / LLM apps</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="dev">
+                        <h3><i class="fas fa-shopping-cart" aria-hidden="true"></i> CMS &amp; E-commerce</h3>
+                        <ul class="chips">
+                            <li>WordPress</li><li>WooCommerce</li><li>Shopify</li><li>Headless CMS</li>
+                            <li>Strapi</li><li>Joomla</li>
+                        </ul>
+                    </div>
+                    <div class="matrix-group reveal" data-group="tools">
+                        <h3><i class="fas fa-briefcase" aria-hidden="true"></i> CRM &amp; Productivity</h3>
+                        <ul class="chips">
+                            <li>Zoho</li><li>Trello</li><li>Google Workspace</li><li>Microsoft 365</li>
+                            <li>Cloudflare</li>
                         </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="tech" class="tech">
-        <div class="container">
-            <h2 class="section-title">Tech I Work With</h2>
-            <div class="tech-grid">
-                <!-- Cloud & DevOps -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-cloud"></i>
-                        <h3>Cloud & DevOps</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">AWS</span>
-                        <span class="tech-chip">AWS EC2</span>
-                        <span class="tech-chip">Azure</span>
-                        <span class="tech-chip">GCP</span>
-                        <span class="tech-chip">Google Compute Engine</span>
-                        <span class="tech-chip">OpenStack</span>
-                        <span class="tech-chip">DigitalOcean</span>
-                        <span class="tech-chip">Linode</span>
-                        <span class="tech-chip">Docker</span>
-                        <span class="tech-chip">Kubernetes</span>
-                        <span class="tech-chip">Jenkins</span>
-                        <span class="tech-chip">GitLab CI</span>
-                        <span class="tech-chip">GitHub Actions</span>
-                        <span class="tech-chip">Terraform</span>
-                        <span class="tech-chip">Ansible</span>
-                        <span class="tech-chip">Infrastructure as Code</span>
-                        <span class="tech-chip">Bash</span>
-                        <span class="tech-chip">Python</span>
-                        <span class="tech-chip">Shell Scripting</span>
-                        <span class="tech-chip">Cron Jobs</span>
-                        <span class="tech-chip">Make.com</span>
-                    </div>
-                </div>
-
-                <!-- Security & Network -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>Security & Network</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">PCI DSS</span>
-                        <span class="tech-chip">ISO 27001</span>
-                        <span class="tech-chip">VAPT</span>
-                        <span class="tech-chip">SIEM</span>
-                        <span class="tech-chip">WAF</span>
-                        <span class="tech-chip">IDS/IPS</span>
-                        <span class="tech-chip">Nessus</span>
-                        <span class="tech-chip">Burp Suite</span>
-                        <span class="tech-chip">Metasploit</span>
-                        <span class="tech-chip">OWASP ZAP</span>
-                        <span class="tech-chip">Nmap</span>
-                        <span class="tech-chip">Wireshark</span>
-                        <span class="tech-chip">pfSense</span>
-                        <span class="tech-chip">OPNsense</span>
-                        <span class="tech-chip">FortiGate</span>
-                        <span class="tech-chip">Cisco ASA</span>
-                        <span class="tech-chip">iptables</span>
-                        <span class="tech-chip">CSF</span>
-                        <span class="tech-chip">UFW</span>
-                        <span class="tech-chip">ModSecurity</span>
-                        <span class="tech-chip">Fail2ban</span>
-                        <span class="tech-chip">Snort</span>
-                        <span class="tech-chip">OSINT Tools</span>
-                        <span class="tech-chip">VLANs</span>
-                        <span class="tech-chip">SSH Key Management</span>
-                        <span class="tech-chip">Google SSO</span>
-                        <span class="tech-chip">MFA/OTP</span>
-                        <span class="tech-chip">AAA</span>
-                        <span class="tech-chip">IAM</span>
-                    </div>
-                </div>
-
-                <!-- Infrastructure & Servers -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-server"></i>
-                        <h3>Infrastructure & Servers</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">Linux</span>
-                        <span class="tech-chip">Ubuntu</span>
-                        <span class="tech-chip">CentOS</span>
-                        <span class="tech-chip">RHEL</span>
-                        <span class="tech-chip">Debian</span>
-                        <span class="tech-chip">Windows</span>
-                        <span class="tech-chip">Windows Server</span>
-                        <span class="tech-chip">VMware ESXi</span>
-                        <span class="tech-chip">Proxmox</span>
-                        <span class="tech-chip">KVM</span>
-                        <span class="tech-chip">Xen</span>
-                        <span class="tech-chip">Apache</span>
-                        <span class="tech-chip">Nginx</span>
-                        <span class="tech-chip">OpenLiteSpeed</span>
-                        <span class="tech-chip">IIS</span>
-                        <span class="tech-chip">HAProxy</span>
-                        <span class="tech-chip">Varnish</span>
-                        <span class="tech-chip">LXC/LXD</span>
-                        <span class="tech-chip">Load Balancers</span>
-                        <span class="tech-chip">High Availability</span>
-                        <span class="tech-chip">Failover Systems</span>
-                        <span class="tech-chip">Postfix</span>
-                        <span class="tech-chip">Dovecot</span>
-                        <span class="tech-chip">BIND</span>
-                        <span class="tech-chip">DHCP</span>
-                        <span class="tech-chip">Asterisk</span>
-                        <span class="tech-chip">3CX</span>
-                        <span class="tech-chip">Proxy Servers</span>
-                    </div>
-                </div>
-
-                <!-- Databases & Monitoring -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-database"></i>
-                        <h3>Databases & Monitoring</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">MySQL</span>
-                        <span class="tech-chip">PostgreSQL</span>
-                        <span class="tech-chip">MongoDB</span>
-                        <span class="tech-chip">Redis</span>
-                        <span class="tech-chip">MariaDB</span>
-                        <span class="tech-chip">MSSQL</span>
-                        <span class="tech-chip">Supabase</span>
-                        <span class="tech-chip">Firebase</span>
-                        <span class="tech-chip">Nagios</span>
-                        <span class="tech-chip">Zabbix</span>
-                        <span class="tech-chip">Grafana</span>
-                        <span class="tech-chip">Prometheus</span>
-                        <span class="tech-chip">ELK Stack</span>
-                        <span class="tech-chip">Rsnapshot</span>
-                        <span class="tech-chip">Automysqlbackup</span>
-                        <span class="tech-chip">Barracuda Backup</span>
-                        <span class="tech-chip">HP Data Protector</span>
-                    </div>
-                </div>
-
-                <!-- Tools & Services -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-tools"></i>
-                        <h3>Tools & Services</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">Git</span>
-                        <span class="tech-chip">GitHub</span>
-                        <span class="tech-chip">GitLab</span>
-                        <span class="tech-chip">SVN</span>
-                        <span class="tech-chip">Trello</span>
-                        <span class="tech-chip">Zoho</span>
-                        <span class="tech-chip">G Suite</span>
-                        <span class="tech-chip">Microsoft 365</span>
-                        <span class="tech-chip">OpenLDAP</span>
-                        <span class="tech-chip">S3</span>
-                        <span class="tech-chip">NFS</span>
-                        <span class="tech-chip">SAN</span>
-                        <span class="tech-chip">NAS</span>
-                        <span class="tech-chip">GlusterFS</span>
-                    </div>
-                </div>
-
-                <!-- Web & Mobile Development -->
-                <div class="tech-card">
-                    <div class="tech-card-header">
-                        <i class="fas fa-code"></i>
-                        <h3>Web & Mobile Development</h3>
-                    </div>
-                    <div class="tech-chips">
-                        <span class="tech-chip">HTML</span>
-                        <span class="tech-chip">CSS</span>
-                        <span class="tech-chip">JavaScript</span>
-                        <span class="tech-chip">React</span>
-                        <span class="tech-chip">Next.js</span>
-                        <span class="tech-chip">TypeScript</span>
-                        <span class="tech-chip">PHP</span>
-                        <span class="tech-chip">Node.js</span>
-                        <span class="tech-chip">WordPress</span>
-                        <span class="tech-chip">WooCommerce</span>
-                        <span class="tech-chip">Shopify</span>
-                        <span class="tech-chip">Headless CMS</span>
-                        <span class="tech-chip">RESTful APIs</span>
-                        <span class="tech-chip">Tailwind CSS</span>
-                        <span class="tech-chip">React Native</span>
-                        <span class="tech-chip">Expo</span>
-                        <span class="tech-chip">AI Integrations</span>
-                    </div>
-                </div>
+        <!-- ============ APPS ============ -->
+        <section id="apps" class="sec sec--full" aria-labelledby="apps-title">
+            <div class="sec-head sec-head--row">
+                <h2 id="apps-title" class="sec-title reveal-title">Projects Showcase</h2>
+                <p class="sec-lead reveal">Free tools that run in your browser. Every one is live, so open any card to
+                    try it. <a href="apps/" class="text-link">See the full apps page</a>.</p>
             </div>
-        </div>
-    </section>
-
-    <section id="startups" class="startups">
-        <div class="container">
-            <h2 class="section-title">What I've Built</h2>
-            <div class="business-grid">
-                <div class="business-card">
-                    <div class="business-content">
-                        <div class="business-header">
-                            <div class="business-logo">
-                                <img src="assets/opsbin.png" alt="Opsbin Logo">
-                            </div>
-                            <div class="business-title">
-                                <h3>Opsbin</h3>
-                                <span class="company-name">UTF Innovations Private Limited</span>
-                            </div>
-                            <a href="https://opsbin.com" target="_blank" class="business-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                        <p class="business-description">
-                            IT Support Services and Solutions Platform. Providing efficient technical support and
-                            customer service to small and medium-sized businesses. Specializing in cloud infrastructure,
-                            security solutions, and managed IT services.
-                        </p>
-                        <div class="business-tech">
-                            <span class="tech-tag">Cloud Infrastructure</span>
-                            <span class="tech-tag">DevOps</span>
-                            <span class="tech-tag">Security</span>
-                            <span class="tech-tag">IT Support</span>
-                            <span class="tech-tag">Managed Services</span>
-                        </div>
-                        <div class="business-social">
-                            <a href="https://opsbin.com" target="_blank" class="business-social-link" title="Website">
-                                <i class="fas fa-globe"></i>
-                            </a>
-                            <a href="tel:+917510995385" class="business-social-link" title="Call">
-                                <i class="fas fa-phone"></i>
-                            </a>
-                            <a href="https://www.linkedin.com/company/utf_opsbin" target="_blank"
-                                class="business-social-link" title="LinkedIn">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="https://wa.me/+917510995385" target="_blank" class="business-social-link"
-                                title="WhatsApp">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                            <a href="https://www.instagram.com/opsbin" target="_blank" class="business-social-link"
-                                title="Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="https://www.facebook.com/profile.php?id=100076796238177" target="_blank"
-                                class="business-social-link" title="Facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="business-card">
-                    <div class="business-content">
-                        <div class="business-header">
-                            <div class="business-logo">
-                                <img src="assets/bitstrail.png" alt="Bitstrail Logo">
-                            </div>
-                            <div class="business-title">
-                                <h3>Bitstrail</h3>
-                                <span class="company-name">Bitstrail Private Limited</span>
-                            </div>
-                            <a href="https://bitstrail.com" target="_blank" class="business-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                        <p class="business-description">
-                            Software Development Company specializing in web and mobile application development, cloud
-                            solutions, and product innovation. Delivering cutting-edge technology solutions for
-                            businesses worldwide.
-                        </p>
-                        <div class="business-tech">
-                            <span class="tech-tag">Web Development</span>
-                            <span class="tech-tag">Mobile Apps</span>
-                            <span class="tech-tag">Cloud Solutions</span>
-                            <span class="tech-tag">Product Development</span>
-                            <span class="tech-tag">Digital Innovation</span>
-                        </div>
-                        <div class="business-social">
-                            <a href="https://bitstrail.com" target="_blank" class="business-social-link"
-                                title="Website">
-                                <i class="fas fa-globe"></i>
-                            </a>
-                            <a href="tel:+919961605385" class="business-social-link" title="Call">
-                                <i class="fas fa-phone"></i>
-                            </a>
-                            <a href="https://www.linkedin.com/company/bitstrail" target="_blank"
-                                class="business-social-link" title="LinkedIn">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="https://wa.me/+919961605385" target="_blank" class="business-social-link"
-                                title="WhatsApp">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                            <a href="https://www.instagram.com/bitstrail_com" target="_blank"
-                                class="business-social-link" title="Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="https://www.facebook.com/bitstrail1" target="_blank" class="business-social-link"
-                                title="Facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="business-card">
-                    <div class="business-content">
-                        <div class="business-header">
-                            <div class="business-logo">
-                                <i class="fas fa-home" style="font-size: 2.5rem; color: var(--primary-color);"></i>
-                            </div>
-                            <div class="business-title">
-                                <h3>Smart HOMI</h3>
-                                <span class="company-name">Smart Home Operations Platform</span>
-                            </div>
-                            <a href="https://smarthomi.app" target="_blank" class="business-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                        <p class="business-description">
-                            Smart home operations and management interface. A shopping and task management, inventory
-                            management, bug tracking, and meal planning platform with help of AI and IoT. Integrate with
-                            existing Smart Home devices and services.
-                        </p>
-                        <div class="business-tech">
-                            <span class="tech-tag">Home Automation</span>
-                            <span class="tech-tag">AI & IoT</span>
-                            <span class="tech-tag">Mobile App</span>
-                            <span class="tech-tag">Home Management</span>
-                            <span class="tech-tag">Smart Home</span>
-                        </div>
-                        <div class="business-social">
-                            <a href="https://smarthomi.app" target="_blank" class="business-social-link"
-                                title="Website">
-                                <i class="fas fa-globe"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="business-card">
-                    <div class="business-content">
-                        <div class="business-header">
-                            <div class="business-logo">
-                                <i class="fas fa-calendar-alt"
-                                    style="font-size: 2.5rem; color: var(--primary-color);"></i>
-                            </div>
-                            <div class="business-title">
-                                <h3>Bookingtrails</h3>
-                                <span class="company-name">Adventure Sports Booking Platform</span>
-                            </div>
-                            <a href="https://bookingtrails.com/" target="_blank" class="business-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </a>
-                        </div>
-                        <p class="business-description">
-                            Adventure sports and activities booking platform with AI recommendations and VR preview of
-                            the activities. Experience the adventure before you book.
-                        </p>
-                        <div class="business-tech">
-                            <span class="tech-tag">Adventure Sports</span>
-                            <span class="tech-tag">VR Previews</span>
-                            <span class="tech-tag">AI Recommendations</span>
-                            <span class="tech-tag">Booking Platform</span>
-                            <span class="tech-tag">Activities</span>
-                        </div>
-                        <div class="business-social">
-                            <a href="https://bookingtrails.com/" target="_blank" class="business-social-link"
-                                title="Website">
-                                <i class="fas fa-globe"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="apps" class="apps">
-        <div class="container">
-            <h2 class="section-title">Projects Showcase</h2>
             <div class="apps-grid">
-                <a href="https://wtfqr.com/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/qr.png" alt="QR Code"
-                                class="project-icon">
-                            <h3>WTFQR - QR Code Generator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes
-                            for URLs, text, contact information, and more with customizable styling options.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">QR Code Generator</span>
-                            <span class="tech-tag">Utility Tool</span>
-                            <span class="tech-tag">Custom QR Codes</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="https://wtfqr.com/" target="_blank" rel="noopener noreferrer" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/qr.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>WTFQR - QR Code Generator</h3>
+                    <p>Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for
+                        URLs, text, contact information, and more with customizable styling options.</p>
                 </a>
-
-                <a href="apps/barcode/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <i class="fas fa-barcode project-icon"
-                                style="background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
-                            <h3>Barcode Generator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Generate custom barcodes instantly in your browser. Supports multiple formats including Code
-                            128, EAN, UPC, and more. Features generic API-like URL generation.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Barcode Generator</span>
-                            <span class="tech-tag">Utility</span>
-                            <span class="tech-tag">Web App</span>
-                            <span class="tech-tag">Client-side</span>
-                        </div>
-                    </div>
+                <a href="apps/helpdesk/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-headset"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Helpdesk &amp; Issue Tracker</h3>
+                    <p>Log tickets, build your own categories and team, assign and track status, and review activity.
+                        Fully customizable and works entirely in your browser.</p>
                 </a>
-                <a href="apps/timer/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/worktimer.png" alt="Work Timer"
-                                class="project-icon">
-                            <h3>Work Timer</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Productivity timer application for tracking work sessions, breaks, and time management.
-                            Helps improve focus and maintain work-life balance with customizable timer settings.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Productivity</span>
-                            <span class="tech-tag">Time Tracking</span>
-                            <span class="tech-tag">Web App</span>
-                            <span class="tech-tag">Timer</span>
-                        </div>
-                    </div>
+                <a href="apps/barcode/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-barcode"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Barcode Generator</h3>
+                    <p>Generate custom barcodes instantly in your browser. Supports multiple formats including Code
+                        128, EAN, UPC, and more. Features generic API-like URL generation.</p>
                 </a>
-
-                <a href="apps/mood/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/mood.png" alt="Mood Logger"
-                                class="project-icon">
-                            <h3>Mood Logger</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Track your emotional wellbeing and mood patterns over time. Log your daily emotions with
-                            notes, visualize trends with interactive charts, and gain insights into your emotional
-                            health.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Wellness</span>
-                            <span class="tech-tag">Mood Tracking</span>
-                            <span class="tech-tag">Data Visualization</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/timer/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/worktimer.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Work Timer</h3>
+                    <p>Productivity timer application for tracking work sessions, breaks, and time management. Helps
+                        improve focus and maintain work-life balance with customizable timer settings.</p>
                 </a>
-
-                <a href="apps/password/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/password.png" alt="Password Generator"
-                                class="project-icon">
-                            <h3>Password Generator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Generate secure, compliant passwords with customizable complexity settings. Features
-                            compliance presets for ISO, PCI, CSA, HIPAA, NIST, and GDPR standards. Create strong
-                            passwords with ease.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Security</span>
-                            <span class="tech-tag">Password Generator</span>
-                            <span class="tech-tag">Compliance</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/mood/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/mood.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Mood Logger</h3>
+                    <p>Track your emotional wellbeing and mood patterns over time. Log your daily emotions with notes,
+                        visualize trends with interactive charts, and gain insights into your emotional health.</p>
                 </a>
-
-                <a href="apps/subnet/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/subnet.png" alt="Subnet Calculator"
-                                class="project-icon">
-                            <h3>Subnet Calculator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR
-                            notation. Demonstrates network engineering and security math with binary representation
-                            visualization.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Network Engineering</span>
-                            <span class="tech-tag">Subnet Calculator</span>
-                            <span class="tech-tag">Security</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/password/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/password.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Password Generator</h3>
+                    <p>Generate secure, compliant passwords with customizable complexity settings. Features compliance
+                        presets for ISO, PCI, CSA, HIPAA, NIST, and GDPR standards. Create strong passwords with ease.
+                    </p>
                 </a>
-
-                <a href="apps/ip/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/ip.png" alt="IP Address Locator"
-                                class="project-icon">
-                            <h3>IP Address Locator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Get comprehensive geographical and network information for any IP address. Displays
-                            location, network, country, timezone, ISP details, and interactive map visualization.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">IP Geolocation</span>
-                            <span class="tech-tag">Network Information</span>
-                            <span class="tech-tag">Location Tracking</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/subnet/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/subnet.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Subnet Calculator</h3>
+                    <p>Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR
+                        notation. Demonstrates network engineering and security math with binary representation
+                        visualization.</p>
                 </a>
-
-                <a href="apps/kanban/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/kanban.png" alt="Kanban Board"
-                                class="project-icon">
-                            <h3>Kanban Board</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            A minimalist drag-and-drop task management board with three columns (To Do, In Progress,
-                            Done). Features local storage persistence, task editing, priority levels, CSV export/import,
-                            and user assignment.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Task Management</span>
-                            <span class="tech-tag">Drag & Drop</span>
-                            <span class="tech-tag">Local Storage</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/ip/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/ip.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>IP Address Locator</h3>
+                    <p>Get comprehensive geographical and network information for any IP address. Displays location,
+                        network, country, timezone, ISP details, and interactive map visualization.</p>
                 </a>
-
-                <a href="apps/resume-cover/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/cv.png"
-                                alt="Resume & Cover Letter Generator" class="project-icon">
-                            <h3>Resume & Cover Letter Generator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            AI-powered ATS-friendly resume and cover letter generator optimized for international job
-                            markets. Uses Gemini AI to create keyword-rich, tailored documents that pass ATS screening
-                            and impress recruiters.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">AI-Powered</span>
-                            <span class="tech-tag">ATS-Optimized</span>
-                            <span class="tech-tag">Resume Builder</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/kanban/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/kanban.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Kanban Board</h3>
+                    <p>A minimalist drag-and-drop task management board with three columns (To Do, In Progress, Done).
+                        Features local storage persistence, task editing, priority levels, CSV export/import, and user
+                        assignment.</p>
                 </a>
-
-                <a href="apps/cofounder-pie/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/founders.png" alt="Co-Founder Pie"
-                                class="project-icon">
-                            <h3>Co-Founder Pie</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Calculate fair equity distribution for startup co-founders based on contributions, tasks,
-                            and responsibilities. Supports 2-10 founders with weighted task scoring and automatic
-                            percentage calculations.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Equity Calculator</span>
-                            <span class="tech-tag">Startup Tools</span>
-                            <span class="tech-tag">Business Calculator</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/resume-cover/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/cv.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Resume &amp; Cover Letter Generator</h3>
+                    <p>AI-powered ATS-friendly resume and cover letter generator optimized for international job
+                        markets. Uses Gemini AI to create keyword-rich, tailored documents that pass ATS screening and
+                        impress recruiters.</p>
                 </a>
-
-                <a href="apps/daybook/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/daybook.png" alt="Daybook"
-                                class="project-icon">
-                            <h3>Daybook</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Track income and expenses for small shops with customer details, invoice generation, and
-                            data export. Perfect for small business bookkeeping with local storage and print-ready
-                            invoices.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Bookkeeping</span>
-                            <span class="tech-tag">Invoice Generator</span>
-                            <span class="tech-tag">Small Business</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/cofounder-pie/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/founders.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Co-Founder Pie</h3>
+                    <p>Calculate fair equity distribution for startup co-founders based on contributions, tasks, and
+                        responsibilities. Supports 2-10 founders with weighted task scoring and automatic percentage
+                        calculations.</p>
                 </a>
-
-                <a href="apps/md/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/markdown.png" alt="Markdown Converter"
-                                class="project-icon">
-                            <h3>Markdown Converter</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload
-                            support, and word count. Perfect for documentation, reports, and content conversion.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Document Converter</span>
-                            <span class="tech-tag">Markdown</span>
-                            <span class="tech-tag">PDF Generator</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/daybook/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/daybook.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Daybook</h3>
+                    <p>Track income and expenses for small shops with customer details, invoice generation, and data
+                        export. Perfect for small business bookkeeping with local storage and print-ready invoices.</p>
                 </a>
-
-                <a href="apps/favicon/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/ico.png"
-                                alt="Image to Favicon Converter" class="project-icon">
-                            <h3>Image to Favicon Converter</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32,
-                            48x48, etc.) with preview and download options. Perfect for creating website icons.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Image Converter</span>
-                            <span class="tech-tag">Favicon Generator</span>
-                            <span class="tech-tag">Icon Creator</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/md/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/markdown.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Markdown Converter</h3>
+                    <p>Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload
+                        support, and word count. Perfect for documentation, reports, and content conversion.</p>
                 </a>
-
-                <a href="apps/json/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/json.png" alt="JSON Formatter"
-                                class="project-icon">
-                            <h3>JSON Formatter</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Format, validate, minify, and beautify JSON instantly. Essential developer tool for working
-                            with APIs, configuration files, and data structures.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">JSON Tools</span>
-                            <span class="tech-tag">Developer Tool</span>
-                            <span class="tech-tag">Data Formatter</span>
-                            <span class="tech-tag">Validator</span>
-                        </div>
-                    </div>
+                <a href="apps/favicon/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/ico.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Image to Favicon Converter</h3>
+                    <p>Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48,
+                        etc.) with preview and download options. Perfect for creating website icons.</p>
                 </a>
-
-                <a href="apps/habit/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/habit.png" alt="Habit Tracker"
-                                class="project-icon">
-                            <h3>Habit Tracker</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Track daily habits with streak counters and calendar views. Build better habits with minimal
-                            design and powerful retention tracking features.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Habit Tracking</span>
-                            <span class="tech-tag">Streak Counter</span>
-                            <span class="tech-tag">Goal Tracking</span>
-                            <span class="tech-tag">Productivity</span>
-                        </div>
-                    </div>
+                <a href="apps/json/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/json.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>JSON Formatter</h3>
+                    <p>Format, validate, minify, and beautify JSON instantly. Essential developer tool for working with
+                        APIs, configuration files, and data structures.</p>
                 </a>
-
-                <a href="apps/sydney_myrta_booking_system_monitoring_system/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <img src="https://robinthomasonline.github.io/assets/myrta.png"
-                                alt="MyRTA Booking System Monitor" class="project-icon">
-                            <h3>MyRTA Booking System Monitor</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Free browser extension that monitors MyRTA booking availability changes and alerts you
-                            instantly when new test dates become available. Get notified with sound alerts and desktop
-                            notifications.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Browser Extension</span>
-                            <span class="tech-tag">Booking Monitor</span>
-                            <span class="tech-tag">Alert System</span>
-                            <span class="tech-tag">Chrome Extension</span>
-                        </div>
-                    </div>
+                <a href="apps/habit/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/habit.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Habit Tracker</h3>
+                    <p>Track daily habits with streak counters and calendar views. Build better habits with minimal
+                        design and powerful retention tracking features.</p>
                 </a>
-
-                <a href="apps/pos/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <i class="fas fa-cash-register project-icon"
-                                style="font-size: 2.5rem; color: var(--primary-color);"></i>
-                            <h3>POS & Billing System</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Comprehensive Point of Sale and Billing System for small shops. Features barcode/QR
-                            scanning, product management, invoicing, transaction tracking, and expense management with
-                            role-based access control.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">POS System</span>
-                            <span class="tech-tag">Billing</span>
-                            <span class="tech-tag">Inventory Management</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/sydney_myrta_booking_system_monitoring_system/" target="_blank"
+                    class="app-card reveal">
+                    <span class="app-top">
+                        <img src="assets/myrta.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>MyRTA Booking System Monitor</h3>
+                    <p>Free browser extension that monitors MyRTA booking availability changes and alerts you instantly
+                        when new test dates become available. Get notified with sound alerts and desktop notifications.
+                    </p>
                 </a>
-
-                <a href="apps/cron/" target="_blank" class="project-card">
-                    <div class="project-content">
-                        <div class="project-header">
-                            <i class="fas fa-clock project-icon"
-                                style="font-size: 2.5rem; color: var(--primary-color);"></i>
-                            <h3>Crontab Entry Creator</h3>
-                            <span class="project-link">
-                                <i class="fas fa-external-link-alt"></i>
-                            </span>
-                        </div>
-                        <p class="project-description">
-                            Create, understand, and manage crontab entries with a visual builder. Generate custom cron
-                            schedules, explore templates, and parse existing entries to understand what they do.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Cron Scheduler</span>
-                            <span class="tech-tag">DevOps Tool</span>
-                            <span class="tech-tag">System Administration</span>
-                            <span class="tech-tag">Web App</span>
-                        </div>
-                    </div>
+                <a href="apps/pos/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i
+                                class="fas fa-cash-register"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>POS &amp; Billing System</h3>
+                    <p>Comprehensive Point of Sale and Billing System for small shops. Features barcode/QR scanning,
+                        product management, invoicing, transaction tracking, and expense management with role-based
+                        access control.</p>
+                </a>
+                <a href="apps/cron/" target="_blank" class="app-card reveal">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-clock"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h3>Crontab Entry Creator</h3>
+                    <p>Create, understand, and manage crontab entries with a visual builder. Generate custom cron
+                        schedules, explore templates, and parse existing entries to understand what they do.</p>
                 </a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="contact" class="contact">
-        <h2 class="section-title">Let's Chat</h2>
-        <p
-            style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Ready to optimize your infrastructure? Let's discuss your next project.</p>
-        <div class="contact-content">
-            <div class="contact-info" id="contact-info-container">
-                <!-- Contact items will be dynamically loaded here -->
+        <!-- ============ CONTACT ============ -->
+        <section id="contact" class="sec" aria-labelledby="contact-title">
+            <div class="sec-head">
+                <h2 id="contact-title" class="sec-title reveal-title">Let's Chat</h2>
+                <p class="sec-lead reveal">Ready to optimize your infrastructure? Let's discuss your next project.
+                </p>
+                <div class="contact-actions reveal">
+                    <a href="mailto:robinthomasonline@gmail.com" class="btn btn-primary magnetic">Email Robin</a>
+                    <a href="https://calendly.com/robinthomasonline/meet" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-ghost magnetic">Book a meeting</a>
+                </div>
             </div>
-        </div>
-    </section>
+            <div class="sec-body">
+                <ul class="contact-grid" id="contact-info-container">
+                    <!-- Filled from contact-config.js; this entry is the no-JS fallback. Details stay in href only. -->
+                    <li>
+                        <a href="mailto:robinthomasonline@gmail.com" class="contact-card">
+                            <i class="fas fa-envelope contact-icon" aria-hidden="true"></i>
+                            <span class="contact-title">Personal</span>
+                            <span class="contact-value">Email</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
 
-
+    <footer class="site-footer">
+        <p class="mono">© <span id="year">2026</span> Robin Thomas</p>
+        <a href="#top" class="text-link mono">Back to top</a>
+    </footer>
 
     <script src="contact-config.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
+    <script type="module" src="scene.js"></script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -1356,77 +993,37 @@
         "url": "https://robinthomasonline.github.io",
         "image": "https://robinthomasonline.github.io/assets/robin-hero.png",
         "jobTitle": "IT & Cybersecurity Consultant",
-        "worksFor": {
-            "@type": "Organization",
-            "name": "Self-Employed"
-        },
+        "worksFor": { "@type": "Organization", "name": "Self-Employed" },
         "email": "robinthomasonline@gmail.com",
         "sameAs": [
             "https://linkedin.com/in/robinthomasonline",
             "https://facebook.com/robinthomasonline",
             "https://instagram.com/robinthomasonline",
             "https://opsbin.com",
-            "https://bitstrail.com"
+            "https://bitstrail.com",
             "https://bookingtrails.com",
             "https://smarthomi.app",
             "https://wtfqr.com"
         ],
         "knowsAbout": [
-            "IT Security",
-            "Cybersecurity",
-            "DevOps",
-            "Cloud Computing",
-            "GRC",
-            "PCI DSS",
-            "ISO 27001",
-            "Network Security",
-            "Infrastructure Management",
-            "Compliance"
+            "IT Security", "Cybersecurity", "DevOps", "Cloud Computing", "GRC", "PCI DSS",
+            "ISO 27001", "Network Security", "Infrastructure Management", "Compliance"
         ],
-        "alumniOf": {
-            "@type": "Organization",
-            "name": "ValueMentor Infosec Pvt Ltd"
-            "url": "https://valuementor.com"
-            {
-                "@type": "Organization",
-                "name": "ValueMentor Infosec Pvt Ltd",
-                "url": "https://valuementor.com"
-            }
-        },
+        "alumniOf": [
+            { "@type": "Organization", "name": "ValueMentor Infosec Pvt Ltd", "url": "https://valuementor.com" },
+            { "@type": "Organization", "name": "Hola World Pty Ltd" }
+        ],
         "hasOccupation": {
             "@type": "Occupation",
             "name": "IT & Cybersecurity Consultant",
-            "occupationLocation": {
-                "@type": "Country",
-                "name": "Australia"
-            }
+            "occupationLocation": { "@type": "Country", "name": "Australia" }
         },
         "founder": [
-            {
-                "@type": "Organization",
-                "name": "Opsbin",
-                "url": "https://opsbin.com"
-            },
-            {
-                "@type": "Organization",
-                "name": "Bitstrail",
-                "url": "https://bitstrail.com"
-            },
-            {
-                "@type": "Organization",
-                "name": "Bookingtrails",
-                "url": "https://bookingtrails.com"
-            },
-            {
-                "@type": "Organization",
-                "name": "Smarthomi",
-                "url": "https://smarthomi.app"
-            },
-            {
-                "@type": "Organization",
-                "name": "WTFQR",
-                "url": "https://wtfqr.com"
-            }
+            { "@type": "Organization", "name": "Opsbin", "url": "https://opsbin.com" },
+            { "@type": "Organization", "name": "Bitstrail", "url": "https://bitstrail.com" },
+            { "@type": "Organization", "name": "Bookingtrails", "url": "https://bookingtrails.com" },
+            { "@type": "Organization", "name": "Smarthomi", "url": "https://smarthomi.app" },
+            { "@type": "Organization", "name": "WTFQR", "url": "https://wtfqr.com" }
         ]
     }
     </script>

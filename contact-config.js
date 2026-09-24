@@ -13,24 +13,6 @@ const CONTACT_CONFIG = {
             rel: null
         },
         {
-            type: 'email',
-            icon: 'fas fa-envelope',
-            title: 'Opsbin',
-            label: 'Email',
-            href: 'mailto:robin@opsbin.com',
-            target: null,
-            rel: null
-        },
-        {
-            type: 'email',
-            icon: 'fas fa-envelope',
-            title: 'Bitstrail',
-            label: 'Email',
-            href: 'mailto:robin@bitstrail.com',
-            target: null,
-            rel: null
-        },
-        {
             type: 'phone',
             icon: 'fas fa-phone',
             title: 'Phone India',

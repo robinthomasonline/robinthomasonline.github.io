@@ -1,960 +1,430 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-webgl" data-scene="quiet">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Apps Showcase | Robin Thomas</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-dark: #0a0f1c;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-cyan: #00f2ff;
-            --accent-purple: #bd00ff;
-            --text-primary: #ffffff;
-            --text-secondary: #a0aec0;
-            --primary-color: #00f2ff;
-            --secondary-color: #bd00ff;
-            --background-color: #0a0f1c;
-            --text-color: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding: 2rem 1rem;
-            line-height: 1.6;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 4rem;
-            padding-top: 2rem;
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            margin-bottom: 2rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--accent-cyan);
-            transform: translateX(-5px);
-            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
-        }
-
-        .back-link:focus {
-            outline: 2px solid var(--accent-cyan);
-            outline-offset: 2px;
-        }
-
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .app-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
-        }
-
-        .app-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(0, 242, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--accent-cyan);
-        }
-
-        .app-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .app-card:focus {
-            outline: 2px solid var(--accent-cyan);
-            outline-offset: 2px;
-        }
-
-        .project-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Inline header with png icon and title on same line */
-        .project-header-inline {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 1rem;
-        }
-
-        .project-icon-img {
-            width: 56px;
-            height: 56px;
-            object-fit: contain;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 6px;
-        }
-
-        .project-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .project-description {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-            line-height: 1.7;
-        }
-
-        .project-features {
-            list-style: none;
-            margin-bottom: 1.5rem;
-        }
-
-        .project-features li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .project-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent-cyan);
-            font-weight: 700;
-        }
-
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: auto;
-            transition: all 0.3s ease;
-        }
-
-        .project-link:hover {
-            gap: 1rem;
-            color: var(--accent-purple);
-        }
-
-        .project-link i {
-            transition: transform 0.3s ease;
-        }
-
-        .project-card:hover .project-link i {
-            transform: translateX(5px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .header p {
-                font-size: 1rem;
-            }
-
-            .apps-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .app-card {
-                padding: 1.5rem;
-            }
-
-            .project-title {
-                font-size: 1.5rem;
-            }
-
-            .project-icon {
-                font-size: 2.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem 0.5rem;
-            }
-
-            .header {
-                margin-bottom: 2rem;
-                padding-top: 1rem;
-            }
-
-            .header h1 {
-                font-size: 1.75rem;
-            }
-
-            .app-card {
-                padding: 1.25rem;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .app-card {
-            animation: fadeInUp 0.6s ease-out backwards;
-        }
-
-        .app-card:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        .app-card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .app-card:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .app-card:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .app-card:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-
-        .app-card:nth-child(6) {
-            animation-delay: 0.6s;
-        }
-
-        .app-card:nth-child(7) {
-            animation-delay: 0.7s;
-        }
-
-        .app-card:nth-child(8) {
-            animation-delay: 0.8s;
-        }
-
-        .app-card:nth-child(9) {
-            animation-delay: 0.9s;
-        }
-
-        .app-card:nth-child(10) {
-            animation-delay: 1s;
-        }
-
-        .app-card:nth-child(11) {
-            animation-delay: 1.1s;
-        }
-
-        /* Footer */
-        .app-footer {
-            text-align: center;
-            padding: 3rem 1rem 2rem;
-            margin-top: 4rem;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .app-footer p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0.5rem 0;
-            line-height: 1.6;
-        }
-
-        .app-footer a {
-            color: var(--accent-cyan);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .app-footer a:hover {
-            color: var(--accent-purple);
-            text-decoration: underline;
-        }
-
-        .app-footer .footer-link {
-            color: var(--accent-purple);
-        }
-
-        .app-footer .footer-link:hover {
-            color: var(--accent-cyan);
-        }
-
-        .app-footer .bmc-logo {
-            display: inline-block;
-            margin-top: 1rem;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .app-footer .bmc-logo:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        .app-footer .bmc-logo img {
-            height: 60px;
-            width: 217px;
-        }
-
-        /* Neural Network Background Canvas */
-        #cyber-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: var(--bg-dark);
-            pointer-events: none;
-        }
-
-        /* Reduced Motion Support */
-        @media (prefers-reduced-motion: reduce) {
-            #cyber-canvas {
-                display: none;
-            }
-
-            .app-card {
-                transition: none;
-            }
-
-            * {
-                animation: none !important;
-            }
-        }
-    </style>
+    <meta name="description"
+        content="Free browser-based tools by Robin Thomas: password and barcode generators, subnet calculator, IP locator, POS and billing, helpdesk, kanban, habit tracker and more.">
+    <meta name="author" content="Robin Thomas">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#09090e">
+    <meta name="color-scheme" content="dark">
+    <link rel="canonical" href="https://robinthomasonline.github.io/apps/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://robinthomasonline.github.io/apps/">
+    <meta property="og:title" content="Apps Showcase | Robin Thomas">
+    <meta property="og:description"
+        content="Free browser-based tools by Robin Thomas for security, networking, business and productivity.">
+    <meta property="og:image" content="https://robinthomasonline.github.io/assets/robin-hero.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../styles.css">
+
+    <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js" } }
+    </script>
 </head>
 
 <body>
-    <!-- Neural Network Background Canvas -->
-    <canvas id="cyber-canvas"
-        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #0a0f1c;"></canvas>
-    <script>
-        const canvas = document.getElementById('cyber-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
+    <a class="skip-link" href="#main">Skip to content</a>
 
-        // Configuration
-        const particleCount = 60;
-        const connectionDistance = 150;
+    <canvas id="scene" class="scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
 
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2 + 1;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            resize();
-            particles = [];
-            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            particles.forEach(p => { p.update(); p.draw(); });
-
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < connectionDistance) {
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - dist / connectionDistance * 0.2})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        // Respect reduced motion preference
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            window.addEventListener('resize', resize);
-            init();
-            animate();
-        } else {
-            canvas.style.display = 'none';
-        }
-    </script>
-    <div class="container">
-        <a href="https://robinthomasonline.github.io" class="back-link">
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Home</span>
+    <header class="site-header">
+        <a href="../" class="brand magnetic" aria-label="Robin Thomas, back to home page">
+            <span class="brand-mark">RT</span>
+            <span class="brand-name">Robin Thomas</span>
         </a>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="primary-nav">
+            <span class="menu-btn-bars" aria-hidden="true"></span>
+            <span class="menu-btn-label">Menu</span>
+        </button>
+        <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+            <ul class="nav-list">
+                <li><a href="../" class="nav-pill magnetic">Home</a></li>
+                <li><a href="../#about" class="nav-pill magnetic">About</a></li>
+                <li><a href="../#experience" class="nav-pill magnetic">Experience</a></li>
+                <li><a href="#top" class="nav-pill magnetic is-active" aria-current="page">Apps</a></li>
+                <li><a href="../#contact" class="nav-pill nav-pill--cta magnetic">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <div class="header">
-            <h1>Apps</h1>
-            <p>Explore my collection of web applications and tools</p>
-        </div>
+    <main id="main">
+        <section id="top" class="sec sec--full apps-page" aria-labelledby="apps-title">
+            <div class="sec-head sec-head--row">
+                <h1 id="apps-title" class="page-title reveal-title">Apps</h1>
+                <p class="sec-lead reveal">Free tools that run in your browser. Nothing to install, and your data
+                    stays on your device unless a tool says otherwise.</p>
+            </div>
 
-        <div class="apps-grid">
-            <a href="barcode/" class="app-card">
-                <div class="project-header-inline">
-                    <i class="fas fa-barcode"
-                        style="font-size: 3rem; margin-right: 1.5rem; background: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
-                    <h2 class="project-title">Barcode Generator</h2>
+            <div class="apps-toolbar reveal">
+                <div class="matrix-filter" role="group" aria-label="Filter apps by category">
+                    <button type="button" class="filter-btn" data-app-filter="all" aria-pressed="true">All</button>
+                    <button type="button" class="filter-btn" data-app-filter="security" aria-pressed="false">Security
+                        &amp; network</button>
+                    <button type="button" class="filter-btn" data-app-filter="dev" aria-pressed="false">Developer
+                        tools</button>
+                    <button type="button" class="filter-btn" data-app-filter="business"
+                        aria-pressed="false">Business</button>
+                    <button type="button" class="filter-btn" data-app-filter="productivity"
+                        aria-pressed="false">Productivity</button>
                 </div>
-                <p class="project-description">
-                    Free online barcode generator supporting multiple formats (Code 128, EAN, UPC, etc.).
-                    Generate, customize colors, and download as PNG or SVG. Includes URL-based API functionality.
-                </p>
-                <ul class="project-features">
-                    <li>Multiple barcode formats</li>
-                    <li>Customizable colors</li>
-                    <li>PNG & SVG Export</li>
-                    <li>API-like functionality via URL</li>
-                    <li>Client-side generation</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
-            <a href="mood/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/mood.png" alt="Mood Logger"
-                        class="project-icon-img">
-                    <h2 class="project-title">Mood Logger</h2>
-                </div>
-                <p class="project-description">
-                    Track your emotional wellbeing with a comprehensive mood logging application.
-                    Visualize your mood trends over time and gain insights into your emotional patterns.
-                </p>
-                <ul class="project-features">
-                    <li>Emoji-based mood tracking</li>
-                    <li>Interactive charts and analytics</li>
-                    <li>Note-taking for each entry</li>
-                    <li>Export data to CSV</li>
-                    <li>Mobile-friendly design</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <p class="apps-count mono" id="apps-count" aria-live="polite">19 apps</p>
+            </div>
 
-            <a href="password/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/password.png" alt="Password Generator"
-                        class="project-icon-img">
-                    <h2 class="project-title">Password Generator</h2>
-                </div>
-                <p class="project-description">
-                    Generate secure, compliant passwords with customizable settings.
-                    Includes presets for ISO, PCI, CSA, HIPAA, NIST, and GDPR compliance standards.
-                </p>
-                <ul class="project-features">
-                    <li>Customizable password length</li>
-                    <li>Character type selection</li>
-                    <li>Compliance presets</li>
-                    <li>One-click copy to clipboard</li>
-                    <li>Security best practices</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+            <div class="apps-grid">
+                <a href="password/" class="app-card reveal" data-cat="security">
+                    <span class="app-top">
+                        <img src="../assets/password.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Password Generator</h2>
+                    <p>Generate secure, compliant passwords with customizable settings. Includes presets for ISO, PCI,
+                        CSA, HIPAA, NIST, and GDPR compliance standards.</p>
+                    <ul class="app-features">
+                        <li>Customizable password length</li>
+                        <li>Character type selection</li>
+                        <li>Compliance presets</li>
+                        <li>One-click copy to clipboard</li>
+                    </ul>
+                </a>
 
-            <a href="timer/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/worktimer.png" alt="Work Timer"
-                        class="project-icon-img">
-                    <h2 class="project-title">Work Timer</h2>
-                </div>
-                <p class="project-description">
-                    A retro-style timer application for tracking work sessions and tasks.
-                    Manage multiple tasks, view statistics, and export your work history.
-                </p>
-                <ul class="project-features">
-                    <li>Stopwatch and countdown modes</li>
-                    <li>Task management</li>
-                    <li>Quick preset timers</li>
-                    <li>Daily statistics</li>
-                    <li>CSV export functionality</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="subnet/" class="app-card reveal" data-cat="security">
+                    <span class="app-top">
+                        <img src="../assets/subnet.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Subnet Calculator</h2>
+                    <p>Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR notation,
+                        with binary representation visualization.</p>
+                    <ul class="app-features">
+                        <li>IP/CIDR notation support</li>
+                        <li>Network and broadcast addresses</li>
+                        <li>Host range calculation</li>
+                        <li>Binary representation</li>
+                    </ul>
+                </a>
 
-            <a href="ip/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/ip.png" alt="IP Address Locator"
-                        class="project-icon-img">
-                    <h2 class="project-title">IP Address Locator</h2>
-                </div>
-                <p class="project-description">
-                    Get comprehensive geographical and network information for any IP address.
-                    Displays all details from IPAPI including location, network, country, and timezone data.
-                </p>
-                <ul class="project-features">
-                    <li>Real-time IP geolocation</li>
-                    <li>Complete IPAPI data display</li>
-                    <li>Interactive location map</li>
-                    <li>Network and ISP information</li>
-                    <li>Country and timezone details</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="ip/" class="app-card reveal" data-cat="security">
+                    <span class="app-top">
+                        <img src="../assets/ip.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>IP Address Locator</h2>
+                    <p>Get comprehensive geographical and network information for any IP address, including location,
+                        network, country, and timezone data.</p>
+                    <ul class="app-features">
+                        <li>Real-time IP geolocation</li>
+                        <li>Interactive location map</li>
+                        <li>Network and ISP information</li>
+                        <li>Country and timezone details</li>
+                    </ul>
+                </a>
 
-            <a href="subnet/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/subnet.png" alt="Subnet Calculator"
-                        class="project-icon-img">
-                    <h2 class="project-title">Subnet Calculator</h2>
-                </div>
-                <p class="project-description">
-                    Calculate subnet mask, network address, broadcast address, and host range from IP/CIDR notation.
-                    Demonstrates network engineering and security math with binary representation visualization.
-                </p>
-                <ul class="project-features">
-                    <li>IP/CIDR notation support</li>
-                    <li>Subnet mask calculation</li>
-                    <li>Network and broadcast addresses</li>
-                    <li>Host range calculation</li>
-                    <li>Binary representation visualization</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="cron/" class="app-card reveal" data-cat="dev">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-clock"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Crontab Entry Creator</h2>
+                    <p>Create, understand, and manage crontab entries. Build schedules visually, explore common
+                        templates, and parse existing entries to see what they do.</p>
+                    <ul class="app-features">
+                        <li>Visual crontab builder</li>
+                        <li>Common templates library</li>
+                        <li>Crontab parser and explainer</li>
+                        <li>One-click copy to clipboard</li>
+                    </ul>
+                </a>
 
-            <a href="kanban/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/kanban.png" alt="Kanban Board"
-                        class="project-icon-img">
-                    <h2 class="project-title">Kanban Board</h2>
-                </div>
-                <p class="project-description">
-                    A minimalist drag-and-drop task management board with three columns (To Do, In Progress, Done).
-                    Features local storage persistence, task editing, priority levels, CSV export/import, and user
-                    assignment.
-                </p>
-                <ul class="project-features">
-                    <li>Drag-and-drop task management</li>
-                    <li>Three-column workflow</li>
-                    <li>Priority levels and user assignment</li>
-                    <li>CSV export and import</li>
-                    <li>Local storage persistence</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="json/" class="app-card reveal" data-cat="dev">
+                    <span class="app-top">
+                        <img src="../assets/json.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>JSON Formatter</h2>
+                    <p>Format, validate, minify, and beautify JSON instantly. Essential for working with APIs,
+                        configuration files, and data structures.</p>
+                    <ul class="app-features">
+                        <li>Format, beautify and minify</li>
+                        <li>Validate JSON syntax</li>
+                        <li>Customizable indent size</li>
+                        <li>File size and compression stats</li>
+                    </ul>
+                </a>
 
-            <a href="resume-cover/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/cv.png" alt="Resume & Cover Letter Generator"
-                        class="project-icon-img">
-                    <h2 class="project-title">Resume & Cover Letter Generator</h2>
-                </div>
-                <p class="project-description">
-                    AI-powered ATS-friendly resume and cover letter generator optimized for international job markets.
-                    Uses Gemini AI to create keyword-rich, tailored documents that pass ATS screening.
-                </p>
-                <ul class="project-features">
-                    <li>AI-powered resume generation</li>
-                    <li>ATS-optimized formatting</li>
-                    <li>Keyword extraction from job descriptions</li>
-                    <li>International standards support</li>
-                    <li>PDF export functionality</li>
-                    <li>Editable generated content</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="barcode/" class="app-card reveal" data-cat="dev">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-barcode"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Barcode Generator</h2>
+                    <p>Generate barcodes in multiple formats (Code 128, EAN, UPC and more), customize colors, and
+                        download as PNG or SVG. Includes URL-based API functionality.</p>
+                    <ul class="app-features">
+                        <li>Multiple barcode formats</li>
+                        <li>Customizable colors</li>
+                        <li>PNG and SVG export</li>
+                        <li>API-like URL generation</li>
+                    </ul>
+                </a>
 
-            <a href="cofounder-pie/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/founders.png" alt="Co-Founder Pie"
-                        class="project-icon-img">
-                    <h2 class="project-title">Co-Founder Pie</h2>
-                </div>
-                <p class="project-description">
-                    Calculate fair equity distribution for startup co-founders based on contributions, tasks, and
-                    responsibilities.
-                    Supports 2-10 founders with weighted task scoring and automatic percentage calculations.
-                </p>
-                <ul class="project-features">
-                    <li>Equity distribution calculator</li>
-                    <li>Support for 2-10 founders</li>
-                    <li>Weighted task scoring</li>
-                    <li>Automatic percentage calculations</li>
-                    <li>Local storage persistence</li>
-                    <li>Multiple startup management</li>
-                    <li>Export/Import functionality</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="https://wtfqr.com/" target="_blank" rel="noopener noreferrer" class="app-card reveal"
+                    data-cat="dev">
+                    <span class="app-top">
+                        <img src="../assets/qr.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>WTFQR - QR Code Generator</h2>
+                    <p>Generate custom QR codes instantly for URLs, text, contact information, and more, with
+                        customizable styling options.</p>
+                    <ul class="app-features">
+                        <li>Multiple QR code types</li>
+                        <li>Customizable styling</li>
+                        <li>Instant generation</li>
+                        <li>Download and share</li>
+                    </ul>
+                </a>
 
-            <a href="daybook/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/daybook.png" alt="Daybook"
-                        class="project-icon-img">
-                    <h2 class="project-title">Daybook</h2>
-                </div>
-                <p class="project-description">
-                    Track income and expenses for small shops with customer details, invoice generation, and data
-                    export.
-                    Perfect for small business bookkeeping with local storage and print-ready invoices.
-                </p>
-                <ul class="project-features">
-                    <li>Income and expense tracking</li>
-                    <li>Customer name and details</li>
-                    <li>Invoice generation</li>
-                    <li>CSV and JSON export</li>
-                    <li>Shop settings management</li>
-                    <li>Edit and delete entries</li>
-                    <li>Local storage persistence</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="favicon/" class="app-card reveal" data-cat="dev">
+                    <span class="app-top">
+                        <img src="../assets/ico.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Image to Favicon Converter</h2>
+                    <p>Convert any image to favicon format in multiple sizes (16x16, 32x32, 48x48 and more) with
+                        preview and download options.</p>
+                    <ul class="app-features">
+                        <li>Multiple favicon sizes</li>
+                        <li>Real-time preview</li>
+                        <li>Individual and bulk download</li>
+                        <li>Drag and drop support</li>
+                    </ul>
+                </a>
 
-            <a href="favicon/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="../assets/ico.png" alt="Image to Favicon Converter" class="project-icon-img">
-                    <h2 class="project-title">Image to Favicon Converter</h2>
-                </div>
-                <p class="project-description">
-                    Convert any image to favicon format. Generate favicons in multiple sizes (16x16, 32x32, 48x48, etc.)
-                    with preview and download options. Perfect for creating website icons.
-                </p>
-                <ul class="project-features">
-                    <li>Multiple favicon sizes</li>
-                    <li>Image upload and preview</li>
-                    <li>Individual and bulk download</li>
-                    <li>Real-time preview</li>
-                    <li>Supports multiple image formats</li>
-                    <li>Drag and drop support</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="md/" class="app-card reveal" data-cat="dev">
+                    <span class="app-top">
+                        <img src="../assets/markdown.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Markdown Converter</h2>
+                    <p>Convert Markdown files to DOC and PDF formats instantly, with live preview, file upload support,
+                        and word count.</p>
+                    <ul class="app-features">
+                        <li>Markdown to DOC and PDF</li>
+                        <li>Live preview</li>
+                        <li>File upload support</li>
+                        <li>Syntax highlighting</li>
+                    </ul>
+                </a>
 
-            <a href="json/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="../assets/json.png" alt="JSON Formatter" class="project-icon-img">
-                    <h2 class="project-title">JSON Formatter</h2>
-                </div>
-                <p class="project-description">
-                    Format, validate, minify, and beautify JSON instantly. Essential tool for developers working with
-                    APIs,
-                    configuration files, and data structures.
-                </p>
-                <ul class="project-features">
-                    <li>Format and beautify JSON</li>
-                    <li>Minify JSON</li>
-                    <li>Validate JSON syntax</li>
-                    <li>Copy to clipboard</li>
-                    <li>Customizable indent size</li>
-                    <li>File size and compression stats</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="helpdesk/" class="app-card reveal" data-cat="business">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i class="fas fa-headset"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Helpdesk &amp; Issue Tracker</h2>
+                    <p>A fully customizable ticketing tool. Define your own categories and team, log tickets, and track
+                        each one through Open, Assigned, In Progress, and Resolved.</p>
+                    <ul class="app-features">
+                        <li>Custom categories and team</li>
+                        <li>Filterable, searchable queue</li>
+                        <li>Activity log per ticket</li>
+                        <li>CSV export</li>
+                    </ul>
+                </a>
 
-            <a href="habit/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="../assets/habit.png" alt="Habit Tracker" class="project-icon-img">
-                    <h2 class="project-title">Habit Tracker</h2>
-                </div>
-                <p class="project-description">
-                    Track daily habits with streak counters and calendar views. Build better habits with minimal design
-                    and powerful retention tracking features.
-                </p>
-                <ul class="project-features">
-                    <li>Daily habit tracking</li>
-                    <li>Recurring habits support</li>
-                    <li>Streak counter</li>
-                    <li>Calendar view</li>
-                    <li>Statistics dashboard</li>
-                    <li>Local storage persistence</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="pos/" class="app-card reveal" data-cat="business">
+                    <span class="app-top">
+                        <span class="app-icon app-icon--glyph" aria-hidden="true"><i
+                                class="fas fa-cash-register"></i></span>
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>POS &amp; Billing System</h2>
+                    <p>Point of Sale and billing for small shops and retail, with barcode/QR scanning, products,
+                        customers, invoicing, transactions, and expense tracking.</p>
+                    <ul class="app-features">
+                        <li>Barcode and QR scanning</li>
+                        <li>Inventory and customers</li>
+                        <li>Role-based user access</li>
+                        <li>Excel export and import</li>
+                    </ul>
+                </a>
 
-            <a href="md/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="../assets/markdown.png" alt="Markdown Converter" class="project-icon-img">
-                    <h2 class="project-title">Markdown Converter</h2>
-                </div>
-                <p class="project-description">
-                    Convert Markdown files to DOC and PDF formats instantly. Features live preview, file upload support,
-                    and word count. Perfect for documentation, reports, and content conversion.
-                </p>
-                <ul class="project-features">
-                    <li>Markdown to DOC conversion</li>
-                    <li>Markdown to PDF conversion</li>
-                    <li>Live preview</li>
-                    <li>File upload support</li>
-                    <li>Word count display</li>
-                    <li>Syntax highlighting</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="daybook/" class="app-card reveal" data-cat="business">
+                    <span class="app-top">
+                        <img src="../assets/daybook.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Daybook</h2>
+                    <p>Track income and expenses for small shops with customer details, invoice generation, and data
+                        export. Print-ready invoices included.</p>
+                    <ul class="app-features">
+                        <li>Income and expense tracking</li>
+                        <li>Invoice generation</li>
+                        <li>CSV and JSON export</li>
+                        <li>Local storage persistence</li>
+                    </ul>
+                </a>
 
-            <a href="sydney_myrta_booking_system_monitoring_system/" class="app-card">
-                <div class="project-header-inline">
-                    <img src="https://robinthomasonline.github.io/assets/myrta.png" alt="MyRTA Booking System Monitor"
-                        class="project-icon-img">
-                    <h2 class="project-title">MyRTA Booking System Monitor</h2>
-                </div>
-                <p class="project-description">
-                    Free browser extension that monitors MyRTA booking availability changes and alerts you instantly
-                    when new test dates become available. Get notified with sound alerts and desktop notifications.
-                </p>
-                <ul class="project-features">
-                    <li>Monitor booking page for visual changes</li>
-                    <li>Instant sound and desktop notifications</li>
-                    <li>Automatic page refresh every 10 minutes</li>
-                    <li>Background monitoring while you work</li>
-                    <li>Easy step-by-step installation guide</li>
-                    <li>Works with Chrome, Edge, and Chromium browsers</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="cofounder-pie/" class="app-card reveal" data-cat="business">
+                    <span class="app-top">
+                        <img src="../assets/founders.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Co-Founder Pie</h2>
+                    <p>Calculate fair equity distribution for startup co-founders based on contributions, tasks, and
+                        responsibilities. Supports 2-10 founders.</p>
+                    <ul class="app-features">
+                        <li>Weighted task scoring</li>
+                        <li>Automatic percentages</li>
+                        <li>Multiple startups</li>
+                        <li>Export and import</li>
+                    </ul>
+                </a>
 
-            <a href="https://wtfqr.com/" target="_blank" rel="noopener noreferrer" class="app-card">
-                <div class="project-header-inline">
-                    <img src="../assets/qr.png" alt="WTFQR - QR Code Generator" class="project-icon-img">
-                    <h2 class="project-title">WTFQR - QR Code Generator</h2>
-                </div>
-                <p class="project-description">
-                    Generate custom QR codes instantly with a simple and intuitive interface. Create QR codes for URLs,
-                    text, contact information, and more with customizable styling options.
-                </p>
-                <ul class="project-features">
-                    <li>Custom QR code generation</li>
-                    <li>Multiple QR code types</li>
-                    <li>Customizable styling</li>
-                    <li>Instant generation</li>
-                    <li>Download and share options</li>
-                    <li>Simple and intuitive interface</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="resume-cover/" class="app-card reveal" data-cat="business">
+                    <span class="app-top">
+                        <img src="../assets/cv.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Resume &amp; Cover Letter Generator</h2>
+                    <p>AI-powered, ATS-friendly resume and cover letter generator. Uses Gemini AI to create
+                        keyword-rich documents tailored to each job.</p>
+                    <ul class="app-features">
+                        <li>AI-powered generation</li>
+                        <li>ATS-optimized formatting</li>
+                        <li>Keyword extraction</li>
+                        <li>PDF export</li>
+                    </ul>
+                </a>
 
-            <a href="pos/" class="app-card">
-                <div class="project-header-inline">
-                    <i class="fas fa-cash-register project-icon"></i>
-                    <h2 class="project-title">POS & Billing System</h2>
-                </div>
-                <p class="project-description">
-                    A comprehensive Point of Sale (POS) and Billing System for small shops and retail businesses.
-                    Features barcode/QR code scanning, product management, customer management, invoicing, transactions,
-                    and expense tracking.
-                </p>
-                <ul class="project-features">
-                    <li>Barcode & QR code scanning</li>
-                    <li>Product and inventory management</li>
-                    <li>Customer management</li>
-                    <li>Invoice generation</li>
-                    <li>Transaction and expense tracking</li>
-                    <li>Role-based user access (Admin, Manager, Sales)</li>
-                    <li>Excel export/import</li>
-                    <li>Shop customization</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
+                <a href="timer/" class="app-card reveal" data-cat="productivity">
+                    <span class="app-top">
+                        <img src="../assets/worktimer.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Work Timer</h2>
+                    <p>A retro-style timer for tracking work sessions and tasks. Manage multiple tasks, view statistics,
+                        and export your work history.</p>
+                    <ul class="app-features">
+                        <li>Stopwatch and countdown</li>
+                        <li>Task management</li>
+                        <li>Daily statistics</li>
+                        <li>CSV export</li>
+                    </ul>
+                </a>
 
-            <a href="cron/" class="app-card">
-                <div class="project-header-inline">
-                    <i class="fas fa-clock project-icon"></i>
-                    <h2 class="project-title">Crontab Entry Creator</h2>
-                </div>
-                <p class="project-description">
-                    A web-based tool for creating, understanding, and managing crontab entries. Generate custom cron
-                    schedules with a visual builder, explore common templates, and parse existing crontab entries to
-                    understand what they do.
-                </p>
-                <ul class="project-features">
-                    <li>Visual crontab builder</li>
-                    <li>Quick select options</li>
-                    <li>Common templates library</li>
-                    <li>Crontab parser and explainer</li>
-                    <li>One-click copy to clipboard</li>
-                    <li>Multiple selection support</li>
-                </ul>
-                <div class="project-link">
-                    <span>View Project</span>
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-            </a>
-        </div>
-    </div>
+                <a href="kanban/" class="app-card reveal" data-cat="productivity">
+                    <span class="app-top">
+                        <img src="../assets/kanban.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Kanban Board</h2>
+                    <p>A minimalist drag-and-drop board with To Do, In Progress and Done columns, priority levels, and
+                        user assignment.</p>
+                    <ul class="app-features">
+                        <li>Drag-and-drop tasks</li>
+                        <li>Priorities and assignees</li>
+                        <li>CSV export and import</li>
+                        <li>Local storage persistence</li>
+                    </ul>
+                </a>
 
-    <!-- Footer -->
-    <footer class="app-footer">
-        <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank"
-                rel="noopener noreferrer">Robin Thomas</a></p>
-        <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.
-        </p>
+                <a href="habit/" class="app-card reveal" data-cat="productivity">
+                    <span class="app-top">
+                        <img src="../assets/habit.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Habit Tracker</h2>
+                    <p>Track daily habits with streak counters and calendar views. Minimal design with retention
+                        tracking built in.</p>
+                    <ul class="app-features">
+                        <li>Recurring habits</li>
+                        <li>Streak counter</li>
+                        <li>Calendar view</li>
+                        <li>Statistics dashboard</li>
+                    </ul>
+                </a>
+
+                <a href="mood/" class="app-card reveal" data-cat="productivity">
+                    <span class="app-top">
+                        <img src="../assets/mood.png" alt="" class="app-icon" width="48" height="48" loading="lazy"
+                            decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>Mood Logger</h2>
+                    <p>Track your emotional wellbeing over time. Visualize mood trends and gain insights into your
+                        emotional patterns.</p>
+                    <ul class="app-features">
+                        <li>Emoji-based mood tracking</li>
+                        <li>Interactive charts</li>
+                        <li>Notes for each entry</li>
+                        <li>CSV export</li>
+                    </ul>
+                </a>
+
+                <a href="sydney_myrta_booking_system_monitoring_system/" class="app-card reveal"
+                    data-cat="productivity">
+                    <span class="app-top">
+                        <img src="../assets/myrta.png" alt="" class="app-icon" width="48" height="48"
+                            loading="lazy" decoding="async">
+                        <span class="live-tag mono">Live</span>
+                    </span>
+                    <h2>MyRTA Booking System Monitor</h2>
+                    <p>Free browser extension that watches MyRTA booking availability and alerts you instantly when new
+                        test dates open up.</p>
+                    <ul class="app-features">
+                        <li>Sound and desktop alerts</li>
+                        <li>Auto refresh every 10 minutes</li>
+                        <li>Runs in the background</li>
+                        <li>Chrome, Edge and Chromium</li>
+                    </ul>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer apps-footer">
+        <p class="mono">© <span id="year">2026</span> <a href="../" class="text-link">Robin Thomas</a></p>
+        <p class="mono">Want a feature or found a bug? <a href="mailto:robinthomasonline@gmail.com"
+                class="text-link">Send an email</a></p>
         <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer"
-            class="bmc-logo">
-            <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+            class="bmc-link">
+            <img src="../assets/bmc.png" alt="Buy Me A Coffee" height="40" loading="lazy" decoding="async">
         </a>
     </footer>
+
+    <script src="../script.js" defer></script>
+    <script type="module" src="../scene.js"></script>
 </body>
 
 </html>

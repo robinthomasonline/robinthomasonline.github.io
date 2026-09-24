@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
     const downloadPngBtn = document.getElementById('downloadPngBtn');
     const downloadSvgBtn = document.getElementById('downloadSvgBtn');
-    const apiLinkCode = document.getElementById('apiLink');
 
     // Debounce function to prevent excessive rendering
     function debounce(func, wait) {
@@ -45,37 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayValue: displayValue,
                 width: 2,
                 height: 100,
-                margin: 10,
-                valid: function (valid) {
-                    if (!valid) {
-                        // Handle invalid input silently or show basic feedback
-                        // JsBarcode handles visual feedback usually by not rendering or rendering default
-                    }
-                }
+                margin: 10
             });
-            updateApiLink(value, format, displayValue);
         } catch (e) {
             console.error("Barcode generation error:", e);
             // Optionally show error to user
         }
-    }
-
-    function updateApiLink(value, format, displayValue) {
-        // Update the API usage example text
-        const url = new URL(window.location.href);
-        // Clean params
-        url.search = '';
-        const params = new URLSearchParams();
-        params.set('value', value);
-        params.set('format', format);
-        if (displayValue !== true) { // Only show if false (since true is default) or always show? User asked to implement option, let's show it if it's explicitly interesting.
-            // Actually, let's always show it or show it if it differs from default?
-            // Let's just add it for clarity as requested "implement show text option in api"
-            params.set('text', displayValue);
-        }
-
-        // We only show the query part for the user to copy
-        apiLinkCode.textContent = `?${params.toString()}`;
     }
 
     // API Handling: Parse URL Params on Load

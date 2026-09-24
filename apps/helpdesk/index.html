@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Free Helpdesk & Issue Tracker - Log tickets, build your own categories and team, assign and track status, and review activity. Fully customizable and works entirely in your browser.">
+<meta name="keywords" content="helpdesk, issue tracker, ticket system, support desk, ticket queue, issue reporting, team assignment, free helpdesk tool">
+<meta name="author" content="Robin Thomas">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://robinthomasonline.github.io/apps/helpdesk/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://robinthomasonline.github.io/apps/helpdesk/">
+<meta property="og:title" content="Helpdesk & Issue Tracker | Free Ticket Management Tool">
+<meta property="og:description" content="Log tickets, build your own categories and team, assign and track status, and review activity. Fully customizable and works entirely in your browser.">
+<meta property="og:site_name" content="Robin Thomas - Apps">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://robinthomasonline.github.io/apps/helpdesk/">
+<meta name="twitter:title" content="Helpdesk & Issue Tracker | Free Ticket Management Tool">
+<meta name="twitter:description" content="Log tickets, build your own categories and team, assign and track status, and review activity.">
+
+<title>Helpdesk & Issue Tracker | Free Ticket Management Tool | Robin Thomas</title>
+<link rel="stylesheet" href="helpdesk.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="https://robinthomasonline.github.io/assets/favicon.ico">
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1><i class="fas fa-headset"></i> Helpdesk</h1>
+    <p class="subtitle">Log tickets, track them through your workflow, and keep everyone on the same page.</p>
+  </div>
+
+  <div class="top-bar">
+    <div class="whoami">
+      <label for="whoName">Signed in as</label>
+      <input type="text" id="whoName" placeholder="Your name" autocomplete="off">
+    </div>
+    <div class="stat-chips">
+      <div class="chip" style="border-left-color:var(--danger-color)"><span class="num" id="statOpen">0</span><span class="lbl">Open</span></div>
+      <div class="chip" style="border-left-color:var(--warning-color)"><span class="num" id="statAssigned">0</span><span class="lbl">Assigned</span></div>
+      <div class="chip" style="border-left-color:var(--primary-color)"><span class="num" id="statProgress">0</span><span class="lbl">In Progress</span></div>
+      <div class="chip" style="border-left-color:var(--secondary-color)"><span class="num" id="statResolved">0</span><span class="lbl">Resolved</span></div>
+    </div>
+  </div>
+
+  <div class="board-controls">
+    <button class="btn-primary" type="button" data-open="ticketModalBackdrop">
+      <i class="fas fa-plus"></i> New Ticket
+    </button>
+    <button class="btn-secondary" type="button" data-open="categoriesModalBackdrop">
+      <i class="fas fa-tags"></i> <span id="categoriesBtnLabel">Categories</span>
+    </button>
+    <button class="btn-secondary" type="button" data-open="teamModalBackdrop">
+      <i class="fas fa-users"></i> <span id="teamBtnLabel">Team</span>
+    </button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2><i class="fas fa-list-check"></i> Ticket Queue</h2>
+      <span class="eyebrow" id="queueCount">0 tickets</span>
+    </div>
+    <div class="queue-controls">
+      <div class="tabs-inline" id="tabs">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="Open">Open</button>
+        <button class="tab" data-filter="Assigned">Assigned</button>
+        <button class="tab" data-filter="In Progress">In progress</button>
+        <button class="tab" data-filter="Resolved">Resolved</button>
+      </div>
+      <input type="text" class="search-box" id="searchBox" placeholder="Search location, reference, reporter…">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticket</th><th>Category</th><th>Details</th><th>Reported</th>
+            <th>Reporter</th><th>Assigned to</th><th>Status</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="queueBody">
+          <tr class="empty-row"><td colspan="8">No tickets yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2><i class="fas fa-chart-simple"></i> Report</h2>
+      <span class="eyebrow">Auto-generated from ticket data</span>
+    </div>
+    <div class="analytics-grid">
+      <div class="analytics-col">
+        <h3>Top categories</h3>
+        <div id="byCategory"></div>
+      </div>
+      <div class="analytics-col">
+        <h3>Top locations</h3>
+        <div id="byLocation"></div>
+      </div>
+    </div>
+    <div class="analytics-actions">
+      <button class="btn-secondary" id="exportBtn"><i class="fas fa-download"></i> Export CSV</button>
+      <button class="btn-secondary btn-danger" id="resetBtn"><i class="fas fa-trash"></i> Clear all data</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-backdrop" id="ticketModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mid">Log a Ticket</div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form class="ticket-form" id="issueForm">
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" required>
+            <option value="">Select category…</option>
+          </select>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="location">Location / Area (optional)</label>
+            <input type="text" id="location" placeholder="e.g. Office 2, Floor 3">
+          </div>
+          <div class="field">
+            <label for="reference">Reference (optional)</label>
+            <input type="text" id="reference" placeholder="e.g. Asset tag, order #">
+          </div>
+        </div>
+        <div class="field">
+          <label for="desc">Description</label>
+          <textarea id="desc" placeholder="What happened? Be specific — this becomes the record the team acts on." required></textarea>
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label for="reporter">Reported by</label>
+            <input type="text" id="reporter" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="priority">Priority</label>
+            <select id="priority">
+              <option>Standard</option>
+              <option>Urgent</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>Add a category first</button>
+      </form>
+
+      <div class="slip" id="slip">
+        <div class="slip-top">
+          <div>
+            <div class="muted" style="text-transform:uppercase; letter-spacing:0.06em; font-size:0.7rem;">Ticket logged</div>
+            <div class="slip-id" id="slipId">TCK-0000-0000</div>
+          </div>
+          <span class="slip-status">Open</span>
+        </div>
+        <div class="slip-note">Added to the queue for triage and assignment. Anyone with this tool open on this device will see it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="categoriesModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mid">Manage Categories</div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="tag-add">
+        <input type="text" id="categoryInput" placeholder="Add a category, e.g. Hardware" maxlength="40">
+        <button id="categoryAddBtn" type="button">Add</button>
+      </div>
+      <div class="tag-list" id="categoryList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="teamModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mid">Manage Team</div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="tag-add">
+        <input type="text" id="teamInput" placeholder="Add a team member" maxlength="40">
+        <button id="teamAddBtn" type="button">Add</button>
+      </div>
+      <div class="tag-list" id="teamList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="detailsModalBackdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <div class="mid" id="mId">TCK-0000-0000</div>
+        <div class="muted" id="mCatLoc" style="margin-top:4px;"></div>
+      </div>
+      <button class="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-controls">
+        <div class="field" style="margin-bottom:0;">
+          <label>Status</label>
+          <select id="mStatus" class="assign-select" style="width:100%;">
+            <option>Open</option><option>Assigned</option><option>In Progress</option><option>Resolved</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Assigned to</label>
+          <select id="mAssigned" class="assign-select" style="width:100%;"></select>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="k">Description</div>
+        <div class="v" id="mDesc"></div>
+      </div>
+      <div class="modal-section">
+        <div class="k">Reported by</div>
+        <div class="v" id="mReporter"></div>
+      </div>
+      <div class="modal-section">
+        <div class="k">Activity</div>
+        <div id="mLog"></div>
+      </div>
+    </div>
+    <div class="note-row">
+      <input type="text" id="mNoteInput" placeholder="Add a note…">
+      <button id="mNoteBtn">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg"></span></div>
+
+<!-- Footer -->
+<footer class="app-footer">
+    <p>❤️ Developed By <a href="https://robinthomasonline.github.io/" target="_blank" rel="noopener noreferrer">Robin Thomas</a></p>
+    <p>Request Feature or report bug to <a href="mailto:robinthomasonline@gmail.com" class="footer-link">email</a>.</p>
+    <a href="https://www.buymeacoffee.com/robinthomasonline" target="_blank" rel="noopener noreferrer" class="bmc-logo">
+        <img src="https://robinthomasonline.github.io/assets/bmc.png" alt="Buy Me A Coffee">
+    </a>
+    <a href="https://robinthomasonline.github.io/apps/" class="view-all-apps-btn">
+        <i class="fas fa-th"></i> View All Apps
+    </a>
+</footer>
+
+<script src="helpdesk.js"></script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Helpdesk & Issue Tracker",
+    "description": "Log tickets, build your own categories and team, assign and track status, and review activity in a fully customizable helpdesk.",
+    "url": "https://robinthomasonline.github.io/apps/helpdesk/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Robin Thomas",
+        "url": "https://robinthomasonline.github.io"
+    },
+    "featureList": [
+        "Custom ticket categories",
+        "Custom team/assignee list",
+        "Ticket queue with filters and search",
+        "Status and assignment tracking",
+        "Activity log and notes",
+        "CSV export",
+        "Local storage persistence"
+    ]
+}
+</script>
+</body>
+</html>
