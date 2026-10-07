@@ -997,6 +997,28 @@ main {
     padding: 0.5rem clamp(1.25rem, 3vw, 2rem);
 }
 
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.badges a {
+    display: block;
+    border-radius: var(--r-lg);
+    transition: transform 0.2s ease;
+}
+
+.badges a:hover,
+.badges a:focus-visible {
+    transform: translateY(-4px);
+}
+
+.badges img {
+    width: clamp(88px, 18vw, 120px);
+    height: auto;
+}
+
 .spec-row {
     display: flex;
     align-items: baseline;
