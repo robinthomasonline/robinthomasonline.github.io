@@ -986,12 +986,6 @@ main {
     font-size: var(--t-sm);
 }
 
-@media (min-width: 900px) {
-    .creds {
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-    }
-}
-
 .spec-sheet {
     border-radius: var(--r-lg);
     padding: 0.5rem clamp(1.25rem, 3vw, 2rem);
